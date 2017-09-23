@@ -8,4 +8,10 @@
     <string name="navigation_subject">Subject View</string>
     <string name="navigation_calendar">Calendar View</string>
     <string name="navigation_settings">Settings</string>
+
+    <string name="edit_subjects">Edit Subjects</string>
+    <string name="edit_work">Edit Work Types</string>
+    <string name="edit_agendas">Edit Agendas</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="notifications">Notifications</string>
 </resources>
