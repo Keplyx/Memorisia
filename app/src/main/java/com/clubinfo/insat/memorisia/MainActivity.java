@@ -1,5 +1,6 @@
 package com.clubinfo.insat.memorisia;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity
         
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
     }
     
     @Override
@@ -79,21 +82,19 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-            
-        } else if (id == R.id.nav_slideshow) {
-            
-        } else if (id == R.id.nav_manage) {
-            
-        } else if (id == R.id.nav_share) {
-            
-        } else if (id == R.id.nav_send) {
-            
+        Fragment fragment = new HomeFragment();
+        if (id == R.id.nav_home) {
+            fragment = new HomeFragment();
+        } else if (id == R.id.nav_subjects) {
+            fragment = new SubjectsFragment();
+        } else if (id == R.id.nav_calendar) {
+            fragment = new CalendarFragment();
+        } else if (id == R.id.nav_settings) {
+            fragment = new SettingsFragment();
         }
-        
+    
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+    
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
