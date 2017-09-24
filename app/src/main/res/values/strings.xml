@@ -14,4 +14,10 @@
     <string name="edit_agendas">Edit Agendas</string>
     <string name="night_mode">Night Mode</string>
     <string name="notifications">Notifications</string>
+
+    <string name="home_title">Home</string>
+    <string name="subjects_title">Subjects</string>
+    <string name="calendar_title">Calendar</string>
+    <string name="settings_title">Settings</string>
+
 </resources>

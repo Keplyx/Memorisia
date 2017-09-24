@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.settings_fragment, container, false);
-    }
+        View v = inflater.inflate(R.layout.settings_fragment, container, false);
+        getActivity().setTitle(R.string.settings_title);
+        return v;    }
     
 }

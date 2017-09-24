@@ -20,6 +20,8 @@ public class SubjectsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
+        getActivity().setTitle(R.string.subjects_title);
+        
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(mLayoutManager);

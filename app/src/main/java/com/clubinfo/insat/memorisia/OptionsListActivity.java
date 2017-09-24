@@ -33,12 +33,15 @@ public class OptionsListActivity extends AppCompatActivity {
             switch (option){
                 case 0:
                     mAdapter = createSubjectsListAdapter();
+                    setTitle(R.string.edit_subjects);
                     break;
                 case 1:
                     mAdapter = createWorkTypesListAdapter();
+                    setTitle(R.string.edit_work);
                     break;
                 case 2:
                     mAdapter = createAgendasListAdapter();
+                    setTitle(R.string.edit_agendas);
                     break;
             }
         }
