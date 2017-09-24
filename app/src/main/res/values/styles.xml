@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/buttonColor</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,5 +17,35 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
+
+    <style name="AppTheme.Dark" parent="AppTheme">
+        <item name="android:colorBackground">@color/backgroundDark</item>
+        <item name="colorButtonNormal">@color/buttonColorDark</item>
+
+        <item name="android:editTextColor">@color/textColorInverse</item>
+        <item name="android:textColorPrimary">@color/textColorInverse</item>
+        <item name="android:textColorSecondary">@color/textColorInverse</item>
+        <item name="android:textColorTertiary">@color/textColorInverse</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorInverse</item>
+        <item name="android:textColorSecondaryInverse">@color/textColorInverse</item>
+        <item name="android:textColorTertiaryInverse">@color/textColorInverse</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/textColorInverse</item>
+        <item name="android:textColorPrimaryInverseDisableOnly">@color/textColorInverse</item>
+        <item name="android:textColorPrimaryNoDisable">@color/textColorInverse</item>
+        <item name="android:textColorSecondaryNoDisable">@color/textColorInverse</item>
+        <item name="android:textColorPrimaryInverseNoDisable">@color/textColorInverse</item>
+        <item name="android:textColorSecondaryInverseNoDisable">@color/textColorInverse</item>
+        <item name="android:textColorHint">@color/textColorInverse</item>
+        <item name="android:textColorHintInverse">@color/textColorInverse</item>
+        <item name="android:searchButtonText">@color/textColorInverse</item>
+
+    </style>
+
+    <style name="AppTheme.Dark.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
 </resources>

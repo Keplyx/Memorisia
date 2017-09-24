@@ -1,7 +1,10 @@
 package com.clubinfo.insat.memorisia;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -13,6 +16,9 @@ public class EditOptionsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences mPrefs = getSharedPreferences("general_pref", Context.MODE_PRIVATE);
+        if (mPrefs.getBoolean("night_mode", false))
+            setTheme(R.style.AppTheme_Dark);
         setContentView(R.layout.activity_edit_options);
     
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

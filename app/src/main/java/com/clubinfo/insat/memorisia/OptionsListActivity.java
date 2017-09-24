@@ -1,12 +1,15 @@
 package com.clubinfo.insat.memorisia;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -23,10 +26,14 @@ public class OptionsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences mPrefs = getSharedPreferences("general_pref", Context.MODE_PRIVATE);
+        if (mPrefs.getBoolean("night_mode", false))
+            setTheme(R.style.AppTheme_Dark);
         setContentView(R.layout.recyclerview_layout);
-    
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    
+        
         
         Bundle b = getIntent().getExtras();
         mAdapter = null;

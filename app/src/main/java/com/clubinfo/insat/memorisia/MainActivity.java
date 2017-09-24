@@ -1,14 +1,18 @@
 package com.clubinfo.insat.memorisia;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -28,9 +32,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
     MenuItem editButton;
-
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
+        SharedPreferences mPrefs = getSharedPreferences("general_pref", Context.MODE_PRIVATE);
+        if (mPrefs.getBoolean("night_mode", false))
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
@@ -48,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    
     }
     
     @Override
@@ -107,7 +117,6 @@ public class MainActivity extends AppCompatActivity
             fragment = new CalendarFragment();
         } else if (id == R.id.nav_settings) {
             fragment = new SettingsFragment();
-            
         }
     
         
