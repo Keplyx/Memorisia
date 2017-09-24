@@ -23,9 +23,9 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         public ViewHolder(View v){
             super(v);
             layout = v;
-            textHeader = v.findViewById(R.id.firstLine);
-            textFooter = v.findViewById(R.id.secondLine);
-            logo = v.findViewById(R.id.icon);
+            textHeader = v.findViewById(R.id.subjectTitle);
+            textFooter = v.findViewById(R.id.SubjectDescription);
+            logo = v.findViewById(R.id.SubjectIcon);
         }
     }
 
@@ -55,12 +55,6 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
     public void onBindViewHolder (ViewHolder holder, final int pos){
         final String name = values.get(pos);
         holder.textHeader.setText(name);
-        holder.textHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                remove(pos);
-            }
-        });
         holder.textFooter.setText("Footer: " + name);
         holder.logo.setImageResource(R.drawable.icons8_computer_96);
     }

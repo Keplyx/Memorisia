@@ -5,4 +5,5 @@
     <color name="colorAccent">#24ba2b</color>
     <color name="colorWhite">#ffffff</color>
     <color name="iconTint">#7d7d7d</color>
+    <color name="colorRed">#db0000</color>
 </resources>

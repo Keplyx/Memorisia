@@ -1,6 +1,7 @@
 package com.clubinfo.insat.memorisia;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -107,5 +108,26 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    
+    
+    public void onClickOptionButton(View v) {
+        int id = v.getId();
+        Intent intent = new Intent(this, OptionsListActivity.class);
+        Bundle b = new Bundle();
+        switch (id){
+            default:
+                b.putInt("option", 0);
+                break;
+            case R.id.editWork:
+                b.putInt("option", 1);
+                break;
+            case R.id.editAgenda:
+                b.putInt("option", 2);
+                break;
+        }
+        intent.putExtras(b);
+        startActivity(intent);
+        //finish();
     }
 }
