@@ -20,4 +20,10 @@
     <string name="calendar_title">Calendar</string>
     <string name="settings_title">Settings</string>
 
+
+    <string name="name">Name</string>
+    <string name="logo">Logo</string>
+    <string name="color">Color</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
 </resources>

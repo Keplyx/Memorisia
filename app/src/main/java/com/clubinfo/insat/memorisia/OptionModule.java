@@ -1,19 +1,20 @@
 package com.clubinfo.insat.memorisia;
 
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.Image;
 
 public class OptionModule {
     private int id;
+    private int type;
     private String name;
     private int logo;
     private int optionColor;
     private boolean notificationsEnabled;
     
-    public OptionModule(int id, String name, int logo, int optionColor, boolean notificationsEnabled) {
+    
+    public OptionModule(int id, int type, String name, int logo, int optionColor, boolean notificationsEnabled) {
         this.id = id;
+        this.type = type;
+        
         this.name = name;
         this.logo = logo;
         this.optionColor = optionColor;
@@ -26,6 +27,14 @@ public class OptionModule {
     
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public int getType() {
+        return type;
+    }
+    
+    public void setType(int type) {
+        this.type = type;
     }
     
     public String getName() {

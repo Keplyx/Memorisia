@@ -4,11 +4,13 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class OptionsListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    
+    int option;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +31,7 @@ public class OptionsListActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         mAdapter = null;
         if (b != null){
-            int option = b.getInt("option");
+            option = b.getInt("option");
             switch (option){
                 case 0:
                     mAdapter = createSubjectsListAdapter();
@@ -47,6 +49,7 @@ public class OptionsListActivity extends AppCompatActivity {
         }
         if (mAdapter != null){
             recyclerView = (RecyclerView) findViewById(R.id.subjectsRecyclerView);
+            recyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(mAdapter);
@@ -58,10 +61,10 @@ public class OptionsListActivity extends AppCompatActivity {
         int logo = R.drawable.ic_subject_black_24dp;
     
         for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, "Subject " + i, logo, 0x000000, false);
+            OptionModule m = new OptionModule(i, option, "Subject " + i, logo, Color.parseColor("#ffebee"), false);
             modules.add(m);
         }
-        return new OptionsRecyclerAdapter(modules);
+        return new OptionsRecyclerAdapter(modules, this);
     }
     
     private OptionsRecyclerAdapter createWorkTypesListAdapter(){
@@ -69,10 +72,10 @@ public class OptionsListActivity extends AppCompatActivity {
         int logo = R.drawable.ic_work_black_24dp;
         
         for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, "Work Type " + i, logo, 0x000000, false);
+            OptionModule m = new OptionModule(i, option, "Work Type " + i, logo, Color.parseColor("#5c6bc0"), false);
             modules.add(m);
         }
-        return new OptionsRecyclerAdapter(modules);
+        return new OptionsRecyclerAdapter(modules, this);
     }
     
     private OptionsRecyclerAdapter createAgendasListAdapter(){
@@ -80,10 +83,34 @@ public class OptionsListActivity extends AppCompatActivity {
         int logo = R.drawable.ic_date_range_black_24dp;
         
         for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, "Work Type " + i, logo, 0x000000, false);
+            OptionModule m = new OptionModule(i, option, "Agenda  " + i, logo, Color.parseColor("#ffc107"), false);
             modules.add(m);
         }
-        return new OptionsRecyclerAdapter(modules);
+        return new OptionsRecyclerAdapter(modules, this);
+    }
+    
+    
+    public static void editSelected(OptionModule module){
+
+    }
+    
+    public void onClickItem(View v) {
+        int id = v.getId();
+        Intent intent = new Intent(this, EditOptionsActivity.class);
+        Bundle b = new Bundle();
+        switch (id){
+            default:
+                b.putInt("option", 0);
+                break;
+            case R.id.editWork:
+                b.putInt("option", 1);
+                break;
+            case R.id.editAgenda:
+                b.putInt("option", 2);
+                break;
+        }
+        intent.putExtras(b);
+        startActivity(intent);
     }
     
     @Override

@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".OptionsListActivity">
         </activity>
+        <activity android:name=".EditOptionsActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -42,7 +42,7 @@
         android:textAppearance="@android:style/TextAppearance.Material.Menu"/>
 
     <ImageButton
-        android:id="@+id/optionDelete"
+        android:id="@+id/editWork"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_alignParentEnd="true"
@@ -51,7 +51,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/colorRed"
-        app:srcCompat="@drawable/ic_delete_forever_black_24dp"/>
+        android:onClick="onClickItem"
+        android:tint="@color/iconTint"
+        app:srcCompat="@drawable/ic_edit_black_24dp"/>
 
 </RelativeLayout>
