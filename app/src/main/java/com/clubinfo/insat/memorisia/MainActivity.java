@@ -2,9 +2,13 @@ package com.clubinfo.insat.memorisia;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -23,7 +27,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
-    
+    MenuItem editButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        editButton = menu.findItem(R.id.action_edit);
+        editButton.setVisible(false);
+        Drawable icon = editButton.getIcon();
+        icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
+        editButton.setIcon(icon);
         return true;
     }
     
@@ -69,14 +78,18 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_edit:
+                Intent intent = new Intent(this, OptionsListActivity.class);
+                Bundle b = new Bundle();
+                b.putInt("option", 0);
+                intent.putExtras(b);
+                startActivity(intent);
+                break;
         }
-        
         return super.onOptionsItemSelected(item);
     }
+    
     
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -84,16 +97,20 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = new HomeFragment();
+        editButton.setVisible(false);
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
         } else if (id == R.id.nav_subjects) {
             fragment = new SubjectsFragment();
+            editButton.setVisible(true);
         } else if (id == R.id.nav_calendar) {
             fragment = new CalendarFragment();
         } else if (id == R.id.nav_settings) {
             fragment = new SettingsFragment();
+            
         }
     
+        
         getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
     
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

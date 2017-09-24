@@ -30,6 +30,8 @@ public class EditOptionsActivity extends AppCompatActivity {
             notifications.setChecked(b.getBoolean("notifications"));
         }
         
+        
+        setTitle(b.getString("name"));
     }
     
     @Override

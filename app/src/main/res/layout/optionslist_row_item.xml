@@ -35,22 +35,19 @@
         android:layout_alignTop="@+id/optionLogo"
         android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/optionLogo"
-        android:layout_toLeftOf="@+id/button"
         android:layout_toRightOf="@+id/optionLogo"
         android:gravity="center_vertical"
         android:text="Title"
         android:textAppearance="@android:style/TextAppearance.Material.Menu"/>
 
-    <ImageButton
-        android:id="@+id/editWork"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
+        android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
         android:onClick="onClickItem"
         android:tint="@color/iconTint"
         app:srcCompat="@drawable/ic_edit_black_24dp"/>
