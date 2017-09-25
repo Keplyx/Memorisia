@@ -136,9 +136,11 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         }
-    
         
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+    
+        ft.replace(R.id.content_frame, fragment).commit();
     
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
