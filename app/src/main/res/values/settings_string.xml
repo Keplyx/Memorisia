@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="edit_subjects">Edit Subjects</string>
+    <string name="edit_work">Edit Work Types</string>
+    <string name="edit_agendas">Edit Agendas</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="night_mode_desc">Makes the app darker</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_desc">Choose whether to get reminders with notifications</string>
+
+    <string name="prefs_personalise">Personalize App</string>
+    <string name="prefs_general">General</string>
+</resources>

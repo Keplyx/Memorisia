@@ -4,11 +4,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.BoolRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -32,15 +34,17 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
     MenuItem editButton;
-    
+    private boolean isNightMode;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
-        SharedPreferences mPrefs = getSharedPreferences("general_pref", Context.MODE_PRIVATE);
-        if (mPrefs.getBoolean("night_mode", false))
-            setTheme(R.style.AppTheme_Dark_NoActionBar);
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
+        isNightMode = nightMode;
+        if(nightMode)
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+        
         setContentView(R.layout.activity_main);
         
         if (savedInstanceState == null)
@@ -58,6 +62,19 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
+        if (nightMode != isNightMode){
+            Intent intent = getIntent();
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Prevent loops in back button
+            finish();
+            startActivity(intent);
+        }
     }
     
     @Override
@@ -116,7 +133,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_calendar) {
             fragment = new CalendarFragment();
         } else if (id == R.id.nav_settings) {
-            fragment = new SettingsFragment();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
         }
     
         

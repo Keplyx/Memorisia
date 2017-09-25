@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
@@ -26,34 +27,32 @@ public class OptionsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences mPrefs = getSharedPreferences("general_pref", Context.MODE_PRIVATE);
-        if (mPrefs.getBoolean("night_mode", false))
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
+        if(nightMode)
             setTheme(R.style.AppTheme_Dark);
         setContentView(R.layout.recyclerview_layout);
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    
         
         
-        Bundle b = getIntent().getExtras();
+        option = Integer.parseInt(getIntent().getData().toString());
         mAdapter = null;
-        if (b != null){
-            option = b.getInt("option");
-            switch (option){
-                case 0:
-                    mAdapter = createSubjectsListAdapter();
-                    setTitle(R.string.edit_subjects);
-                    break;
-                case 1:
-                    mAdapter = createWorkTypesListAdapter();
-                    setTitle(R.string.edit_work);
-                    break;
-                case 2:
-                    mAdapter = createAgendasListAdapter();
-                    setTitle(R.string.edit_agendas);
-                    break;
-            }
+        switch (option){
+            case 0:
+                mAdapter = createSubjectsListAdapter();
+                setTitle(R.string.edit_subjects);
+                break;
+            case 1:
+                mAdapter = createWorkTypesListAdapter();
+                setTitle(R.string.edit_work);
+                break;
+            case 2:
+                mAdapter = createAgendasListAdapter();
+                setTitle(R.string.edit_agendas);
+                break;
         }
+        
         if (mAdapter != null){
             recyclerView = (RecyclerView) findViewById(R.id.subjectsRecyclerView);
             recyclerView.setHasFixedSize(true);
