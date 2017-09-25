@@ -1,6 +1,7 @@
 package com.clubinfo.insat.memorisia;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,11 +26,12 @@ public class SubjectsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
-        final List<String> input = new ArrayList<>();
+        final List<OptionModule> modules = new ArrayList<>();
         for (int i = 0; i < 10; i++){
-            input.add("Test " + (i + 1));
+            OptionModule m = new OptionModule(i, 0, "Subject " + i, R.drawable.ic_subject_black_24dp, Color.parseColor("#E2261B"), false);
+            modules.add(m);
         }
-        mAdapter = new SubjectsRecyclerAdapter(input);
+        mAdapter = new SubjectsRecyclerAdapter(modules);
         recyclerView.setAdapter(mAdapter);
     
         return view;

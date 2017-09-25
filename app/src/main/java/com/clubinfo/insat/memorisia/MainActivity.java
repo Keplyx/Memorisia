@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.BoolRes;
@@ -108,9 +109,7 @@ public class MainActivity extends AppCompatActivity
         switch (id){
             case R.id.action_edit:
                 Intent intent = new Intent(this, OptionsListActivity.class);
-                Bundle b = new Bundle();
-                b.putInt("option", 0);
-                intent.putExtras(b);
+                intent.setData(Uri.parse("0"));
                 startActivity(intent);
                 break;
         }

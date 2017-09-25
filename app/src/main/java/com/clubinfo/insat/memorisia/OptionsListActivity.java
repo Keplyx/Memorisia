@@ -67,7 +67,7 @@ public class OptionsListActivity extends AppCompatActivity {
         int logo = R.drawable.ic_subject_black_24dp;
     
         for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, option, "Subject " + i, logo, Color.parseColor("#ffebee"), false);
+            OptionModule m = new OptionModule(i, option, "Subject " + i, logo, Color.parseColor("#E2261B"), false);
             modules.add(m);
         }
         return new OptionsRecyclerAdapter(modules, this);

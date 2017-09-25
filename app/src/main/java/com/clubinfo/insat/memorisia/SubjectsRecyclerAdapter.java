@@ -11,8 +11,8 @@ import java.util.List;
 
 
 public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecyclerAdapter.ViewHolder> {
-
-    private List<String> values;
+    
+    private List<OptionModule> modules;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView textHeader;
@@ -29,18 +29,18 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         }
     }
 
-    public void add(int pos, String item){
-        values.add(pos, item);
+    public void add(int pos, OptionModule item){
+        modules.add(pos, item);
         notifyItemInserted(pos);
     }
 
     public void remove(int pos){
-        values.remove(pos);
+        modules.remove(pos);
         notifyItemRemoved(pos);
     }
 
-    public SubjectsRecyclerAdapter(List<String> myDataset){
-        values = myDataset;
+    public SubjectsRecyclerAdapter(List<OptionModule> modules){
+        this.modules = modules;
     }
 
     @Override
@@ -53,14 +53,17 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
 
     @Override
     public void onBindViewHolder (ViewHolder holder, final int pos){
-        final String name = values.get(pos);
+        final String name = modules.get(pos).getName();
+        final int logo = modules.get(pos).getLogo();
+        final int color = modules.get(pos).getOptionColor();
         holder.textHeader.setText(name);
         holder.textFooter.setText("Footer: " + name);
-        holder.logo.setImageResource(R.drawable.icons8_computer_96);
+        holder.logo.setImageResource(logo);
+        holder.logo.setColorFilter(color);
     }
 
     @Override
     public int getItemCount(){
-        return values.size();
+        return modules.size();
     }
 }

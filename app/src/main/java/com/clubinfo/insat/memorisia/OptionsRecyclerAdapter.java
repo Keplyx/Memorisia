@@ -23,7 +23,6 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
     
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView text;
-        public TextView rowColor;
         public ImageView logo;
         public ImageButton editButton;
         public View layout;
@@ -32,7 +31,6 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
             super(v);
             layout = v;
             text = v.findViewById(R.id.optionTitle);
-            rowColor = v.findViewById(R.id.optionColor);
             logo = v.findViewById(R.id.optionLogo);
             editButton = v.findViewById(R.id.editWork);
         }
@@ -85,7 +83,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
         
         holder.text.setText(name);
         holder.logo.setImageResource(logo);
-        holder.rowColor.setBackgroundColor(color);
+        holder.logo.setColorFilter(color);
     }
 
     
