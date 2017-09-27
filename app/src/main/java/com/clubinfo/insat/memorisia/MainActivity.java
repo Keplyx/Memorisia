@@ -146,25 +146,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    
-    
-    public void onClickOptionButton(View v) {
-        int id = v.getId();
-        Intent intent = new Intent(this, OptionsListActivity.class);
-        Bundle b = new Bundle();
-        switch (id){
-            default:
-                b.putInt("option", 0);
-                break;
-            case R.id.editWork:
-                b.putInt("option", 1);
-                break;
-            case R.id.editAgenda:
-                b.putInt("option", 2);
-                break;
-        }
-        intent.putExtras(b);
-        startActivity(intent);
-        //finish();
-    }
+
 }

@@ -21,4 +21,11 @@
     <string name="color">Color</string>
     <string name="done">Done</string>
     <string name="delete">Delete</string>
+
+    <string name="action_add">Add</string>7
+
+    <string name="editing">Editing</string>
+    <string name="create_subject">Create New Subject</string>
+    <string name="create_work">Create New Work Type</string>
+    <string name="create_agenda">Create New Agenda</string>
 </resources>
