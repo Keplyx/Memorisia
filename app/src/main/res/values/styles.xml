@@ -40,7 +40,7 @@
         <item name="android:textColorHint">@color/textColorInverse</item>
         <item name="android:textColorHintInverse">@color/textColorInverse</item>
         <item name="android:searchButtonText">@color/textColorInverse</item>
-
+        <item name="android:listDivider">@color/dividerColorInverse</item>
     </style>
 
     <style name="AppTheme.Dark.NoActionBar">

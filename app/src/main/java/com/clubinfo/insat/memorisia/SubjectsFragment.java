@@ -3,6 +3,7 @@ package com.clubinfo.insat.memorisia;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ public class SubjectsFragment extends Fragment {
         
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(mLayoutManager);
         final List<OptionModule> modules = new ArrayList<>();
         for (int i = 0; i < 10; i++){

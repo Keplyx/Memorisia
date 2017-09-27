@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -55,6 +56,8 @@ public class OptionsListActivity extends AppCompatActivity {
             recyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
+            recyclerView.addItemDecoration(dividerItemDecoration);
             recyclerView.setAdapter(mAdapter);
         }
     }
