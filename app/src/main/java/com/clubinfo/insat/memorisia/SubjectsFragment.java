@@ -31,7 +31,7 @@ public class SubjectsFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         final List<OptionModule> modules = new ArrayList<>();
         for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, 0, "Subject " + i, R.drawable.ic_subject_black_24dp, Color.parseColor("#E2261B"), false);
+            OptionModule m = new OptionModule(i, 0, "Subject " + i, R.drawable.ic_subject_black_24dp, "#E2261B", false);
             modules.add(m);
         }
         mAdapter = new SubjectsRecyclerAdapter(modules);

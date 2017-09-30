@@ -1,5 +1,6 @@
 package com.clubinfo.insat.memorisia;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,11 +56,11 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
     public void onBindViewHolder (ViewHolder holder, final int pos){
         final String name = modules.get(pos).getName();
         final int logo = modules.get(pos).getLogo();
-        final int color = modules.get(pos).getOptionColor();
+        final String color = modules.get(pos).getColor();
         holder.textHeader.setText(name);
         holder.textFooter.setText("Footer: " + name);
         holder.logo.setImageResource(logo);
-        holder.logo.setColorFilter(color);
+        holder.logo.setColorFilter(Color.parseColor(color));
     }
 
     @Override

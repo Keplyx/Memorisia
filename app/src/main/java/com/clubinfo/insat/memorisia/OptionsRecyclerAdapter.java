@@ -2,6 +2,7 @@ package com.clubinfo.insat.memorisia;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.solver.SolverVariable;
 import android.support.v7.widget.RecyclerView;
@@ -63,7 +64,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
     public void onBindViewHolder (ViewHolder holder, final int pos){
         final String name = modules.get(pos).getName();
         final int logo = modules.get(pos).getLogo();
-        final int color = modules.get(pos).getOptionColor();
+        final String color = modules.get(pos).getColor();
         final int type = modules.get(pos).getType();
         final boolean notifications = modules.get(pos).isNotificationsEnabled();
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +74,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
                 Bundle b = new Bundle();
                 b.putString("name", name);
                 b.putInt("logo", logo);
-                b.putInt("color", color);
+                b.putString("color", color);
                 b.putInt("type", type);
                 b.putBoolean("notifications", notifications);
                 intent.putExtras(b);
@@ -83,7 +84,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
         
         holder.text.setText(name);
         holder.logo.setImageResource(logo);
-        holder.logo.setColorFilter(color);
+        holder.logo.setColorFilter(Color.parseColor(color));
     }
 
     

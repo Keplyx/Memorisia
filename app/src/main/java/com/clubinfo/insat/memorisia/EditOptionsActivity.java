@@ -1,17 +1,26 @@
 package com.clubinfo.insat.memorisia;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 public class EditOptionsActivity extends AppCompatActivity {
+    
+    private TextView TextView;
+    private ImageButton logoImageButton;
+    private Button colorButton;
+    private Switch notificationsSwitch;
     
     private int type;
     
@@ -26,19 +35,19 @@ public class EditOptionsActivity extends AppCompatActivity {
     
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     
-        TextView name = (TextView) findViewById(R.id.moduleName);
-        ImageButton logo = (ImageButton) findViewById(R.id.moduleLogo);
-        Button color = (Button) findViewById(R.id.moduleColor);
-        Switch notifications = (Switch) findViewById(R.id.moduleNotifications);
+        TextView = (TextView) findViewById(R.id.moduleName);
+        logoImageButton = (ImageButton) findViewById(R.id.moduleLogo);
+        colorButton = (Button) findViewById(R.id.moduleColor);
+        notificationsSwitch = (Switch) findViewById(R.id.moduleNotifications);
         
         Bundle b = getIntent().getExtras();
-        // if has a name, we are editing, else we are creating a new option
+        // if has a TextView, we are editing, else we are creating a new option
         if (b != null && b.getString("name") != null){
-            name.setText(b.getString("name"));
-            logo.setImageResource(b.getInt("logo"));
-            color.setBackgroundColor(b.getInt("color"));
+            TextView.setText(b.getString("name"));
+            logoImageButton.setImageResource(b.getInt("logo"));
+            colorButton.setBackgroundColor(Color.parseColor(b.getString("color")));
             type = b.getInt("type");
-            notifications.setChecked(b.getBoolean("notifications"));
+            notificationsSwitch.setChecked(b.getBoolean("notifications"));
             setTitle(getResources().getString(R.string.editing) + " " + b.getString("name"));
         }
         else if (b != null)
@@ -55,8 +64,8 @@ public class EditOptionsActivity extends AppCompatActivity {
                     setTitle(R.string.create_agenda);
                     break;
             }
-            name.setText(R.string.name);
-            color.setBackgroundColor(Color.parseColor("#ffffff"));
+            TextView.setText(R.string.name);
+            colorButton.setBackgroundColor(Color.parseColor("#ffffff"));
         }
     }
     
@@ -69,4 +78,19 @@ public class EditOptionsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    public void onClickDone (View v){
+        // store icon and color on change in variable
+        OptionModule module = new OptionModule(-1, type, TextView.getText().toString(),
+                R.drawable.ic_subject_black_24dp, "#c5c5c5", notificationsSwitch.isChecked());
+        
+        SaveManager saver = new SaveManager(this);
+        saver.saveOptionModule(module);
+        Intent intent = new Intent(this, OptionsListActivity.class);
+        intent.setData(Uri.parse(type + ""));
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+    
 }

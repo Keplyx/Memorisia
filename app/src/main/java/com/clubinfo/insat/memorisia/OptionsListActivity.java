@@ -35,18 +35,15 @@ public class OptionsListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         type = Integer.parseInt(getIntent().getData().toString());
-        mAdapter = null;
+        mAdapter = createModulesListAdapter(type);
         switch (type){
             case 0:
-                mAdapter = createSubjectsListAdapter();
                 setTitle(R.string.edit_subjects);
                 break;
             case 1:
-                mAdapter = createWorkTypesListAdapter();
                 setTitle(R.string.edit_work);
                 break;
             case 2:
-                mAdapter = createAgendasListAdapter();
                 setTitle(R.string.edit_agendas);
                 break;
         }
@@ -62,39 +59,11 @@ public class OptionsListActivity extends AppCompatActivity {
         }
     }
     
-    private OptionsRecyclerAdapter createSubjectsListAdapter(){
-        final List<OptionModule> modules = new ArrayList<>();
-        int logo = R.drawable.ic_subject_black_24dp;
     
-        for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, type, "Subject " + i, logo, Color.parseColor("#E2261B"), false);
-            modules.add(m);
-        }
+    private OptionsRecyclerAdapter createModulesListAdapter(int type){
+        final List<OptionModule> modules = new SaveManager(this).getModuleList(type);
         return new OptionsRecyclerAdapter(modules, this);
     }
-    
-    private OptionsRecyclerAdapter createWorkTypesListAdapter(){
-        final List<OptionModule> modules = new ArrayList<>();
-        int logo = R.drawable.ic_work_black_24dp;
-        
-        for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, type, "Work Type " + i, logo, Color.parseColor("#5c6bc0"), false);
-            modules.add(m);
-        }
-        return new OptionsRecyclerAdapter(modules, this);
-    }
-    
-    private OptionsRecyclerAdapter createAgendasListAdapter(){
-        final List<OptionModule> modules = new ArrayList<>();
-        int logo = R.drawable.ic_date_range_black_24dp;
-        
-        for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, type, "Agenda  " + i, logo, Color.parseColor("#ffc107"), false);
-            modules.add(m);
-        }
-        return new OptionsRecyclerAdapter(modules, this);
-    }
-    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

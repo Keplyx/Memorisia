@@ -7,17 +7,17 @@ public class OptionModule {
     private int type;
     private String name;
     private int logo;
-    private int optionColor;
+    private String color;
     private boolean notificationsEnabled;
     
     
-    public OptionModule(int id, int type, String name, int logo, int optionColor, boolean notificationsEnabled) {
+    public OptionModule(int id, int type, String name, int logo, String color, boolean notificationsEnabled) {
         this.id = id;
         this.type = type;
         
         this.name = name;
         this.logo = logo;
-        this.optionColor = optionColor;
+        this.color = color;
         this.notificationsEnabled = notificationsEnabled;
     }
     
@@ -53,12 +53,12 @@ public class OptionModule {
         this.logo = logo;
     }
     
-    public int getOptionColor() {
-        return optionColor;
+    public String getColor() {
+        return color;
     }
     
-    public void setOptionColor(int optionColor) {
-        this.optionColor = optionColor;
+    public void setColor(String color) {
+        this.color = color;
     }
     
     public boolean isNotificationsEnabled() {
