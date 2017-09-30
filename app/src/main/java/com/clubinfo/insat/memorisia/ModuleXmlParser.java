@@ -27,7 +27,7 @@ public class ModuleXmlParser {
     }
     
     private List <OptionModule> getModulesOfType(List<OptionModule> list, int type){
-        if (type < 0)
+        if (type < 0 || list.size() == 0)
             return list;
         List<OptionModule> modules = new ArrayList<>();
         for (OptionModule m:list){

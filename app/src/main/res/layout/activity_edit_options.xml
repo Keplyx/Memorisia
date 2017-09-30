@@ -66,6 +66,7 @@
         android:layout_margin="8dp"
         android:backgroundTint="@color/colorNo"
         android:drawableRight="@drawable/ic_delete_forever_black_24dp"
+        android:onClick="onClickDelete"
         android:text="@string/delete"/>
 
     <TextView

@@ -10,4 +10,7 @@
 
     <string name="prefs_personalise">Personalize App</string>
     <string name="prefs_general">General</string>
+
+    <string name="confirm_delete">Are you sure you want to delete this entry?</string>
+    <string name="cannot_delete">You cannot delete the only entry!</string>
 </resources>

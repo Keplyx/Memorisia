@@ -25,7 +25,6 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView text;
         public ImageView logo;
-        public ImageButton editButton;
         public View layout;
 
         public ViewHolder(View v){
@@ -33,7 +32,6 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
             layout = v;
             text = v.findViewById(R.id.optionTitle);
             logo = v.findViewById(R.id.optionLogo);
-            editButton = v.findViewById(R.id.editWork);
         }
     }
 
@@ -66,6 +64,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
         final int logo = modules.get(pos).getLogo();
         final String color = modules.get(pos).getColor();
         final int type = modules.get(pos).getType();
+        final int id = modules.get(pos).getId();
         final boolean notifications = modules.get(pos).isNotificationsEnabled();
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +75,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
                 b.putInt("logo", logo);
                 b.putString("color", color);
                 b.putInt("type", type);
+                b.putInt("id", id);
                 b.putBoolean("notifications", notifications);
                 intent.putExtras(b);
                 context.startActivity(intent);

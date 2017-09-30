@@ -2,17 +2,12 @@ package com.clubinfo.insat.memorisia;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Xml;
-
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,32 +42,37 @@ public class SaveManager {
         return modules;
     }
     
-    
-    
-    public void saveOptionModule(OptionModule module) {
-        FileOutputStream fos;
+    public void deleteOptionModule(int id){
         List<OptionModule> moduleList = getModuleList(-1);
-        if (module.getId() == -1)
-            module.setId(createUniqueId(moduleList));
-        moduleList.add(module);
-        try {
-            fos = context.openFileOutput(modulesFilename, Context.MODE_PRIVATE);
-            XmlSerializer serializer = Xml.newSerializer();
-            serializer.setOutput(fos, "UTF-8");
-            serializer.startDocument(null, true);
-            serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-            serializer.startTag(null, "modulesList");
-            for (OptionModule m: moduleList) {
-                serializer = writeModule(serializer, m);
+        for (int i = 0; i < moduleList.size(); i++){
+            if (moduleList.get(i).getId() == id){
+                moduleList.remove(i);
+                break;
             }
-            serializer.endDocument();
-            serializer.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        writeToXml(moduleList);
     }
     
+    public void saveOptionModule(OptionModule module) {
+        List<OptionModule> moduleList = getModuleList(-1);
+        if (module.getId() == -1) {
+            module.setId(createUniqueId(moduleList));
+            moduleList.add(module);
+        } else
+            replaceExisting(moduleList, module);
+        writeToXml(moduleList);
+    }
+    
+    private List<OptionModule> replaceExisting(List<OptionModule> list, OptionModule module){
+        for (int i = 0; i < list.size(); i++){
+            if (module.getId() == list.get(i).getId()){
+                list.remove(i);
+                list.add(module);
+                break;
+            }
+        }
+        return list;
+    }
     
     private int createUniqueId(List<OptionModule> modules){
         for (int i = 0; i < modules.size(); i++) {
@@ -89,6 +89,25 @@ public class SaveManager {
         return -1;
     }
     
+    private void writeToXml(List<OptionModule> list){
+        FileOutputStream fos;
+        try {
+            fos = context.openFileOutput(modulesFilename, Context.MODE_PRIVATE);
+            XmlSerializer serializer = Xml.newSerializer();
+            serializer.setOutput(fos, "UTF-8");
+            serializer.startDocument(null, true);
+            serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+            serializer.startTag(null, "modulesList");
+            for (OptionModule m: list) {
+                serializer = writeModule(serializer, m);
+            }
+            serializer.endDocument();
+            serializer.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
     private XmlSerializer writeModule(XmlSerializer serializer, OptionModule module){
         try {

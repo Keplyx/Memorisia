@@ -28,4 +28,7 @@
     <string name="create_subject">Create New Subject</string>
     <string name="create_work">Create New Work Type</string>
     <string name="create_agenda">Create New Agenda</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
