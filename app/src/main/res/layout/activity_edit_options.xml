@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.clubinfo.insat.memorisia.EditOptionsActivity">
+    tools:context="com.clubinfo.insat.memorisia.EditOptionsActivity"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <EditText
         android:id="@+id/moduleName"
@@ -18,7 +20,6 @@
         android:layout_toEndOf="@+id/textView4"
         android:layout_toRightOf="@+id/textView4"
         android:ems="10"
-        android:focusedByDefault="false"
         android:inputType="textPersonName"
         android:text="Name"
         android:textAlignment="center"/>
