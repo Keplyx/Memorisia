@@ -63,7 +63,7 @@ public class ModuleXmlParser {
         //int[] attributes = new int[] {0, 0};
         String name = null;
         String color = null;
-        int logo = 0;
+        String logo = null;
         boolean notifications = false;
         
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -112,11 +112,11 @@ public class ModuleXmlParser {
         return color;
     }
     
-    private int readLogo(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String readLogo(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "logo");
         String logo = readText(parser);
         parser.require(XmlPullParser.END_TAG, null, "logo");
-        return Integer.parseInt(logo);
+        return logo;
     }
     
     private boolean readNotifications(XmlPullParser parser) throws IOException, XmlPullParserException {

@@ -61,7 +61,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
     @Override
     public void onBindViewHolder (ViewHolder holder, final int pos){
         final String name = modules.get(pos).getName();
-        final int logo = modules.get(pos).getLogo();
+        final String logo = modules.get(pos).getLogo();
         final String color = modules.get(pos).getColor();
         final int type = modules.get(pos).getType();
         final int id = modules.get(pos).getId();
@@ -72,7 +72,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
                 Intent intent = new Intent(context, EditOptionsActivity.class);
                 Bundle b = new Bundle();
                 b.putString("name", name);
-                b.putInt("logo", logo);
+                b.putString("logo", logo);
                 b.putString("color", color);
                 b.putInt("type", type);
                 b.putInt("id", id);
@@ -83,7 +83,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
         });
         
         holder.text.setText(name);
-        holder.logo.setImageResource(logo);
+        holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
         holder.logo.setColorFilter(Color.parseColor(color));
     }
 

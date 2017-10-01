@@ -121,7 +121,7 @@ public class SaveManager {
             serializer.text(module.getColor());
             serializer.endTag(null, "color");
             serializer.startTag(null, "logo");
-            serializer.text(Integer.toString(module.getLogo()));
+            serializer.text(module.getLogo());
             serializer.endTag(null, "logo");
             serializer.startTag(null, "notifications");
             serializer.text(Boolean.toString(module.isNotificationsEnabled()));

@@ -6,12 +6,12 @@ public class OptionModule {
     private int id;
     private int type;
     private String name;
-    private int logo;
+    private String logo;
     private String color;
     private boolean notificationsEnabled;
     
     
-    public OptionModule(int id, int type, String name, int logo, String color, boolean notificationsEnabled) {
+    public OptionModule(int id, int type, String name, String logo, String color, boolean notificationsEnabled) {
         this.id = id;
         this.type = type;
         
@@ -45,11 +45,11 @@ public class OptionModule {
         this.name = name;
     }
     
-    public int getLogo() {
+    public String getLogo() {
         return logo;
     }
     
-    public void setLogo(int logo) {
+    public void setLogo(String logo) {
         this.logo = logo;
     }
     

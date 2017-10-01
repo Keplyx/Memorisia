@@ -1,5 +1,6 @@
 package com.clubinfo.insat.memorisia;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +15,8 @@ import java.util.List;
 public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecyclerAdapter.ViewHolder> {
     
     private List<OptionModule> modules;
-
+    private Context context;
+    
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView textHeader;
         public TextView textFooter;
@@ -40,7 +42,8 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         notifyItemRemoved(pos);
     }
 
-    public SubjectsRecyclerAdapter(List<OptionModule> modules){
+    public SubjectsRecyclerAdapter(Context context, List<OptionModule> modules){
+        this.context = context;
         this.modules = modules;
     }
 
@@ -55,11 +58,11 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
     @Override
     public void onBindViewHolder (ViewHolder holder, final int pos){
         final String name = modules.get(pos).getName();
-        final int logo = modules.get(pos).getLogo();
+        final String logo = modules.get(pos).getLogo();
         final String color = modules.get(pos).getColor();
         holder.textHeader.setText(name);
         holder.textFooter.setText("Footer: " + name);
-        holder.logo.setImageResource(logo);
+        holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
         holder.logo.setColorFilter(Color.parseColor(color));
     }
 

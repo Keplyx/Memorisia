@@ -17,8 +17,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/optionColor"
-        android:layout_toRightOf="@+id/optionColor"
-        app:srcCompat="@drawable/icons8_computer_96"/>
+        android:layout_toRightOf="@+id/optionColor" />
 
     <TextView
         android:id="@+id/optionTitle"

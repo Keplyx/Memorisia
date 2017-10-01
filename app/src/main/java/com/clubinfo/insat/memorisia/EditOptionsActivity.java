@@ -1,9 +1,13 @@
 package com.clubinfo.insat.memorisia;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -14,20 +18,35 @@ import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 public class EditOptionsActivity extends AppCompatActivity {
     
+    private Context context;
+    
     private TextView TextView;
-    private ImageButton logoImageButton;
+    private GridView logosGridView;
     private Button colorButton;
     private Switch notificationsSwitch;
     private Button deleteButton;
     
     private int type;
     private int id;
+    private String color;
+    private static String logo;
+    
+    private List<String> logosList = new ArrayList<>();
+    private final String logosPath = "logos/";
+    
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +58,9 @@ public class EditOptionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_options);
     
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
+        generateLogosList();
         TextView = (TextView) findViewById(R.id.moduleName);
-        logoImageButton = (ImageButton) findViewById(R.id.moduleLogo);
+        logosGridView = (GridView) findViewById(R.id.logosContainer);
         colorButton = (Button) findViewById(R.id.moduleColor);
         notificationsSwitch = (Switch) findViewById(R.id.moduleNotifications);
         deleteButton = (Button) findViewById(R.id.deleteModule);
@@ -50,11 +69,14 @@ public class EditOptionsActivity extends AppCompatActivity {
         if (b != null && b.getString("name") != null){
             id = b.getInt("id");
             TextView.setText(b.getString("name"));
-            logoImageButton.setImageResource(b.getInt("logo"));
-            colorButton.setBackgroundColor(Color.parseColor(b.getString("color")));
+            logo = b.getString("logo");
+            color = b.getString("color");
+            colorButton.setBackgroundColor(Color.parseColor(color));
             type = b.getInt("type");
             notificationsSwitch.setChecked(b.getBoolean("notifications"));
             setTitle(getResources().getString(R.string.editing) + " " + b.getString("name"));
+            if (logosList.size() > 0)
+                logosGridView.setAdapter(new LogosListAdapter(this, logosList, logo, color));
         }
         else if (b != null)
         {
@@ -72,11 +94,30 @@ public class EditOptionsActivity extends AppCompatActivity {
                     break;
             }
             TextView.setText(R.string.name);
-            colorButton.setBackgroundColor(Color.parseColor("#ffffff"));
+            color = "#cccccc";
+            colorButton.setBackgroundColor(Color.parseColor(color));
             deleteButton.setVisibility(Button.INVISIBLE);
             deleteButton.setEnabled(false);
-            
+            if (logosList.size() > 0)
+                logosGridView.setAdapter(new LogosListAdapter(this, logosList, logosList.get(0), color));
         }
+        context = this;
+    }
+    
+    private void generateLogosList(){
+        String[] list = new String[0];
+        try {
+            list = getAssets().list("logos");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < list.length; i++){
+            logosList.add(logosPath + list[i]);
+        }
+    }
+    
+    public static void setSelectedLogo(String l){
+        logo = l;
     }
     
     @Override
@@ -89,10 +130,29 @@ public class EditOptionsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     
+    public void onClickColorPicker(View v){
+        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.parseColor(color), new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int intColor) {
+                colorButton.setBackgroundColor(intColor);
+                color = String.format("#%06X", (0xFFFFFF & intColor));
+                if (logosList.size() > 0)
+                    logosGridView.setAdapter(new LogosListAdapter(context, logosList, logo, color));
+            }
+            
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+                // cancel was selected by the user
+            }
+            
+        });
+        dialog.show();
+    }
+    
     public void onClickDone (View v){
         // store icon and color on change in variable
         OptionModule module = new OptionModule(id, type, TextView.getText().toString(),
-                R.drawable.ic_subject_black_24dp, "#c5c5c5", notificationsSwitch.isChecked());
+                logo, color, notificationsSwitch.isChecked());
         
         SaveManager saver = new SaveManager(this);
         saver.saveOptionModule(module);
