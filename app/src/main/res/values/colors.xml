@@ -10,6 +10,7 @@
     <color name="colorYes">#35d93d</color>
     <color name="backgroundDark">#2A2A2A</color>
     <color name="textColorInverse">#dbdbdb</color>
+    <color name="textColorInverseDarker">#a0a0a0</color>
     <color name="dividerColorInverse">#a0a5a0</color>
     <color name="buttonColor">#d3c9c2</color>
     <color name="buttonColorDark">#858585</color>

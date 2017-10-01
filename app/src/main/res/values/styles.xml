@@ -26,8 +26,8 @@
 
         <item name="android:editTextColor">@color/textColorInverse</item>
         <item name="android:textColorPrimary">@color/textColorInverse</item>
-        <item name="android:textColorSecondary">@color/textColorInverse</item>
-        <item name="android:textColorTertiary">@color/textColorInverse</item>
+        <item name="android:textColorSecondary">@color/textColorInverseDarker</item>
+        <item name="android:textColorTertiary">@color/textColorInverseDarker</item>
         <item name="android:textColorPrimaryInverse">@color/textColorInverse</item>
         <item name="android:textColorSecondaryInverse">@color/textColorInverse</item>
         <item name="android:textColorTertiaryInverse">@color/textColorInverse</item>

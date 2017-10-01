@@ -35,6 +35,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
+    public static String PACKAGE_NAME;
+    
     MenuItem editButton;
     private boolean isNightMode;
     
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity
             setTheme(R.style.AppTheme_Dark_NoActionBar);
         
         setContentView(R.layout.activity_main);
+    
+        PACKAGE_NAME = getApplicationContext().getPackageName();
         
         if (savedInstanceState == null)
             getFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
@@ -134,6 +138,10 @@ public class MainActivity extends AppCompatActivity
             fragment = new CalendarFragment();
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.nav_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
             return true;
         }
