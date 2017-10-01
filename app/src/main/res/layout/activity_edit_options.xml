@@ -18,6 +18,7 @@
         android:layout_toEndOf="@+id/textView4"
         android:layout_toRightOf="@+id/textView4"
         android:ems="10"
+        android:focusedByDefault="false"
         android:inputType="textPersonName"
         android:text="Name"
         android:textAlignment="center"/>

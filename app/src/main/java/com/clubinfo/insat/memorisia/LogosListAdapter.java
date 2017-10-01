@@ -47,29 +47,25 @@ public class LogosListAdapter extends BaseAdapter {
     // create a new button for each item referenced by the Adapter
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ImageButton button;
-        if (convertView == null) {
-            // if it's not recycled, initialize some attributes
-            button = new ImageButton(context);
-            button.setLayoutParams(new GridView.LayoutParams(200, 200));
-            button.setImageBitmap(Utils.getBitmapFromAsset(context, logosList.get(position)));
-            button.setBackgroundColor(Color.TRANSPARENT);
-            if (logosList.get(position).equals(selected))
-                button.setColorFilter(Color.parseColor(color));
-            else
-                button.setColorFilter(Color.GRAY);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    for (int i =0; i < buttonsList.size(); i++){
-                            buttonsList.get(i).setColorFilter(Color.GRAY);
-                    }
-                    button.setColorFilter(Color.parseColor(color));
-                    EditOptionsActivity.setSelectedLogo(logosList.get(position));
+        button = new ImageButton(context);
+        button.setLayoutParams(new GridView.LayoutParams(200, 200));
+        button.setImageBitmap(Utils.getBitmapFromAsset(context, logosList.get(position)));
+        button.setBackgroundColor(Color.TRANSPARENT);
+        if (logosList.get(position).equals(selected))
+            button.setColorFilter(Color.parseColor(color));
+        else
+            button.setColorFilter(Color.GRAY);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (int i =0; i < buttonsList.size(); i++){
+                    buttonsList.get(i).setColorFilter(Color.GRAY);
                 }
-            });
-        } else {
-            button = (ImageButton) convertView;
-        }
+                button.setColorFilter(Color.parseColor(color));
+                EditOptionsActivity.setSelectedLogo(logosList.get(position));
+            }
+        });
+
         buttonsList.add(button);
         return button;
     }
