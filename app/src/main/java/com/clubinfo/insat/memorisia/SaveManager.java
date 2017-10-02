@@ -9,6 +9,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class SaveManager {
@@ -42,7 +45,18 @@ public class SaveManager {
         return modules;
     }
     
-    public void deleteOptionModule(int id){
+    public List<OptionModule> getSortedModuleList(int type){
+        List<OptionModule> modules = getModuleList(type);
+        Collections.sort(modules, new Comparator<OptionModule>() {
+            @Override
+            public int compare(OptionModule optionModule, OptionModule t1) {
+                return optionModule.getName().compareTo(t1.getName());
+            }
+        });
+        return modules;
+    }
+        
+        public void deleteOptionModule(int id){
         List<OptionModule> moduleList = getModuleList(-1);
         for (int i = 0; i < moduleList.size(); i++){
             if (moduleList.get(i).getId() == id){
