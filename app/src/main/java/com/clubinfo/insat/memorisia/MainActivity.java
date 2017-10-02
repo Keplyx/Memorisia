@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity
     
     public static String PACKAGE_NAME;
     
+    private Context context;
+    
     MenuItem editButton;
     private boolean isNightMode;
     
@@ -68,6 +70,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     
+        context = this;
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EditWorkActivity.class);
+                startActivity(intent);
+            }
+        });
+        
     }
     
     @Override

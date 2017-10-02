@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.clubinfo.insat.memorisia.EditWorkActivity">
+
+
+    <Switch
+        android:id="@+id/notificationsSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
+        android:text="@string/notifications"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="96dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/notificationsSwitch"
+        android:layout_marginLeft="8dp"
+        android:gravity="center"
+        android:text="@string/subject"/>
+
+    <Spinner
+        android:id="@+id/subjectSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_below="@+id/notificationsSwitch"
+        android:layout_marginRight="8dp"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_toRightOf="@+id/textView"
+        android:spinnerMode="dialog"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignEnd="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/work_type"/>
+
+    <Spinner
+        android:id="@+id/workTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignEnd="@+id/subjectSpinner"
+        android:layout_alignRight="@+id/subjectSpinner"
+        android:layout_below="@+id/subjectSpinner"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_toRightOf="@+id/textView"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@+id/workTypeSpinner"
+        android:layout_toStartOf="@+id/workTypeSpinner"
+        android:gravity="center"
+        android:text="@string/priority"/>
+
+    <Spinner
+        android:id="@+id/prioritySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignEnd="@+id/workTypeSpinner"
+        android:layout_alignRight="@+id/workTypeSpinner"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/textView3"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/descriptionEditText"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@+id/prioritySpinner"
+        android:layout_toStartOf="@+id/prioritySpinner"
+        android:gravity="center"
+        android:text="@string/description"/>
+
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/prioritySpinner"
+        android:layout_alignRight="@+id/prioritySpinner"
+        android:layout_below="@+id/prioritySpinner"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/textView4"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="textPersonName"/>
+
+    <TextView
+        android:id="@+id/textView28"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_below="@+id/textView4"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@+id/descriptionEditText"
+        android:layout_toStartOf="@+id/descriptionEditText"
+        android:drawableLeft="@drawable/ic_access_time_black_24dp"
+        android:drawableTint="@color/iconTint"
+        android:gravity="center"
+        android:text="@string/due_date"/>
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView28"
+        android:layout_alignEnd="@+id/descriptionEditText"
+        android:layout_alignRight="@+id/descriptionEditText"
+        android:layout_below="@+id/descriptionEditText"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/textView4"
+        android:text="@string/pick_date"/>
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorYes"
+        android:text="@string/done"/>
+</RelativeLayout>

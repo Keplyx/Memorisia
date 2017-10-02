@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subject">Subject</string>
+    <string name="work_type">Work Type</string>
+    <string name="due_date">Due Date</string>
+    <string name="pick_date">Pick Date</string>
+    <string name="priority">Priority</string>
+    <string name="description">Description</string>
+
+    <string name="add_work">Add New Work</string>
+</resources>
