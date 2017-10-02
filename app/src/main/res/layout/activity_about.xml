@@ -82,12 +82,32 @@
                 android:id="@+id/textView12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/urlTextView"
-                android:layout_centerHorizontal="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/urlTextView2"
                 android:layout_margin="16dp"
-                android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:text="@string/credits_licence"/>
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView10"
+                android:layout_alignStart="@+id/textView10"
+                android:layout_below="@+id/urlTextView"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:text="@string/credits_color_picker"/>
+
+            <TextView
+                android:id="@+id/urlTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView11"
+                android:layout_centerHorizontal="true"
+                android:autoLink="web"
+                android:text="@string/credits_color_picker_url"/>
         </RelativeLayout>
     </ScrollView>
 
