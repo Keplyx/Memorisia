@@ -3,21 +3,27 @@ package com.clubinfo.insat.memorisia;
 
 import android.content.Context;
 import android.util.Xml;
+
+import com.clubinfo.insat.memorisia.ModuleXmlParser;
+import com.clubinfo.insat.memorisia.modules.OptionModule;
+
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class SaveManager {
     
     private static final String modulesFilename = "modules.xml";
+    private static final String worksFilename = "works.xml";
     private Context context;
+    
+    public static final int SUBJECT = 0;
+    public static final int WORKTYPE = 1;
+    public static final int AGENDA = 2;
     
     public SaveManager(Context context) {
         this.context = context;
@@ -28,15 +34,6 @@ public class SaveManager {
         try {
             FileInputStream fis = context.openFileInput(modulesFilename);
             modules = new ModuleXmlParser().parse(fis, type);
-//            for (OptionModule m:modules) {
-//                Log.w("test", "--------------------------");
-//                Log.w("test", "name: " + m.getName());
-//                Log.w("test", "id: " + m.getId());
-//                Log.w("test", "type: " + m.getType());
-//                Log.w("test", "color: " + m.getColor());
-//                Log.w("test", "logo: " + m.getLogo());
-//                Log.w("test", "notifications: " + m.isNotificationsEnabled());
-//            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XmlPullParserException e) {
@@ -45,18 +42,9 @@ public class SaveManager {
         return modules;
     }
     
-    public List<OptionModule> getSortedModuleList(int type){
-        List<OptionModule> modules = getModuleList(type);
-        Collections.sort(modules, new Comparator<OptionModule>() {
-            @Override
-            public int compare(OptionModule optionModule, OptionModule t1) {
-                return optionModule.getName().compareTo(t1.getName());
-            }
-        });
-        return modules;
-    }
+    
         
-        public void deleteOptionModule(int id){
+    public void deleteOptionModule(int id){
         List<OptionModule> moduleList = getModuleList(-1);
         for (int i = 0; i < moduleList.size(); i++){
             if (moduleList.get(i).getId() == id){
@@ -67,10 +55,11 @@ public class SaveManager {
         writeToXml(moduleList);
     }
     
+    
     public void saveOptionModule(OptionModule module) {
         List<OptionModule> moduleList = getModuleList(-1);
         if (module.getId() == -1) {
-            module.setId(createUniqueId(moduleList));
+            module.setId(createUniqueModuleId(moduleList));
             moduleList.add(module);
         } else
             replaceExisting(moduleList, module);
@@ -88,11 +77,11 @@ public class SaveManager {
         return list;
     }
     
-    private int createUniqueId(List<OptionModule> modules){
-        for (int i = 0; i < modules.size(); i++) {
+    private int createUniqueModuleId(List<OptionModule> modules){
+        for (int i = 0; i < modules.size() + 1; i++) {
             boolean valid = true;
-            for (OptionModule m : modules) {
-                if (m.getId() == i) {
+            for (int k = 0; k < modules.size(); k++) {
+                if (modules.get(k).getId() == i) {
                     valid = false;
                     break;
                 }

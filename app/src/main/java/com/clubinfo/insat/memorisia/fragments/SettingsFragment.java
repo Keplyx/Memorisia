@@ -1,4 +1,4 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.clubinfo.insat.memorisia.R;
 
 
 public class SettingsFragment extends PreferenceFragment {

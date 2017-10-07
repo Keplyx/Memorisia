@@ -1,4 +1,4 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.utils;
 
 
 import android.content.Context;
@@ -12,6 +12,9 @@ import java.io.IOException;
 public class Utils {
 
     public static Bitmap getBitmapFromAsset(Context context, String filePath) {
+        if (filePath == null)
+            return null;
+        
         AssetManager assetManager = context.getAssets();
         Bitmap bitmap = null;
         try {
@@ -20,17 +23,6 @@ public class Utils {
             e.printStackTrace();
         }
         return bitmap;
-    }
-    
-    public static Drawable getDrawableFromAsset(Context context, String filePath){
-        AssetManager assetManager = context.getAssets();
-        Drawable drawable = null;
-        try {
-            drawable = Drawable.createFromStream(assetManager.open(filePath), null);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return drawable;
     }
     
 }

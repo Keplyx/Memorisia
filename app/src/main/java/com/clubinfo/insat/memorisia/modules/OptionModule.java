@@ -1,4 +1,4 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.modules;
 
 
 

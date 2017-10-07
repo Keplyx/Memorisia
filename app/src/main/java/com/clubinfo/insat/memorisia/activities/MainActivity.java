@@ -1,24 +1,16 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.activities;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.BoolRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,8 +21,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.clubinfo.insat.memorisia.fragments.CalendarFragment;
+import com.clubinfo.insat.memorisia.fragments.HomeFragment;
+import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.fragments.SubjectsFragment;
+import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
+import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,6 +39,11 @@ public class MainActivity extends AppCompatActivity
     
     MenuItem editButton;
     private boolean isNightMode;
+    
+    public static final String FRAG_HOME = "HOME";
+    public static final String FRAG_SUBJECTS = "SUBJECTS";
+    public static final String FRAG_CALENDAR = "CALENDAR";
+    public static final String FRAG_WORKS = "WORKS";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
     
+    private void checkEditButtonState(){
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        if ((subjects != null && subjects.isVisible()) || (works != null && works.isVisible())) {
+            editButton.setVisible(true);
+        }
+        else{
+            editButton.setVisible(false);
+        }
+    }
+    
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -110,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         editButton = menu.findItem(R.id.action_edit);
-        editButton.setVisible(false);
+        checkEditButtonState();
         Drawable icon = editButton.getIcon();
         icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
         editButton.setIcon(icon);
@@ -125,9 +139,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id){
             case R.id.action_edit:
-                Intent intent = new Intent(this, OptionsListActivity.class);
-                intent.setData(Uri.parse("0"));
-                startActivity(intent);
+                WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+                if (works != null && works.isVisible()) {
+                    Intent intent = new Intent(this, EditOptionsActivity.class);
+                    SaveManager saver = new SaveManager(this);
+                    OptionModule module = ModulesUtils.getModuleOfId(saver.getModuleList(SaveManager.SUBJECT), works.getSubjectId());
+                    Bundle b = new Bundle();
+                    b.putString("name", module.getName());
+                    b.putString("logo", module.getLogo());
+                    b.putString("color", module.getColor());
+                    b.putInt("type", module.getType());
+                    b.putInt("id", module.getId());
+                    b.putBoolean("notifications", module.isNotificationsEnabled());
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(this, OptionsListActivity.class);
+                    intent.setData(Uri.parse("0"));
+                    startActivity(intent);
+                }
+              
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -140,14 +171,18 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = new HomeFragment();
+        String tag = null;
         editButton.setVisible(false);
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
+            tag = FRAG_HOME;
         } else if (id == R.id.nav_subjects) {
             fragment = new SubjectsFragment();
+            tag = FRAG_SUBJECTS;
             editButton.setVisible(true);
         } else if (id == R.id.nav_calendar) {
             fragment = new CalendarFragment();
+            tag = FRAG_CALENDAR;
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -161,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
     
-        ft.replace(R.id.content_frame, fragment).commit();
+        ft.replace(R.id.content_frame, fragment, tag).commit();
     
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

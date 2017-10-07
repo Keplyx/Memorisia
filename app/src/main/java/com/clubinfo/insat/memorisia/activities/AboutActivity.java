@@ -1,12 +1,15 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.activities;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-public class EditWorkActivity extends AppCompatActivity {
+import com.clubinfo.insat.memorisia.R;
+
+public class AboutActivity extends AppCompatActivity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,10 +18,13 @@ public class EditWorkActivity extends AppCompatActivity {
         Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
         if(nightMode)
             setTheme(R.style.AppTheme_Dark);
+        setContentView(R.layout.activity_about);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
-        setContentView(R.layout.activity_edit_work);
-        setTitle(getResources().getString(R.string.add_work));
+        try {
+            setTitle(getResources().getString(R.string.app_name) + " " + getPackageManager().getPackageInfo(MainActivity.PACKAGE_NAME, PackageManager.GET_META_DATA).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     
     @Override

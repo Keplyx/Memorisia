@@ -1,18 +1,20 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.constraint.solver.SolverVariable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.clubinfo.insat.memorisia.activities.EditOptionsActivity;
+import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.util.List;
 
@@ -30,8 +32,8 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
         public ViewHolder(View v){
             super(v);
             layout = v;
-            text = v.findViewById(R.id.optionTitle);
-            logo = v.findViewById(R.id.optionLogo);
+            text = v.findViewById(R.id.workTitle);
+            logo = v.findViewById(R.id.workLogo);
         }
     }
 

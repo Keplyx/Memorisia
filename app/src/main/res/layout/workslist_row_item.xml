@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/workLogo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/optionColor"
+        android:layout_toRightOf="@+id/optionColor"/>
+
+    <TextView
+        android:id="@+id/workTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/workLogo"
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@+id/workLogo"
+        android:layout_toRightOf="@+id/workLogo"
+        android:gravity="center_vertical"
+        android:text="Title"
+        android:textAppearance="@android:style/TextAppearance.Material.Menu"/>
+
+    <TextView
+        android:id="@+id/workDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/workTitle"
+        android:layout_alignStart="@+id/workTitle"
+        android:layout_below="@+id/workTitle"
+        android:layout_marginTop="8dp"
+        android:text="TextView"/>
+
+    <CheckBox
+        android:id="@+id/stateCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/workTitle"
+        android:layout_marginRight="8dp"
+        android:gravity="center"
+        android:text="@string/done"
+        android:layout_alignBottom="@+id/dateTextView"/>
+
+    <RatingBar
+        android:id="@+id/priorityRatingBar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/workLogo"
+        android:layout_alignStart="@+id/workLogo"
+        android:layout_below="@+id/workLogo"
+        android:numStars="5"
+        android:stepSize="1"/>
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/priorityRatingBar"
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@+id/priorityRatingBar"
+        android:layout_toRightOf="@+id/priorityRatingBar"
+        android:drawableLeft="@drawable/ic_access_time_black_24dp"
+        android:gravity="center_vertical"
+        android:text="TextView"/>
+
+</RelativeLayout>

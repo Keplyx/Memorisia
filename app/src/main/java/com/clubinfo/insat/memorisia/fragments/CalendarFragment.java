@@ -1,10 +1,12 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.clubinfo.insat.memorisia.R;
 
 
 public class CalendarFragment extends Fragment {

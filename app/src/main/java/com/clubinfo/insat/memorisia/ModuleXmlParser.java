@@ -1,9 +1,9 @@
 package com.clubinfo.insat.memorisia;
 
 
-import android.graphics.Color;
-import android.util.Log;
 import android.util.Xml;
+
+import com.clubinfo.insat.memorisia.modules.OptionModule;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

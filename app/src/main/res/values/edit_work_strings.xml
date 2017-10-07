@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="agenda">Agenda</string>
     <string name="subject">Subject</string>
     <string name="work_type">Work Type</string>
     <string name="due_date">Due Date</string>
     <string name="pick_date">Pick Date</string>
     <string name="priority">Priority</string>
     <string name="description">Description</string>
+
+    <string name="prio_optional">Optional</string>
+    <string name="prio_low">Low</string>
+    <string name="prio_normal">Normal</string>
+    <string name="prio_Important">Important</string>
+    <string name="prio_urgent">Urgent</string>
 
     <string name="add_work">Add New Work</string>
 </resources>

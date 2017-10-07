@@ -1,13 +1,22 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.adapters;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.clubinfo.insat.memorisia.activities.MainActivity;
+import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
+import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.util.List;
 
@@ -16,6 +25,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
     
     private List<OptionModule> modules;
     private Context context;
+    private FragmentManager fragMan;
     
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView textHeader;
@@ -28,7 +38,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
             layout = v;
             textHeader = v.findViewById(R.id.subjectTitle);
             textFooter = v.findViewById(R.id.SubjectDescription);
-            logo = v.findViewById(R.id.SubjectIcon);
+            logo = v.findViewById(R.id.subjectIcon);
         }
     }
 
@@ -42,9 +52,10 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         notifyItemRemoved(pos);
     }
 
-    public SubjectsRecyclerAdapter(Context context, List<OptionModule> modules){
+    public SubjectsRecyclerAdapter(Context context, List<OptionModule> modules, FragmentManager fragMan){
         this.context = context;
         this.modules = modules;
+        this.fragMan = fragMan;
     }
 
     @Override
@@ -60,10 +71,25 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         final String name = modules.get(pos).getName();
         final String logo = modules.get(pos).getLogo();
         final String color = modules.get(pos).getColor();
+        final int id = modules.get(pos).getId();
         holder.textHeader.setText(name);
         holder.textFooter.setText("Footer: " + name);
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
         holder.logo.setColorFilter(Color.parseColor(color));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new WorkViewFragment();
+                Bundle b = new Bundle();
+                b.putInt("id", id);
+                fragment.setArguments(b);
+                android.app.FragmentTransaction ft = fragMan.beginTransaction();
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.replace(R.id.content_frame, fragment, MainActivity.FRAG_WORKS);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
     }
 
     @Override

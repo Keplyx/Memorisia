@@ -1,4 +1,4 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +14,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
+import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.adapters.OptionsRecyclerAdapter;
+import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.utils.ModulesUtils;
+
 import java.util.List;
 
 public class OptionsListActivity extends AppCompatActivity {
@@ -61,7 +66,7 @@ public class OptionsListActivity extends AppCompatActivity {
     
     
     private OptionsRecyclerAdapter createModulesListAdapter(int type){
-        final List<OptionModule> modules = new SaveManager(this).getSortedModuleList(type);
+        final List<OptionModule> modules = ModulesUtils.sortModuleListByName(new SaveManager(this).getModuleList(type));
         return new OptionsRecyclerAdapter(modules, this);
     }
 

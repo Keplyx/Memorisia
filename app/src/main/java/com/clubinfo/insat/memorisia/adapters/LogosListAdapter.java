@@ -1,19 +1,18 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
+import com.clubinfo.insat.memorisia.activities.EditOptionsActivity;
+import com.clubinfo.insat.memorisia.utils.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SimpleTimeZone;
 
 
 public class LogosListAdapter extends BaseAdapter {

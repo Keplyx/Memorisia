@@ -1,7 +1,6 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.fragments;
 
 import android.app.Fragment;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.adapters.SubjectsRecyclerAdapter;
+import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
 
 public class SubjectsFragment extends Fragment {
@@ -23,20 +24,27 @@ public class SubjectsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
         getActivity().setTitle(R.string.subjects_title);
-        
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(mLayoutManager);
-        final List<OptionModule> modules = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            OptionModule m = new OptionModule(i, 0, "Subject " + i, "", "#E2261B", false);
-            modules.add(m);
-        }
-        mAdapter = new SubjectsRecyclerAdapter(getActivity(), modules);
-        recyclerView.setAdapter(mAdapter);
-    
+        
+        generateSubjectsList();
+
+        
         return view;
+    }
+    
+    private void generateSubjectsList(){
+        SaveManager saver = new SaveManager(getActivity());
+        mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortModuleListByName(saver.getModuleList(SaveManager.SUBJECT)), getFragmentManager());
+        recyclerView.setAdapter(mAdapter);
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        generateSubjectsList();
     }
 }
