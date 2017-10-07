@@ -64,7 +64,7 @@ public class EditWorkActivity extends AppCompatActivity {
     public String[] getModulesNames(List<OptionModule> modules){
         List<String> names = new ArrayList<>();
         for (int i = 0; i < modules.size(); i++){
-            names.add(modules.get(i).getName());
+            names.add(modules.get(i).getText());
         }
         return names.toArray(new String[names.size()]);
     }

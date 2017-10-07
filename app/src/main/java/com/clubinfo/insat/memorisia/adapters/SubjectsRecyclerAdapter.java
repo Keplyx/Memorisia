@@ -68,7 +68,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
 
     @Override
     public void onBindViewHolder (ViewHolder holder, final int pos){
-        final String name = modules.get(pos).getName();
+        final String name = modules.get(pos).getText();
         final String logo = modules.get(pos).getLogo();
         final String color = modules.get(pos).getColor();
         final int id = modules.get(pos).getId();

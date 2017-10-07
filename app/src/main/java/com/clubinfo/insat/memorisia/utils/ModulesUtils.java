@@ -13,7 +13,7 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<OptionModule>() {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
-                return optionModule.getName().compareTo(t1.getName());
+                return optionModule.getText().compareTo(t1.getText());
             }
         });
         return modules;

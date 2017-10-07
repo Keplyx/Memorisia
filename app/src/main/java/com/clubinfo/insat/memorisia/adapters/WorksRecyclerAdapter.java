@@ -74,7 +74,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     
     @Override
     public void onBindViewHolder (WorksRecyclerAdapter.ViewHolder holder, final int pos){
-        final String description = modules.get(pos).getDescription();
+        final String description = modules.get(pos).getText();
         final int workTypeId = modules.get(pos).getWorkTypeId();
         final int priority = modules.get(pos).getPriority();
         final boolean state = modules.get(pos).isState();
@@ -84,7 +84,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         String tempColor = "#ffffff";
         for (int i = 0; i < subjectsList.size(); i++){
             if (subjectsList.get(i).getId() == workTypeId){
-                tempWorkName = subjectsList.get(i).getName();
+                tempWorkName = subjectsList.get(i).getText();
                 tempLogo = subjectsList.get(i).getLogo();
                 tempColor = subjectsList.get(i).getColor();
             }

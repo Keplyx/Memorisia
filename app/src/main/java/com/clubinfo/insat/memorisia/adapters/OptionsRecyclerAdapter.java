@@ -62,7 +62,7 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
 
     @Override
     public void onBindViewHolder (ViewHolder holder, final int pos){
-        final String name = modules.get(pos).getName();
+        final String name = modules.get(pos).getText();
         final String logo = modules.get(pos).getLogo();
         final String color = modules.get(pos).getColor();
         final int type = modules.get(pos).getType();

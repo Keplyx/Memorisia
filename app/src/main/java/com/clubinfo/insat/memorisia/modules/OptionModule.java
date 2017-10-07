@@ -1,32 +1,18 @@
 package com.clubinfo.insat.memorisia.modules;
 
 
+import java.awt.font.TextAttribute;
 
-public class OptionModule {
-    private int id;
+public class OptionModule extends Module{
     private int type;
-    private String name;
     private String logo;
     private String color;
-    private boolean notificationsEnabled;
     
-    
-    public OptionModule(int id, int type, String name, String logo, String color, boolean notificationsEnabled) {
-        this.id = id;
+    public OptionModule(int id, int type, String text, String logo, String color, boolean notificationsEnabled) {
+        super(id, text, notificationsEnabled);
         this.type = type;
-        
-        this.name = name;
         this.logo = logo;
         this.color = color;
-        this.notificationsEnabled = notificationsEnabled;
-    }
-    
-    public int getId() {
-        return id;
-    }
-    
-    public void setId(int id) {
-        this.id = id;
     }
     
     public int getType() {
@@ -35,14 +21,6 @@ public class OptionModule {
     
     public void setType(int type) {
         this.type = type;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
     }
     
     public String getLogo() {
@@ -59,13 +37,5 @@ public class OptionModule {
     
     public void setColor(String color) {
         this.color = color;
-    }
-    
-    public boolean isNotificationsEnabled() {
-        return notificationsEnabled;
-    }
-    
-    public void setNotificationsEnabled(boolean notificationsEnabled) {
-        this.notificationsEnabled = notificationsEnabled;
     }
 }

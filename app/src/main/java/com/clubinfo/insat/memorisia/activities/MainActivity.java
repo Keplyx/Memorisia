@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
                     SaveManager saver = new SaveManager(this);
                     OptionModule module = ModulesUtils.getModuleOfId(saver.getModuleList(SaveManager.SUBJECT), works.getSubjectId());
                     Bundle b = new Bundle();
-                    b.putString("name", module.getName());
+                    b.putString("name", module.getText());
                     b.putString("logo", module.getLogo());
                     b.putString("color", module.getColor());
                     b.putInt("type", module.getType());

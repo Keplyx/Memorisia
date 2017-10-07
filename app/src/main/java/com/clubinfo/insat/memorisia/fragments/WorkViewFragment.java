@@ -55,7 +55,7 @@ public class WorkViewFragment extends Fragment {
         List<OptionModule> list = saver.getModuleList(SaveManager.SUBJECT);
         for (OptionModule m : list){
             if (m.getId() == subjectId)
-                return m.getName();
+                return m.getText();
         }
         return "Subject not found";
     }

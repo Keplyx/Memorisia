@@ -118,7 +118,7 @@ public class SaveManager {
             serializer.attribute(null, "id", Integer.toString(module.getId()));
             serializer.attribute(null, "type", Integer.toString(module.getType()));
             serializer.startTag(null, "name");
-            serializer.text(module.getName());
+            serializer.text(module.getText());
             serializer.endTag(null, "name");
             serializer.startTag(null, "color");
             serializer.text(module.getColor());

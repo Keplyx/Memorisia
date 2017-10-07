@@ -1,35 +1,22 @@
 package com.clubinfo.insat.memorisia.modules;
 
 
-public class WorkModule {
-    private int id;
+public class WorkModule extends Module{
     private int agendaId;
     private int subjectId;
     private int workTypeId;
     private int priority;
-    private String description;
-    private boolean notificationsEnabled;
     private boolean state;
     
     public WorkModule(int id, int agendaId, int subjectId, int workTypeId, int priority,
-                      String description, boolean notificationsEnabled, boolean state) {
-        this.id = id;
+                      String text, boolean notificationsEnabled, boolean state) {
+        super(id, text, notificationsEnabled);
         this.agendaId = agendaId;
         this.subjectId = subjectId;
         this.workTypeId = workTypeId;
         this.priority = priority;
-        this.description = description;
-        this.notificationsEnabled = notificationsEnabled;
         this.state = state;
         
-    }
-    
-    public int getId() {
-        return id;
-    }
-    
-    public void setId(int id) {
-        this.id = id;
     }
     
     public int getAgendaId() {
@@ -62,22 +49,6 @@ public class WorkModule {
     
     public void setPriority(int priority) {
         this.priority = priority;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public boolean isNotificationsEnabled() {
-        return notificationsEnabled;
-    }
-    
-    public void setNotificationsEnabled(boolean notificationsEnabled) {
-        this.notificationsEnabled = notificationsEnabled;
     }
     
     public boolean isState() {

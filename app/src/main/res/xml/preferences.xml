@@ -4,19 +4,19 @@
         <Preference android:title="@string/edit_subjects">
             <intent android:action="android.intent.action.VIEW"
                     android:targetPackage="com.clubinfo.insat.memorisia"
-                    android:targetClass="com.clubinfo.insat.memorisia.OptionsListActivity"
+                    android:targetClass="com.clubinfo.insat.memorisia.activities.OptionsListActivity"
                     android:data="0" />
         </Preference>
         <Preference android:title="@string/edit_work">
             <intent android:action="android.intent.action.VIEW"
                     android:targetPackage="com.clubinfo.insat.memorisia"
-                    android:targetClass="com.clubinfo.insat.memorisia.OptionsListActivity"
+                    android:targetClass="com.clubinfo.insat.memorisia.activities.OptionsListActivity"
                     android:data="1" />
         </Preference>
         <Preference android:title="@string/edit_agendas">
             <intent android:action="android.intent.action.VIEW"
                     android:targetPackage="com.clubinfo.insat.memorisia"
-                    android:targetClass="com.clubinfo.insat.memorisia.OptionsListActivity"
+                    android:targetClass="com.clubinfo.insat.memorisia.activities.OptionsListActivity"
                     android:data="2" />
         </Preference>
     </PreferenceCategory>
