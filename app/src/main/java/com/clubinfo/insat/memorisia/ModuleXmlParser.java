@@ -1,6 +1,7 @@
 package com.clubinfo.insat.memorisia;
 
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.clubinfo.insat.memorisia.modules.OptionModule;
@@ -15,42 +16,49 @@ import java.util.List;
 
 public class ModuleXmlParser {
     
-    public List <OptionModule> parse(InputStream in, int type) throws XmlPullParserException, IOException {
+    public static String OPTION_START_TAG = "optionsList";
+    public static String OPTION_MODULE_START_TAG = "option";
+    public static String WORK_START_TAG = "worksList";
+    public static String WORK_MODULE_START_TAG = "works";
+    
+    public List<OptionModule> parse(InputStream in, int type) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setInput(in, null);
-            parser.nextTag();
+            if (parser.next() == XmlPullParser.END_DOCUMENT)
+                return new ArrayList<>();
+//            parser.nextTag();
             return getModulesOfType(readList(parser), type);
         } finally {
             in.close();
         }
     }
     
-    private List <OptionModule> getModulesOfType(List<OptionModule> list, int type){
+    private List<OptionModule> getModulesOfType(List<OptionModule> list, int type) {
         if (type < 0 || list.size() == 0)
             return list;
         List<OptionModule> modules = new ArrayList<>();
-        for (OptionModule m:list){
+        for (OptionModule m : list) {
             if (m.getType() == type)
                 modules.add(m);
         }
         return modules;
     }
     
-    private List <OptionModule> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private List<OptionModule> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
         List<OptionModule> entries = new ArrayList<>();
-        
-        parser.require(XmlPullParser.START_TAG, null, "modulesList");
+        parser.require(XmlPullParser.START_TAG, null, OPTION_START_TAG);
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             // Starts by looking for the module tag
-            if (name.equals("module")) {
+            if (name.equals(OPTION_MODULE_START_TAG)) {
                 entries.add(readModule(parser));
             }
         }
+        Log.w("test", "Entries: " + entries.size());
         return entries;
     }
     
@@ -58,7 +66,7 @@ public class ModuleXmlParser {
     // Parses the contents of a module. If it encounters a name, logo... hands them off
     // to their respective "read" methods for processing. Otherwise, skips the tag.
     private OptionModule readModule(XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, null, "module");
+        parser.require(XmlPullParser.START_TAG, null, OPTION_MODULE_START_TAG);
         int[] attributes = readModuleAttributes(parser);
         //int[] attributes = new int[] {0, 0};
         String name = null;
@@ -71,7 +79,7 @@ public class ModuleXmlParser {
                 continue;
             }
             String parserName = parser.getName();
-            if (parserName.equals("name")) {
+            if (parserName.equals("text")) {
                 name = readName(parser);
             } else if (parserName.equals("color")) {
                 color = readColor(parser);
@@ -79,7 +87,7 @@ public class ModuleXmlParser {
                 logo = readLogo(parser);
             } else if (parserName.equals("notifications")) {
                 notifications = readNotifications(parser);
-            }else {
+            } else {
                 skip(parser);
             }
         }
@@ -89,19 +97,19 @@ public class ModuleXmlParser {
     private int[] readModuleAttributes(XmlPullParser parser) throws IOException, XmlPullParserException {
         String idString = "";
         String typeString = "";
-        parser.require(XmlPullParser.START_TAG, null, "module");
+        parser.require(XmlPullParser.START_TAG, null, OPTION_MODULE_START_TAG);
         String tag = parser.getName();
-        if (tag.equals("module")) {
+        if (tag.equals(OPTION_MODULE_START_TAG)) {
             idString = parser.getAttributeValue(null, "id");
             typeString = parser.getAttributeValue(null, "type");
         }
-        return new int[] {Integer.parseInt(idString), Integer.parseInt(typeString)};
+        return new int[]{Integer.parseInt(idString), Integer.parseInt(typeString)};
     }
     
     private String readName(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "name");
+        parser.require(XmlPullParser.START_TAG, null, "text");
         String name = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "name");
+        parser.require(XmlPullParser.END_TAG, null, "text");
         return name;
     }
     

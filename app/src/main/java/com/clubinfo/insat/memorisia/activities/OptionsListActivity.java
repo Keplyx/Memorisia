@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,17 +23,17 @@ import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import java.util.List;
 
 public class OptionsListActivity extends AppCompatActivity {
+    int type;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    int type;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        if(nightMode)
+        if (nightMode)
             setTheme(R.style.AppTheme_Dark);
         
         setContentView(R.layout.recyclerview_layout);
@@ -41,7 +41,7 @@ public class OptionsListActivity extends AppCompatActivity {
         
         type = Integer.parseInt(getIntent().getData().toString());
         mAdapter = createModulesListAdapter(type);
-        switch (type){
+        switch (type) {
             case 0:
                 setTitle(R.string.edit_subjects);
                 break;
@@ -53,7 +53,7 @@ public class OptionsListActivity extends AppCompatActivity {
                 break;
         }
         
-        if (mAdapter != null){
+        if (mAdapter != null) {
             recyclerView = (RecyclerView) findViewById(R.id.subjectsRecyclerView);
             recyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
@@ -65,11 +65,11 @@ public class OptionsListActivity extends AppCompatActivity {
     }
     
     
-    private OptionsRecyclerAdapter createModulesListAdapter(int type){
-        final List<OptionModule> modules = ModulesUtils.sortModuleListByName(new SaveManager(this).getModuleList(type));
+    private OptionsRecyclerAdapter createModulesListAdapter(int type) {
+        final List<OptionModule> modules = ModulesUtils.sortModuleListByName(new SaveManager(this).getOptionModuleList(type));
         return new OptionsRecyclerAdapter(modules, this);
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -82,7 +82,7 @@ public class OptionsListActivity extends AppCompatActivity {
     }
     
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -95,7 +95,7 @@ public class OptionsListActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
         }
-    
+        
         return super.onOptionsItemSelected(item);
     }
 }

@@ -38,7 +38,7 @@ public class SubjectsFragment extends Fragment {
     
     private void generateSubjectsList(){
         SaveManager saver = new SaveManager(getActivity());
-        mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortModuleListByName(saver.getModuleList(SaveManager.SUBJECT)), getFragmentManager());
+        mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT)), getFragmentManager());
         recyclerView.setAdapter(mAdapter);
     }
     

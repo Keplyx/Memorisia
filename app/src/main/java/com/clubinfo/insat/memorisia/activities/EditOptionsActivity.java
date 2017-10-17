@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,32 +31,32 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class EditOptionsActivity extends AppCompatActivity {
     
+    private static String logo = "";
+    private final String logosPath = "logos/";
     private Context context;
-    
     private TextView TextView;
     private GridView logosGridView;
     private Button colorButton;
     private Switch notificationsSwitch;
     private Button deleteButton;
-    
     private int type;
     private int id;
     private String color;
-    private static String logo;
-    
     private List<String> logosList = new ArrayList<>();
-    private final String logosPath = "logos/";
     
+    public static void setSelectedLogo(String l) {
+        logo = l;
+    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        if(nightMode)
+        if (nightMode)
             setTheme(R.style.AppTheme_Dark);
         setContentView(R.layout.activity_edit_options);
-    
+        
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         generateLogosList();
         TextView = (TextView) findViewById(R.id.moduleName);
@@ -66,7 +66,7 @@ public class EditOptionsActivity extends AppCompatActivity {
         deleteButton = (Button) findViewById(R.id.deleteModule);
         Bundle b = getIntent().getExtras();
         // if has a TextView, we are editing, else we are creating a new option
-        if (b != null && b.getString("name") != null){
+        if (b != null && b.getString("name") != null) {
             id = b.getInt("id");
             TextView.setText(b.getString("name"));
             logo = b.getString("logo");
@@ -77,12 +77,10 @@ public class EditOptionsActivity extends AppCompatActivity {
             setTitle(getResources().getString(R.string.editing) + " " + b.getString("name"));
             if (logosList.size() > 0)
                 logosGridView.setAdapter(new LogosListAdapter(this, logosList, logo, color));
-        }
-        else if (b != null)
-        {
+        } else if (b != null) {
             type = b.getInt("type");
             id = -1;
-            switch (type){
+            switch (type) {
                 case 0:
                     setTitle(R.string.create_subject);
                     break;
@@ -98,30 +96,28 @@ public class EditOptionsActivity extends AppCompatActivity {
             colorButton.setBackgroundColor(Color.parseColor(color));
             deleteButton.setVisibility(Button.INVISIBLE);
             deleteButton.setEnabled(false);
-            if (logosList.size() > 0)
+            if (logosList.size() > 0) {
                 logosGridView.setAdapter(new LogosListAdapter(this, logosList, logosList.get(0), color));
+                logo = logosList.get(0);
+            }
         }
         context = this;
     }
     
-    private void generateLogosList(){
+    private void generateLogosList() {
         String[] list = new String[0];
         try {
             list = getAssets().list("logos");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < list.length; i++){
+        for (int i = 0; i < list.length; i++) {
             logosList.add(logosPath + list[i]);
         }
     }
     
-    public static void setSelectedLogo(String l){
-        logo = l;
-    }
-    
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -130,7 +126,7 @@ public class EditOptionsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     
-    public void onClickColorPicker(View v){
+    public void onClickColorPicker(View v) {
         AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.parseColor(color), new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int intColor) {
@@ -149,20 +145,20 @@ public class EditOptionsActivity extends AppCompatActivity {
         dialog.show();
     }
     
-    public void onClickDone (View v){
+    public void onClickDone(View v) {
         OptionModule module = new OptionModule(id, type, TextView.getText().toString(),
                 logo, color, notificationsSwitch.isChecked());
         
         SaveManager saver = new SaveManager(this);
-        saver.saveOptionModule(module);
+        saver.saveModule(module);
         exitEditOptions();
     }
     
-    public void onClickDelete(View v){
+    public void onClickDelete(View v) {
         showConfirmDeleteDialog();
     }
     
-    private void showConfirmDeleteDialog(){
+    private void showConfirmDeleteDialog() {
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.AppTheme);
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
         builder.setMessage(getResources().getString(R.string.confirm_delete));
@@ -172,16 +168,16 @@ public class EditOptionsActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int i) {
                         SaveManager saver = new SaveManager(builder.getContext());
-                        if (saver.getModuleList(type).size() == 1)
+                        if (saver.getOptionModuleList(type).size() == 1)
                             showErrorDialog();
-                        else{
+                        else {
                             saver.deleteOptionModule(id);
                             exitEditOptions();
                         }
                         dialog.cancel();
                     }
                 });
-    
+        
         builder.setNegativeButton(
                 getResources().getString(R.string.no),
                 new DialogInterface.OnClickListener() {
@@ -189,22 +185,22 @@ public class EditOptionsActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
-    
+        
         AlertDialog alert = builder.create();
         alert.show();
     }
     
-    private void showErrorDialog(){
+    private void showErrorDialog() {
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.AppTheme);
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
         builder.setMessage(getResources().getString(R.string.cannot_delete));
         builder.setCancelable(true);
-    
+        
         AlertDialog alert = builder.create();
         alert.show();
     }
     
-    private void exitEditOptions(){
+    private void exitEditOptions() {
         Intent intent = new Intent(this, OptionsListActivity.class);
         intent.setData(Uri.parse(type + ""));
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

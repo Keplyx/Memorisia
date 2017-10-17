@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,11 +19,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.clubinfo.insat.memorisia.fragments.CalendarFragment;
-import com.clubinfo.insat.memorisia.fragments.HomeFragment;
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.fragments.CalendarFragment;
+import com.clubinfo.insat.memorisia.fragments.HomeFragment;
 import com.clubinfo.insat.memorisia.fragments.SubjectsFragment;
 import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                 if (works != null && works.isVisible()) {
                     Intent intent = new Intent(this, EditOptionsActivity.class);
                     SaveManager saver = new SaveManager(this);
-                    OptionModule module = ModulesUtils.getModuleOfId(saver.getModuleList(SaveManager.SUBJECT), works.getSubjectId());
+                    OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), works.getSubjectId());
                     Bundle b = new Bundle();
                     b.putString("name", module.getText());
                     b.putString("logo", module.getLogo());

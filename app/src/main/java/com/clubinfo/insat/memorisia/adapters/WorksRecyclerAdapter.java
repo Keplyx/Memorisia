@@ -61,7 +61,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         this.context = context;
         this.modules = modules;
         SaveManager saver = new SaveManager(context);
-        subjectsList = saver.getModuleList(SaveManager.WORKTYPE);
+        subjectsList = saver.getOptionModuleList(SaveManager.WORKTYPE);
     }
     
     @Override

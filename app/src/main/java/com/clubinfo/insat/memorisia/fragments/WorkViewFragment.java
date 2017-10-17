@@ -52,7 +52,7 @@ public class WorkViewFragment extends Fragment {
     
     private String getSubjectName(){
         SaveManager saver = new SaveManager(getActivity());
-        List<OptionModule> list = saver.getModuleList(SaveManager.SUBJECT);
+        List<OptionModule> list = saver.getOptionModuleList(SaveManager.SUBJECT);
         for (OptionModule m : list){
             if (m.getId() == subjectId)
                 return m.getText();
