@@ -61,14 +61,8 @@ public class WorkViewFragment extends Fragment {
     }
     
     private void generateWorksList(){
-        //SaveManager saver = new SaveManager(getActivity());
-        List<WorkModule> worksList = new ArrayList<>();
-        for (int i = -2; i < 10; i++){
-            Boolean done = new Random().nextBoolean();
-            int priority = new Random().nextInt(6);
-            int workType = 0;
-            worksList.add(new WorkModule(-1, -1, subjectId, workType, priority, "Test" + i, false, done));
-        }
+        SaveManager saver = new SaveManager(getActivity());
+        List<WorkModule> worksList = saver.getWorkModuleList(-1, subjectId, -1);
         mAdapter = new WorksRecyclerAdapter(getActivity(), worksList);
         recyclerView.setAdapter(mAdapter);
     }

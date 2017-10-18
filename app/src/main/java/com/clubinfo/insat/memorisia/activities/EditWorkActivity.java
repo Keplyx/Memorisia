@@ -1,6 +1,8 @@
 package com.clubinfo.insat.memorisia.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,6 +82,9 @@ public class EditWorkActivity extends AppCompatActivity {
         Switch notif = (Switch) findViewById(R.id.notificationsSwitch);
         boolean notifications = notif.isChecked();
         WorkModule work = new WorkModule(-1, selectedAgenda, selectedSubject, selectedWorkType, priority, description, notifications, false);
+        SaveManager saver = new SaveManager(this);
+        saver.saveModule(work);
+        finish();
     }
     
 

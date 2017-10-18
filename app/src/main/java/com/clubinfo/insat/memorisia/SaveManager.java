@@ -40,7 +40,7 @@ public class SaveManager {
     
     
     public List<OptionModule> getOptionModuleList(int type) {
-        Log.w("test", "get module list triggered");
+        Log.w("test", "get option module list triggered");
         List<OptionModule> modules = new ArrayList<>();
         try {
             Log.w("test", context.getFilesDir().getPath() + "/" + MODULES_FILENAME);
@@ -59,6 +59,27 @@ public class SaveManager {
         return modules;
     }
     
+    public List<WorkModule> getWorkModuleList(int agenda, int subject, int workType) {
+        Log.w("test", "get work module list triggered");
+        List<WorkModule> modules = new ArrayList<>();
+        try {
+            Log.w("test", context.getFilesDir().getPath() + "/" + WORKS_FILENAME);
+            File file = new File(context.getFilesDir().getPath() + "/" + WORKS_FILENAME);
+            if (!file.exists())
+                return new ArrayList<>();
+            Log.w("test", "File found");
+            readFile(context, WORKS_FILENAME);
+            FileInputStream fis = context.openFileInput(WORKS_FILENAME);
+            modules = new WorkModuleXmlParser().parse(fis, agenda, subject, workType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        return modules;
+    }
+    
+    
     public void deleteOptionModule(int id) {
         List<OptionModule> moduleList = getOptionModuleList(-1);
         for (int i = 0; i < moduleList.size(); i++) {
@@ -70,8 +91,19 @@ public class SaveManager {
         writeOptionModuleToXml(moduleList);
     }
     
+    public void deleteWorkModule(int id) {
+        List<WorkModule> moduleList = getWorkModuleList(-1, -1, -1);
+        for (int i = 0; i < moduleList.size(); i++) {
+            if (moduleList.get(i).getId() == id) {
+                moduleList.remove(i);
+                break;
+            }
+        }
+        writeWorkModuleToXml(moduleList);
+    }
+    
     public void saveModule(OptionModule module) {
-        Log.w("test", "Save triggered");
+        Log.w("test", "Save Option triggered");
         List<OptionModule> moduleList = getOptionModuleList(-1);
         if (module.getId() == -1) {
             module.setId(createUniqueModuleId(moduleList));
@@ -82,7 +114,8 @@ public class SaveManager {
     }
     
     public void saveModule(WorkModule module) {
-        List<WorkModule> moduleList = new ArrayList<>();
+        Log.w("test", "Save Work triggered");
+        List<WorkModule> moduleList = getWorkModuleList(-1, -1, -1);
         if (module.getId() == -1) {
             module.setId(createUniqueModuleId(moduleList));
             moduleList.add(module);
@@ -167,7 +200,6 @@ public class SaveManager {
             serializer.endDocument();
             serializer.flush();
             fos.close();
-            readFile(context, WORKS_FILENAME);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -202,9 +234,9 @@ public class SaveManager {
         try {
             serializer.startTag(null, WorkModuleXmlParser.WORK_MODULE_START_TAG);
             serializer.attribute(null, "id", Integer.toString(module.getId()));
+            serializer.attribute(null, "agendaId", Integer.toString(module.getAgendaId()));
             serializer.attribute(null, "subjectId", Integer.toString(module.getSubjectId()));
             serializer.attribute(null, "workTypeId", Integer.toString(module.getWorkTypeId()));
-            serializer.attribute(null, "agendaId", Integer.toString(module.getAgendaId()));
             serializer.startTag(null, "text");
             serializer.text(module.getText());
             serializer.endTag(null, "text");
@@ -214,6 +246,9 @@ public class SaveManager {
             serializer.startTag(null, "date");
             serializer.text("");
             serializer.endTag(null, "date");
+            serializer.startTag(null, "state");
+            serializer.text(Boolean.toString(module.isState()));
+            serializer.endTag(null, "state");
             serializer.startTag(null, "notifications");
             serializer.text(Boolean.toString(module.isNotificationsEnabled()));
             serializer.endTag(null, "notifications");
