@@ -8,6 +8,8 @@ import android.util.Xml;
 import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
+import com.clubinfo.insat.memorisia.xmlparsers.OptionModuleXmlParser;
+import com.clubinfo.insat.memorisia.xmlparsers.WorkModuleXmlParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -46,9 +48,9 @@ public class SaveManager {
             if (!file.exists())
                 return new ArrayList<>();
             Log.w("test", "File found");
-            readFile(context);
+            readFile(context, MODULES_FILENAME);
             FileInputStream fis = context.openFileInput(MODULES_FILENAME);
-            modules = new ModuleXmlParser().parse(fis, type);
+            modules = new OptionModuleXmlParser().parse(fis, type);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XmlPullParserException e) {
@@ -130,7 +132,6 @@ public class SaveManager {
     }
     
     private void writeOptionModuleToXml(List<OptionModule> list) {
-        Log.w("test", "Write option module list triggered");
         FileOutputStream fos;
         try {
             fos = context.openFileOutput(MODULES_FILENAME, Context.MODE_PRIVATE);
@@ -138,7 +139,7 @@ public class SaveManager {
             serializer.setOutput(fos, "UTF-8");
             serializer.startDocument(null, true);
             serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-            serializer.startTag(null, ModuleXmlParser.OPTION_START_TAG);
+            serializer.startTag(null, OptionModuleXmlParser.OPTION_START_TAG);
             for (int i = 0; i < list.size(); i++) {
                 serializer = writeModule(serializer, list.get(i));
             }
@@ -151,6 +152,7 @@ public class SaveManager {
     }
     
     private void writeWorkModuleToXml(List<WorkModule> list) {
+        Log.w("test", "Write work module list triggered");
         FileOutputStream fos;
         try {
             fos = context.openFileOutput(WORKS_FILENAME, Context.MODE_PRIVATE);
@@ -158,13 +160,14 @@ public class SaveManager {
             serializer.setOutput(fos, "UTF-8");
             serializer.startDocument(null, true);
             serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-            serializer.startTag(null, ModuleXmlParser.WORK_START_TAG);
+            serializer.startTag(null, WorkModuleXmlParser.WORK_START_TAG);
             for (int i = 0; i < list.size(); i++) {
                 serializer = writeModule(serializer, list.get(i));
             }
             serializer.endDocument();
             serializer.flush();
             fos.close();
+            readFile(context, WORKS_FILENAME);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -173,7 +176,7 @@ public class SaveManager {
     private XmlSerializer writeModule(XmlSerializer serializer, OptionModule module) {
         Log.w("test", "write module triggered");
         try {
-            serializer.startTag(null, ModuleXmlParser.OPTION_MODULE_START_TAG);
+            serializer.startTag(null, OptionModuleXmlParser.OPTION_MODULE_START_TAG);
             serializer.attribute(null, "id", Integer.toString(module.getId()));
             serializer.attribute(null, "type", Integer.toString(module.getType()));
             serializer.startTag(null, "text");
@@ -188,7 +191,7 @@ public class SaveManager {
             serializer.startTag(null, "notifications");
             serializer.text(Boolean.toString(module.isNotificationsEnabled()));
             serializer.endTag(null, "notifications");
-            serializer.endTag(null, ModuleXmlParser.OPTION_MODULE_START_TAG);
+            serializer.endTag(null, OptionModuleXmlParser.OPTION_MODULE_START_TAG);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -197,7 +200,7 @@ public class SaveManager {
     
     private XmlSerializer writeModule(XmlSerializer serializer, WorkModule module) {
         try {
-            serializer.startTag(null, ModuleXmlParser.WORK_MODULE_START_TAG);
+            serializer.startTag(null, WorkModuleXmlParser.WORK_MODULE_START_TAG);
             serializer.attribute(null, "id", Integer.toString(module.getId()));
             serializer.attribute(null, "subjectId", Integer.toString(module.getSubjectId()));
             serializer.attribute(null, "workTypeId", Integer.toString(module.getWorkTypeId()));
@@ -214,7 +217,7 @@ public class SaveManager {
             serializer.startTag(null, "notifications");
             serializer.text(Boolean.toString(module.isNotificationsEnabled()));
             serializer.endTag(null, "notifications");
-            serializer.endTag(null, ModuleXmlParser.WORK_MODULE_START_TAG);
+            serializer.endTag(null, WorkModuleXmlParser.WORK_MODULE_START_TAG);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -222,9 +225,9 @@ public class SaveManager {
     }
     
     
-    private void readFile(Context context) {
+    private void readFile(Context context, String fileName) {
         try {
-            InputStream inputStream = context.openFileInput(MODULES_FILENAME);
+            InputStream inputStream = context.openFileInput(fileName);
             
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);

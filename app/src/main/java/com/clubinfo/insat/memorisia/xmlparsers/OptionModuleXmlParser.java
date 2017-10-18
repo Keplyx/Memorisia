@@ -1,4 +1,4 @@
-package com.clubinfo.insat.memorisia;
+package com.clubinfo.insat.memorisia.xmlparsers;
 
 
 import android.util.Log;
@@ -14,12 +14,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModuleXmlParser {
+public class OptionModuleXmlParser extends ModuleXmlParser {
+    
     
     public static String OPTION_START_TAG = "optionsList";
     public static String OPTION_MODULE_START_TAG = "option";
-    public static String WORK_START_TAG = "worksList";
-    public static String WORK_MODULE_START_TAG = "works";
     
     public List<OptionModule> parse(InputStream in, int type) throws XmlPullParserException, IOException {
         try {
@@ -106,13 +105,6 @@ public class ModuleXmlParser {
         return new int[]{Integer.parseInt(idString), Integer.parseInt(typeString)};
     }
     
-    private String readName(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "text");
-        String name = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "text");
-        return name;
-    }
-    
     private String readColor(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "color");
         String color = readText(parser);
@@ -126,39 +118,4 @@ public class ModuleXmlParser {
         parser.require(XmlPullParser.END_TAG, null, "logo");
         return logo;
     }
-    
-    private boolean readNotifications(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "notifications");
-        String notifications = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "notifications");
-        return Boolean.parseBoolean(notifications);
-    }
-    
-    // For the tags title and summary, extracts their text values.
-    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String result = "";
-        if (parser.next() == XmlPullParser.TEXT) {
-            result = parser.getText();
-            parser.nextTag();
-        }
-        return result;
-    }
-    
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
-    }
-    
 }
