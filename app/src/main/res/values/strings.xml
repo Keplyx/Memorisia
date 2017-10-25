@@ -24,7 +24,8 @@
     <string name="done">Done</string>
     <string name="delete">Delete</string>
 
-    <string name="action_add">Add</string>7
+    <string name="action_add">Add</string>
+    <string name="action_sort">Sort</string>
 
     <string name="editing">Editing</string>
     <string name="create_subject">Create New Subject</string>

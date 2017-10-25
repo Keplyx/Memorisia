@@ -176,6 +176,7 @@ public class SaveManager {
             for (int i = 0; i < list.size(); i++) {
                 serializer = writeModule(serializer, list.get(i));
             }
+            serializer.endTag(null, OptionModuleXmlParser.OPTION_START_TAG);
             serializer.endDocument();
             serializer.flush();
             fos.close();
@@ -197,6 +198,7 @@ public class SaveManager {
             for (int i = 0; i < list.size(); i++) {
                 serializer = writeModule(serializer, list.get(i));
             }
+            serializer.endTag(null, WorkModuleXmlParser.WORK_START_TAG);
             serializer.endDocument();
             serializer.flush();
             fos.close();

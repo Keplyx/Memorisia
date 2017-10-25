@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
@@ -30,6 +33,9 @@ import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private Context context;
     
     MenuItem editButton;
+    MenuItem sortButton;
     private boolean isNightMode;
     
     public static final String FRAG_HOME = "HOME";
@@ -140,10 +147,16 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         editButton = menu.findItem(R.id.action_edit);
+        sortButton = menu.findItem(R.id.action_sort);
         checkEditButtonState();
-        Drawable icon = editButton.getIcon();
-        icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
-        editButton.setIcon(icon);
+        Drawable editIcon = editButton.getIcon();
+        Drawable sortIcon = sortButton.getIcon();
+        editIcon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
+        sortIcon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
+        editButton.setIcon(editIcon);
+        sortButton.setIcon(sortIcon);
+    
+        
         return true;
     }
     
