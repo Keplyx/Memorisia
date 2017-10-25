@@ -79,13 +79,13 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
             }
             String parserName = parser.getName();
             if (parserName.equals("text")) {
-                name = readName(parser);
+                name = readStringProperty(parser, "text");
             } else if (parserName.equals("color")) {
                 color = readColor(parser);
             } else if (parserName.equals("logo")) {
                 logo = readLogo(parser);
             } else if (parserName.equals("notifications")) {
-                notifications = readNotifications(parser);
+                notifications = readBooleanProperty(parser, "notifications");
             } else {
                 skip(parser);
             }

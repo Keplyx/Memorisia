@@ -8,18 +8,18 @@ import java.io.IOException;
 
 public class ModuleXmlParser {
     
-    public String readName(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "text");
-        String name = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "text");
-        return name;
+    public String readStringProperty(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, tag);
+        String value = readText(parser);
+        parser.require(XmlPullParser.END_TAG, null, tag);
+        return value;
     }
     
-    public boolean readNotifications(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "notifications");
-        String notifications = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "notifications");
-        return Boolean.parseBoolean(notifications);
+    public boolean readBooleanProperty(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, tag);
+        String value = readText(parser);
+        parser.require(XmlPullParser.END_TAG, null, tag);
+        return Boolean.parseBoolean(value);
     }
     
     // For the tags title and summary, extracts their text values.

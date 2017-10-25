@@ -26,6 +26,13 @@ public class ModulesUtils {
         }
         return null;
     }
-        
-        
+    
+    public static int getPosInList (List<OptionModule> modules, int id){
+        for (int i = 0; i < modules.size(); i++){
+            if (modules.get(i).getId() == id)
+                return i;
+        }
+        return -1;
     }
+    
+}

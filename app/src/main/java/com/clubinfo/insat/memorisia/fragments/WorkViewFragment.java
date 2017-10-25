@@ -67,4 +67,10 @@ public class WorkViewFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
     }
     
+    @Override
+    public void onResume() {
+        super.onResume();
+        generateWorksList();
+    }
+    
 }

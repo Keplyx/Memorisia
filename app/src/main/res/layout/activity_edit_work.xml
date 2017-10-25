@@ -200,4 +200,16 @@
         android:onClick="onClickDoneWork"
         android:text="@string/done"/>
 
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorRed"
+        android:onClick="onClickDelete"
+        android:text="@string/delete"/>
+
 </RelativeLayout>

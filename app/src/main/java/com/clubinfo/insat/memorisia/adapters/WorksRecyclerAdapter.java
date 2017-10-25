@@ -1,9 +1,12 @@
 package com.clubinfo.insat.memorisia.adapters;
 
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.clubinfo.insat.memorisia.activities.EditOptionsActivity;
+import com.clubinfo.insat.memorisia.activities.EditWorkActivity;
+import com.clubinfo.insat.memorisia.activities.MainActivity;
+import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
@@ -75,10 +82,13 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     @Override
     public void onBindViewHolder (WorksRecyclerAdapter.ViewHolder holder, final int pos){
         final String description = modules.get(pos).getText();
+        final int agendaId = modules.get(pos).getAgendaId();
+        final int subjectId = modules.get(pos).getSubjectId();
         final int workTypeId = modules.get(pos).getWorkTypeId();
         final int priority = modules.get(pos).getPriority();
+        final int id = modules.get(pos).getId();
         final boolean state = modules.get(pos).isState();
-        
+        final boolean notifications = modules.get(pos).isNotificationsEnabled();
         String tempWorkName = "Work Type not found";
         String tempLogo = null;
         String tempColor = "#ffffff";
@@ -100,6 +110,24 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
         holder.logo.setColorFilter(Color.parseColor(color));
+    
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EditWorkActivity.class);
+                Bundle b = new Bundle();
+                b.putString("text", description);
+                b.putInt("workTypeId", workTypeId);
+                b.putInt("subjectId", subjectId);
+                b.putInt("agendaId", agendaId);
+                b.putInt("priority", priority);
+                b.putInt("id", id);
+                b.putBoolean("state", state);
+                b.putBoolean("notifications", notifications);
+                intent.putExtras(b);
+                context.startActivity(intent);
+            }
+        });
     }
     
     @Override

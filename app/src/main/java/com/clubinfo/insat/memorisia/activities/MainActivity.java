@@ -79,7 +79,23 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, EditWorkActivity.class);
-                startActivity(intent);
+                Bundle b = new Bundle();
+                b.putString("text", "");
+                b.putInt("workTypeId", -1);
+                b.putInt("subjectId", -1);
+                b.putInt("agendaId", -1);
+                b.putInt("priority", -1);
+                b.putInt("id", -1);
+                b.putBoolean("state", false);
+                b.putBoolean("notifications", false);
+                WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+                if (works != null && works.isVisible()) {
+                    SaveManager saver = new SaveManager(context);
+                    OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), works.getSubjectId());
+                    b.putInt("subjectId", module.getId());
+                }
+                intent.putExtras(b);
+                context.startActivity(intent);
             }
         });
         

@@ -78,13 +78,13 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
             }
             String parserName = parser.getName();
             if (parserName.equals("text")) {
-                name = readName(parser);
+                name = readStringProperty(parser, "text");
             } else if (parserName.equals("priority")) {
                 priority = readPriority(parser);
             } else if (parserName.equals("state")) {
-                state = readState(parser);
+                state = readBooleanProperty(parser, "state");
             } else if (parserName.equals("notifications")) {
-                notifications = readNotifications(parser);
+                notifications = readBooleanProperty(parser, "notifications");
             } else {
                 skip(parser);
             }
