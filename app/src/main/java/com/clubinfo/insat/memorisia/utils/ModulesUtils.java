@@ -2,6 +2,7 @@ package com.clubinfo.insat.memorisia.utils;
 
 
 import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.modules.WorkModule;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,6 +34,15 @@ public class ModulesUtils {
                 return i;
         }
         return -1;
+    }
+    
+    public static int getWorkDoneNumber(List<WorkModule> list) {
+        int counter = 0;
+        for (WorkModule work: list){
+            if (work.isState())
+                counter++;
+        }
+        return counter;
     }
     
 }

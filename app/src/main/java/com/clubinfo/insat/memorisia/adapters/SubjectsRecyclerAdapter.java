@@ -4,18 +4,23 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
+import com.clubinfo.insat.memorisia.modules.WorkModule;
+import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.util.List;
@@ -31,6 +36,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         public TextView textHeader;
         public TextView textFooter;
         public ImageView logo;
+        public ProgressBar bar;
         public View layout;
 
         public ViewHolder(View v){
@@ -39,6 +45,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
             textHeader = v.findViewById(R.id.subjectTitle);
             textFooter = v.findViewById(R.id.SubjectDescription);
             logo = v.findViewById(R.id.subjectIcon);
+            bar = v.findViewById(R.id.subjectProgress);
         }
     }
 
@@ -76,6 +83,21 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         holder.textFooter.setText("Footer: " + name);
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
         holder.logo.setColorFilter(Color.parseColor(color));
+    
+        SaveManager saver = new SaveManager(context);
+        List<WorkModule> worksList = saver.getWorkModuleList(-1, id, -1);
+        if (worksList.size() != 0) {
+            holder.bar.setMax(worksList.size());
+            holder.bar.setProgress(ModulesUtils.getWorkDoneNumber(worksList));
+            if (ModulesUtils.getWorkDoneNumber(worksList) == worksList.size())
+                holder.bar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+        }
+        else{
+            holder.bar.setMax(1);
+            holder.bar.setProgress(1);
+            holder.bar.getProgressDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        }
+        
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
