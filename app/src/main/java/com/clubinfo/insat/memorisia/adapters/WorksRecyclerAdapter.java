@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -107,7 +108,14 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.description.setText(description);
         holder.priorityBar.setRating((float) priority);
         holder.doneCheckBox.setChecked(state);
-    
+        holder.doneCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+               @Override
+               public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    SaveManager saver = new SaveManager(context);
+                    saver.saveModule(new WorkModule(id, agendaId, subjectId, workTypeId, priority, description, notifications, isChecked));
+               }
+           }
+        );
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
         holder.logo.setColorFilter(Color.parseColor(color));
     

@@ -44,7 +44,7 @@ public class WorkViewFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(mLayoutManager);
-    
+        
         generateWorksList();
         
         return view;
