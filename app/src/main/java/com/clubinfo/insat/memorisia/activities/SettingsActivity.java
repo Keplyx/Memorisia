@@ -12,7 +12,9 @@ import com.clubinfo.insat.memorisia.fragments.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     
-    public static String KEY_NIGHT_MODE = "pref_key_night_mode";
+    public static final String KEY_NIGHT_MODE = "pref_key_night_mode";
+    public static final String KEY_SUBJECTS_SORT_TYPE = "pref_key_subjects_sort_type";
+    public static final String KEY_SUBJECTS_SORT_REVERSE = "pref_key_subjects_sort_reverse";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
