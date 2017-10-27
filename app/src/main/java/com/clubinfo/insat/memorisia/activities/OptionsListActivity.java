@@ -66,7 +66,7 @@ public class OptionsListActivity extends AppCompatActivity {
     
     
     private OptionsRecyclerAdapter createModulesListAdapter(int type) {
-        final List<OptionModule> modules = ModulesUtils.sortModuleListByName(new SaveManager(this).getOptionModuleList(type));
+        final List<OptionModule> modules = ModulesUtils.sortModuleListByName(new SaveManager(this).getOptionModuleList(type), false);
         return new OptionsRecyclerAdapter(modules, this);
     }
     

@@ -132,6 +132,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
     
+    private void checkSortButtonState(){
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
+        if (subjects != null && subjects.isVisible()) {
+            sortButton.setVisible(true);
+        }
+        else{
+            sortButton.setVisible(false);
+        }
+    }
+    
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -149,6 +159,7 @@ public class MainActivity extends AppCompatActivity
         editButton = menu.findItem(R.id.action_edit);
         sortButton = menu.findItem(R.id.action_sort);
         checkEditButtonState();
+        checkSortButtonState();
         Drawable editIcon = editButton.getIcon();
         Drawable sortIcon = sortButton.getIcon();
         editIcon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
@@ -166,6 +177,7 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         switch (id){
             case R.id.action_edit:
                 WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
@@ -187,7 +199,21 @@ public class MainActivity extends AppCompatActivity
                     intent.setData(Uri.parse("0"));
                     startActivity(intent);
                 }
-              
+                break;
+            case R.id.action_sortName:
+                if (subjects != null && subjects.isVisible()) {
+                    subjects.setSortType(SubjectsFragment.SORT_NAME);
+                }
+                break;
+            case R.id.action_sortDonePercent:
+                if (subjects != null && subjects.isVisible()) {
+                    subjects.setSortType(SubjectsFragment.SORT_DONE_PERCENT);
+                }
+                break;
+            case R.id.action_sortTotalWork:
+                if (subjects != null && subjects.isVisible()) {
+                    subjects.setSortType(SubjectsFragment.SORT_TOTAL_WORK);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -202,6 +228,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = new HomeFragment();
         String tag = null;
         editButton.setVisible(false);
+        sortButton.setVisible(false);
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
             tag = FRAG_HOME;
@@ -209,6 +236,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new SubjectsFragment();
             tag = FRAG_SUBJECTS;
             editButton.setVisible(true);
+            sortButton.setVisible(true);
         } else if (id == R.id.nav_calendar) {
             fragment = new CalendarFragment();
             tag = FRAG_CALENDAR;

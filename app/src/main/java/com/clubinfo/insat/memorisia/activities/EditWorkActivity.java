@@ -58,15 +58,15 @@ public class EditWorkActivity extends AppCompatActivity {
         
         SaveManager saver = new SaveManager(this);
         
-        agendasList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.AGENDA));
+        agendasList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.AGENDA), false);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(agendasList));
         agendasSpinner.setAdapter(adapter);
         
-        subjectsList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT));
+        subjectsList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), false);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(subjectsList));
         subjectsSpinner.setAdapter(adapter);
         
-        workTypesList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.WORKTYPE));
+        workTypesList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.WORKTYPE), false);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(workTypesList));
         worksSpinner.setAdapter(adapter);
         

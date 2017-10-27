@@ -263,24 +263,24 @@ public class SaveManager {
     
     
     private void readFile(Context context, String fileName) {
-        try {
-            InputStream inputStream = context.openFileInput(fileName);
-            
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString;
-                Log.w("test", "Document Start");
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    Log.w("test", receiveString);
-                }
-                inputStream.close();
-                Log.w("test", "Document End");
-            }
-        } catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
+//        try {
+//            InputStream inputStream = context.openFileInput(fileName);
+//
+//            if (inputStream != null) {
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//                String receiveString;
+//                Log.w("test", "Document Start");
+//                while ((receiveString = bufferedReader.readLine()) != null) {
+//                    Log.w("test", receiveString);
+//                }
+//                inputStream.close();
+//                Log.w("test", "Document End");
+//            }
+//        } catch (FileNotFoundException e) {
+//            Log.e("login activity", "File not found: " + e.toString());
+//        } catch (IOException e) {
+//            Log.e("login activity", "Can not read file: " + e.toString());
+//        }
     }
 }

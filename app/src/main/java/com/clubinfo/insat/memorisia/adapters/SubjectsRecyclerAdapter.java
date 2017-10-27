@@ -5,8 +5,10 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +82,6 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         final String color = modules.get(pos).getColor();
         final int id = modules.get(pos).getId();
         holder.textHeader.setText(name);
-        holder.textFooter.setText("Footer: " + name);
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
         holder.logo.setColorFilter(Color.parseColor(color));
     
@@ -91,11 +92,18 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
             holder.bar.setProgress(ModulesUtils.getWorkDoneNumber(worksList));
             if (ModulesUtils.getWorkDoneNumber(worksList) == worksList.size())
                 holder.bar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+            if (Build.VERSION.SDK_INT >= 24)
+                holder.textFooter.setText(Html.fromHtml(context.getString(R.string.done) + ": " +
+                    ModulesUtils.getWorkDoneNumber(worksList) + " / " + "<b>" + worksList.size() + "</b>", Html.FROM_HTML_MODE_LEGACY));
+            else
+                holder.textFooter.setText(Html.fromHtml(context.getString(R.string.done) + ": " +
+                        ModulesUtils.getWorkDoneNumber(worksList) + " / " + "<b>" + worksList.size() + "</b>"));
         }
         else{
             holder.bar.setMax(1);
             holder.bar.setProgress(1);
             holder.bar.getProgressDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+            holder.textFooter.setText("");
         }
         
         holder.itemView.setOnClickListener(new View.OnClickListener() {
