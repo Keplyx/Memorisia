@@ -31,7 +31,10 @@ import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity
                 context.startActivity(intent);
             }
         });
-        
+        getSelectedAgendasFromPrefs();
     }
     
     @Override
@@ -214,17 +217,20 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < modules.size(); i++) {
             MenuItem item = menu.add(0, modules.get(i).getId(), Menu.NONE, modules.get(i).getText());
             item.setCheckable(true);
+            item.setChecked(selectedAgendas.contains(modules.get(i).getId()));
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
-                    menuItem.setChecked(!menuItem.isChecked());
-                    if (menuItem.isChecked())
+                    if (!menuItem.isChecked()) {
+                        menuItem.setChecked(true);
                         selectedAgendas.add(menuItem.getItemId());
-                    else {
+                    }
+                    else if (canDeselectAgenda(menuItem.getItemId())){
                         for (int i = 0; i < selectedAgendas.size(); i++){
                             if (selectedAgendas.get(i) == menuItem.getItemId())
                                 selectedAgendas.remove(i);
                         }
+                        menuItem.setChecked(false);
                     }
                     SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
                     WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
@@ -232,11 +238,47 @@ public class MainActivity extends AppCompatActivity
                         subjects.generateSubjectsList();
                     else if (works != null && works.isVisible())
                         works.generateWorksList();
+    
+                    saveSelectedAgendasToPrefs();
                     return false;
                 }
             });
         }
     }
+    
+    private boolean canDeselectAgenda(int id){
+        Menu menu = agendaButton.getSubMenu();
+        for (int i = 0; i < menu.size(); i++){
+            if (menu.getItem(i).isChecked() && menu.getItem(i).getItemId() != id)
+                return true;
+        }
+        return false;
+    }
+    
+    private void saveSelectedAgendasToPrefs(){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        List<String> agendas = new ArrayList<>();
+        for (int i = 0; i < selectedAgendas.size(); i++){
+            agendas.add(selectedAgendas.get(i).toString());
+        }
+        Set<String> set = new HashSet<>(agendas);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, set);
+        editor.apply();
+    }
+    
+    private void getSelectedAgendasFromPrefs(){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> set = sharedPref.getStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, null);
+        List<String> agendas = new ArrayList<>();
+        if (set != null)
+            agendas = new ArrayList<>(set);
+        selectedAgendas.clear();
+        for (int i = 0; i < agendas.size(); i++){
+            selectedAgendas.add(Integer.parseInt(agendas.get(i)));
+        }
+    }
+    
     
     public Menu getMenu() {
         return menu;
