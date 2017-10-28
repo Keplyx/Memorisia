@@ -180,10 +180,10 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_below="@+id/textView28"
+                android:layout_height="96dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView28"/>
 
         </RelativeLayout>
     </ScrollView>
@@ -191,25 +191,29 @@
     <Button
         android:id="@+id/doneButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:backgroundTint="@color/colorYes"
+        android:drawableLeft="@drawable/ic_done_black_24dp"
         android:onClick="onClickDoneWork"
-        android:text="@string/done"/>
+        android:text="@string/done"
+        android:textColor="@color/backgroundDark"/>
 
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/colorRed"
+        android:backgroundTint="@color/colorNo"
+        android:drawableRight="@drawable/ic_delete_forever_black_24dp"
         android:onClick="onClickDelete"
-        android:text="@string/delete"/>
+        android:text="@string/delete"
+        android:textColor="@color/backgroundDark"/>
 
 </RelativeLayout>

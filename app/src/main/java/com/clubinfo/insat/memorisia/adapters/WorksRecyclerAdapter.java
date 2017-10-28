@@ -5,8 +5,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 import com.clubinfo.insat.memorisia.activities.EditOptionsActivity;
 import com.clubinfo.insat.memorisia.activities.EditWorkActivity;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
+import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.R;
@@ -34,7 +40,6 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     private List<WorkModule> modules;
     private List<OptionModule> subjectsList;
     private Context context;
-    private FragmentManager fragMan;
     
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView workTypeHeader;
@@ -108,11 +113,14 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.description.setText(description);
         holder.priorityBar.setRating((float) priority);
         holder.doneCheckBox.setChecked(state);
+        setWorkChecked(holder.layout, state);
+        final View holderLayout = holder.layout;
         holder.doneCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                @Override
                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     SaveManager saver = new SaveManager(context);
                     saver.saveModule(new WorkModule(id, agendaId, subjectId, workTypeId, priority, description, notifications, isChecked));
+                    setWorkChecked(holderLayout, isChecked);
                }
            }
         );
@@ -136,6 +144,19 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
                 context.startActivity(intent);
             }
         });
+    }
+    
+    private void setWorkChecked(View v, boolean isChecked){
+        if (!isChecked){
+            v.setBackgroundColor(0);
+            return;
+        }
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
+        if (nightMode)
+            v.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWorkDoneDark));
+        else
+            v.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWorkDoneLight));
     }
     
     @Override

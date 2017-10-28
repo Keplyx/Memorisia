@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -96,8 +97,10 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         if (worksList.size() != 0) {
             holder.bar.setMax(worksList.size());
             holder.bar.setProgress(ModulesUtils.getWorkDoneNumber(worksList));
-            if (ModulesUtils.getWorkDoneNumber(worksList) == worksList.size())
-                holder.bar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+            if (ModulesUtils.getWorkDoneNumber(worksList) == worksList.size()) {
+                holder.bar.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.colorWorkDoneLight), PorterDuff.Mode.SRC_IN);
+                holder.textHeader.setTextColor(ContextCompat.getColor(context, R.color.colorWorkDoneLight));
+            }
             if (Build.VERSION.SDK_INT >= 24)
                 holder.textFooter.setText(Html.fromHtml(context.getString(R.string.done) + ": " +
                     ModulesUtils.getWorkDoneNumber(worksList) + " / " + "<b>" + worksList.size() + "</b>", Html.FROM_HTML_MODE_LEGACY));
@@ -106,9 +109,8 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
                         ModulesUtils.getWorkDoneNumber(worksList) + " / " + "<b>" + worksList.size() + "</b>"));
         }
         else{
-            holder.bar.setMax(1);
-            holder.bar.setProgress(1);
-            holder.bar.getProgressDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+            holder.bar.getProgressDrawable().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+            holder.textHeader.setTextColor(ContextCompat.getColor(context, R.color.dividerColorInverse));
             holder.textFooter.setText("");
         }
         
@@ -120,7 +122,6 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
                 b.putInt("id", id);
                 fragment.setArguments(b);
                 android.app.FragmentTransaction ft = fragMan.beginTransaction();
-                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.replace(R.id.content_frame, fragment, MainActivity.FRAG_WORKS);
                 ft.addToBackStack(null);
                 ft.commit();

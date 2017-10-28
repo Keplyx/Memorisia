@@ -38,6 +38,8 @@ public class EditWorkActivity extends AppCompatActivity {
     private RatingBar priorityBar;
     private Switch notificationsSwitch;
     
+    private boolean state = false;
+    
     private WorkModule actualModule;
     
     @Override
@@ -80,6 +82,7 @@ public class EditWorkActivity extends AppCompatActivity {
                 priorityBar.setRating((float) b.getInt("priority"));
             descriptionTextView.setText(b.getString("text"));
             notificationsSwitch.setChecked(b.getBoolean("notifications"));
+            state = b.getBoolean("state");
             generateModule(b.getInt("id"));
         }
         else
@@ -108,7 +111,7 @@ public class EditWorkActivity extends AppCompatActivity {
         int priority = (int) priorityBar.getRating();
         String description = descriptionTextView.getText().toString();
         boolean notifications = notificationsSwitch.isChecked();
-        actualModule = new WorkModule(id, selectedAgenda, selectedSubject, selectedWorkType, priority, description, notifications, false);
+        actualModule = new WorkModule(id, selectedAgenda, selectedSubject, selectedWorkType, priority, description, notifications, state);
     }
     
     
