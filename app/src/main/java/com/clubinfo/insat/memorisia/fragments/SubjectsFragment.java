@@ -7,12 +7,12 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.adapters.SubjectsRecyclerAdapter;
 import com.clubinfo.insat.memorisia.SaveManager;
@@ -47,8 +47,14 @@ public class SubjectsFragment extends Fragment {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         currentSortType = sharedPref.getInt(SettingsActivity.KEY_SUBJECTS_SORT_TYPE, 0);
         reverseSort = sharedPref.getBoolean(SettingsActivity.KEY_SUBJECTS_SORT_REVERSE, false);
-        generateSubjectsList(currentSortType);
-
+        generateSubjectsList();
+    
+        MainActivity act = (MainActivity) getActivity();
+        if (act.getSortButton() != null) {
+            act.generateSortMenu(act.getSortButton().getSubMenu(), true);
+            act.changeSortMenuItemIcon(act.getSortButton().getSubMenu().getItem(currentSortType), reverseSort);
+        }
+        
         
         return view;
     }
@@ -60,21 +66,25 @@ public class SubjectsFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(SettingsActivity.KEY_SUBJECTS_SORT_TYPE, currentSortType);
         editor.putBoolean(SettingsActivity.KEY_SUBJECTS_SORT_REVERSE, reverseSort);
-        editor.commit();
-        generateSubjectsList(currentSortType);
+        editor.apply();
+        generateSubjectsList();
     }
     
-    private void generateSubjectsList(int sortType){
+    public boolean isReverseSort() {
+        return reverseSort;
+    }
+    
+    private void generateSubjectsList(){
         SaveManager saver = new SaveManager(getActivity());
-        switch (sortType) {
+        switch (currentSortType) {
             case SORT_NAME:
-                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), reverseSort), getFragmentManager());
+                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), reverseSort), getFragmentManager());
                 break;
             case SORT_DONE_PERCENT:
-                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortModuleListByDonePercent(saver.getOptionModuleList(SaveManager.SUBJECT), getActivity(), reverseSort), getFragmentManager());
+                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortOptionModuleListByDonePercent(saver.getOptionModuleList(SaveManager.SUBJECT), getActivity(), reverseSort), getFragmentManager());
                 break;
             case SORT_TOTAL_WORK:
-                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortModuleListByTotalWork(saver.getOptionModuleList(SaveManager.SUBJECT), getActivity(), reverseSort), getFragmentManager());
+                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortOptionModuleListByTotalWork(saver.getOptionModuleList(SaveManager.SUBJECT), getActivity(), reverseSort), getFragmentManager());
                 break;
             default:
                 mAdapter = new SubjectsRecyclerAdapter(getActivity(), saver.getOptionModuleList(SaveManager.SUBJECT), getFragmentManager());
@@ -86,6 +96,6 @@ public class SubjectsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        generateSubjectsList(currentSortType);
+        generateSubjectsList();
     }
 }

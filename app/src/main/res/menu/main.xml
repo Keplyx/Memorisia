@@ -14,15 +14,7 @@
         android:title="@string/action_sort"
         app:showAsAction="ifRoom">
         <menu>
-            <item
-                android:id="@+id/action_sortName"
-                android:title="@string/sort_name" />
-            <item
-                android:id="@+id/action_sortDonePercent"
-                android:title="@string/sort_percent" />
-            <item
-                android:id="@+id/action_sortTotalWork"
-                android:title="@string/sort_total_work" />
+
         </menu>
     </item>
 </menu>

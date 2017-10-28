@@ -38,4 +38,6 @@
     <string name="sort_name">Sort by name</string>
     <string name="sort_percent">Sort by done percent</string>
     <string name="sort_total_work">Sort by total work</string>
+    <string name="sort_priority">Sort by priority</string>
+    <string name="sort_type">Sort by type</string>
 </resources>

@@ -1,9 +1,7 @@
 package com.clubinfo.insat.memorisia.activities;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +15,6 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
@@ -58,15 +55,15 @@ public class EditWorkActivity extends AppCompatActivity {
         
         SaveManager saver = new SaveManager(this);
         
-        agendasList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.AGENDA), false);
+        agendasList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.AGENDA), false);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(agendasList));
         agendasSpinner.setAdapter(adapter);
         
-        subjectsList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), false);
+        subjectsList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), false);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(subjectsList));
         subjectsSpinner.setAdapter(adapter);
         
-        workTypesList = ModulesUtils.sortModuleListByName(saver.getOptionModuleList(SaveManager.WORKTYPE), false);
+        workTypesList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.WORKTYPE), false);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(workTypesList));
         worksSpinner.setAdapter(adapter);
         

@@ -40,14 +40,11 @@ public class SaveManager {
     
     
     public List<OptionModule> getOptionModuleList(int type) {
-        Log.w("test", "get option module list triggered");
         List<OptionModule> modules = new ArrayList<>();
         try {
-            Log.w("test", context.getFilesDir().getPath() + "/" + MODULES_FILENAME);
             File file = new File(context.getFilesDir().getPath() + "/" + MODULES_FILENAME);
             if (!file.exists())
                 return new ArrayList<>();
-            Log.w("test", "File found");
             readFile(context, MODULES_FILENAME);
             FileInputStream fis = context.openFileInput(MODULES_FILENAME);
             modules = new OptionModuleXmlParser().parse(fis, type);
@@ -60,14 +57,11 @@ public class SaveManager {
     }
     
     public List<WorkModule> getWorkModuleList(int agenda, int subject, int workType) {
-        Log.w("test", "get work module list triggered");
         List<WorkModule> modules = new ArrayList<>();
         try {
-            Log.w("test", context.getFilesDir().getPath() + "/" + WORKS_FILENAME);
             File file = new File(context.getFilesDir().getPath() + "/" + WORKS_FILENAME);
             if (!file.exists())
                 return new ArrayList<>();
-            Log.w("test", "File found");
             readFile(context, WORKS_FILENAME);
             FileInputStream fis = context.openFileInput(WORKS_FILENAME);
             modules = new WorkModuleXmlParser().parse(fis, agenda, subject, workType);
@@ -103,7 +97,6 @@ public class SaveManager {
     }
     
     public void saveModule(OptionModule module) {
-        Log.w("test", "Save Option triggered");
         List<OptionModule> moduleList = getOptionModuleList(-1);
         if (module.getId() == -1) {
             module.setId(createUniqueModuleId(moduleList));
@@ -114,7 +107,6 @@ public class SaveManager {
     }
     
     public void saveModule(WorkModule module) {
-        Log.w("test", "Save Work triggered");
         List<WorkModule> moduleList = getWorkModuleList(-1, -1, -1);
         if (module.getId() == -1) {
             module.setId(createUniqueModuleId(moduleList));
@@ -186,7 +178,6 @@ public class SaveManager {
     }
     
     private void writeWorkModuleToXml(List<WorkModule> list) {
-        Log.w("test", "Write work module list triggered");
         FileOutputStream fos;
         try {
             fos = context.openFileOutput(WORKS_FILENAME, Context.MODE_PRIVATE);
@@ -208,7 +199,6 @@ public class SaveManager {
     }
     
     private XmlSerializer writeModule(XmlSerializer serializer, OptionModule module) {
-        Log.w("test", "write module triggered");
         try {
             serializer.startTag(null, OptionModuleXmlParser.OPTION_MODULE_START_TAG);
             serializer.attribute(null, "id", Integer.toString(module.getId()));

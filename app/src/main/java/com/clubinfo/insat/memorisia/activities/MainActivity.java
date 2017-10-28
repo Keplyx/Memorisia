@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,8 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
@@ -33,9 +30,6 @@ import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
@@ -43,6 +37,7 @@ public class MainActivity extends AppCompatActivity
     
     private Context context;
     
+    Menu menu;
     MenuItem editButton;
     MenuItem sortButton;
     private boolean isNightMode;
@@ -51,6 +46,13 @@ public class MainActivity extends AppCompatActivity
     public static final String FRAG_SUBJECTS = "SUBJECTS";
     public static final String FRAG_CALENDAR = "CALENDAR";
     public static final String FRAG_WORKS = "WORKS";
+    
+    
+    private static final int MENU_SORT_NAME = Menu.FIRST;
+    private static final int MENU_SORT_DONE_PERCENT = Menu.FIRST + 1;
+    private static final int MENU_SORT_TOTAL_WORK = Menu.FIRST + 2;
+    private static final int MENU_SORT_PRIORITY = Menu.FIRST + 3;
+    private static final int MENU_SORT_WORK_TYPE = Menu.FIRST + 4;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,9 +134,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
     
-    private void checkSortButtonState(){
+    public void checkSortButtonState(){
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
-        if (subjects != null && subjects.isVisible()) {
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        if (subjects != null && subjects.isVisible() || (works != null && works.isVisible())) {
             sortButton.setVisible(true);
         }
         else{
@@ -153,8 +156,9 @@ public class MainActivity extends AppCompatActivity
     }
     
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu m) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        menu = m;
         getMenuInflater().inflate(R.menu.main, menu);
         editButton = menu.findItem(R.id.action_edit);
         sortButton = menu.findItem(R.id.action_sort);
@@ -167,8 +171,35 @@ public class MainActivity extends AppCompatActivity
         editButton.setIcon(editIcon);
         sortButton.setIcon(sortIcon);
     
-        
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        Menu subMenu = sortButton.getSubMenu();
+        if (subjects != null && subjects.isVisible())
+            generateSortMenu(subMenu, true);
+        else if (works != null && works.isVisible())
+            generateSortMenu(subMenu, false);
         return true;
+    }
+    
+    public void generateSortMenu(Menu menu, boolean isSubjects){
+        menu.clear();
+        menu.add(0, MENU_SORT_NAME, Menu.NONE, R.string.sort_name);
+        if (isSubjects) {
+            menu.add(0, MENU_SORT_DONE_PERCENT, Menu.NONE, R.string.sort_percent);
+            menu.add(0, MENU_SORT_TOTAL_WORK, Menu.NONE, R.string.sort_total_work);
+        }
+        else {
+            menu.add(0, MENU_SORT_PRIORITY, Menu.NONE, R.string.sort_priority);
+            menu.add(0, MENU_SORT_WORK_TYPE, Menu.NONE, R.string.sort_type);
+        }
+    }
+    
+    public Menu getMenu() {
+        return menu;
+    }
+    
+    public MenuItem getSortButton() {
+        return sortButton;
     }
     
     @Override
@@ -178,9 +209,9 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
         switch (id){
             case R.id.action_edit:
-                WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
                 if (works != null && works.isVisible()) {
                     Intent intent = new Intent(this, EditOptionsActivity.class);
                     SaveManager saver = new SaveManager(this);
@@ -200,27 +231,57 @@ public class MainActivity extends AppCompatActivity
                     startActivity(intent);
                 }
                 break;
-            case R.id.action_sortName:
+            case MENU_SORT_NAME:
                 if (subjects != null && subjects.isVisible()) {
                     subjects.setSortType(SubjectsFragment.SORT_NAME);
+                    changeSortMenuItemIcon(item, subjects.isReverseSort());
+                }
+                else if (works != null && works.isVisible()) {
+                    works.setSortType(WorkViewFragment.SORT_NAME);
+                    changeSortMenuItemIcon(item, works.isReverseSort());
                 }
                 break;
-            case R.id.action_sortDonePercent:
+            case MENU_SORT_DONE_PERCENT:
                 if (subjects != null && subjects.isVisible()) {
                     subjects.setSortType(SubjectsFragment.SORT_DONE_PERCENT);
+                    changeSortMenuItemIcon(item, subjects.isReverseSort());
                 }
                 break;
-            case R.id.action_sortTotalWork:
+            case MENU_SORT_TOTAL_WORK:
                 if (subjects != null && subjects.isVisible()) {
                     subjects.setSortType(SubjectsFragment.SORT_TOTAL_WORK);
+                    changeSortMenuItemIcon(item, subjects.isReverseSort());
+                }
+                break;
+            case MENU_SORT_PRIORITY:
+                if (works != null && works.isVisible()) {
+                    works.setSortType(WorkViewFragment.SORT_PRIORITY);
+                    changeSortMenuItemIcon(item, works.isReverseSort());
+                }
+                break;
+            case MENU_SORT_WORK_TYPE:
+                if (works != null && works.isVisible()) {
+                    works.setSortType(WorkViewFragment.SORT_WORK_TYPE);
+                    changeSortMenuItemIcon(item, works.isReverseSort());
                 }
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
     
+    public void changeSortMenuItemIcon(MenuItem item, boolean isReverse){
+        for (int i = 0; i < sortButton.getSubMenu().size(); i++){
+            MenuItem it = sortButton.getSubMenu().getItem(i);
+            if (it.getItemId() != item.getItemId())
+                it.setIcon(0);
+            else if (!isReverse)
+                it.setIcon(R.drawable.ic_arrow_downward_black_24dp);
+            else if (isReverse)
+                it.setIcon(R.drawable.ic_arrow_upward_black_24dp);
+        }
+    }
     
-    @SuppressWarnings("StatementWithEmptyBody")
+    
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
