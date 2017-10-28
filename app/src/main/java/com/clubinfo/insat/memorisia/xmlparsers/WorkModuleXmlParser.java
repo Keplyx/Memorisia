@@ -1,10 +1,8 @@
 package com.clubinfo.insat.memorisia.xmlparsers;
 
 
-import android.util.Log;
 import android.util.Xml;
 
-import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -20,6 +18,15 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
     public static String WORK_START_TAG = "worksList";
     public static String WORK_MODULE_START_TAG = "work";
     
+    /**
+     * Parses the works save file and extracts a {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list
+     *
+     * @param in       {@link java.io.InputStream InputStream} to use
+     * @param agenda   Agenda id to search for. -1 to search for all
+     * @param subject  Subject id to search for. -1 to search for all
+     * @param workType Work type id to search for. -1 to search for all
+     * @return {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list of the parsed file
+     */
     public List<WorkModule> parse(InputStream in, int agenda, int subject, int workType) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
@@ -33,17 +40,34 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
         }
     }
     
+    
+    /**
+     * Gets only the {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule}s of the given
+     * agenda, subject and work type a in a list
+     *
+     * @param list     {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list to search in
+     * @param agenda   Agenda id to search for. -1 to search for all
+     * @param subject  Subject id to search for. -1 to search for all
+     * @param workType Work type id to search for. -1 to search for all
+     * @return {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list of the given type
+     */
     private List<WorkModule> getModulesOfType(List<WorkModule> list, int agenda, int subject, int workType) {
         if (subject < 0 || list.size() == 0)
             return list;
         List<WorkModule> modules = new ArrayList<>();
         for (WorkModule m : list) {
-            if (m.getSubjectId() == subject)
+            if (m.getSubjectId() == subject && m.getAgendaId() == agenda && m.getWorkTypeId() == workType)
                 modules.add(m);
         }
         return modules;
     }
     
+    /**
+     * Parses every modules and gets their data
+     *
+     * @param parser xml parser to use
+     * @return {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list of the parsed file
+     */
     private List<WorkModule> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
         List<WorkModule> entries = new ArrayList<>();
         parser.require(XmlPullParser.START_TAG, null, WORK_START_TAG);
@@ -60,8 +84,12 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
         return entries;
     }
     
-    // Parses the contents of a module. If it encounters a name, priority... hands them off
-    // to their respective "read" methods for processing. Otherwise, skips the tag.
+    /**
+     * Parses the content of a module
+     *
+     * @param parser xml parser to use
+     * @return {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} of the parsed module
+     */
     private WorkModule readModule(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, WORK_MODULE_START_TAG);
         int[] attributes = readModuleAttributes(parser);
@@ -88,9 +116,15 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
                 skip(parser);
             }
         }
-        return new WorkModule(attributes[0], attributes[1], attributes[2], attributes[3], priority,name, notifications, state);
+        return new WorkModule(attributes[0], attributes[1], attributes[2], attributes[3], priority, name, notifications, state);
     }
     
+    /**
+     * Reads the attributes of a module (id, agenda id, subject id, and work type id)
+     *
+     * @param parser xml parser to use
+     * @return array containing parsed data: id at index 0, agenda id at 1, subject id at 2, work type id at 3
+     */
     private int[] readModuleAttributes(XmlPullParser parser) throws IOException, XmlPullParserException {
         String idString = "";
         String agendaString = "";
@@ -108,13 +142,12 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
                 Integer.parseInt(subjectString), Integer.parseInt(worktypeString)};
     }
     
-    public boolean readState(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "state");
-        String state = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "state");
-        return Boolean.parseBoolean(state);
-    }
-    
+    /**
+     * Reads the priority property of a module
+     *
+     * @param parser xml parser to use
+     * @return Integer representation of the priority
+     */
     private int readPriority(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "priority");
         String prio = readText(parser);

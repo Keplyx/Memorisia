@@ -1,7 +1,9 @@
 package com.clubinfo.insat.memorisia.modules;
 
-
-public class Module{
+/**
+ * Module that can contain an int, a String, and a boolean, serving as a base for more complexe modules
+ */
+public class Module {
     private int id;
     private String text;
     private boolean notificationsEnabled;

@@ -13,6 +13,9 @@ import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 
 import java.io.IOException;
 
+/**
+ * Class providing general utility static methods
+ */
 public class Utils {
     
     /**

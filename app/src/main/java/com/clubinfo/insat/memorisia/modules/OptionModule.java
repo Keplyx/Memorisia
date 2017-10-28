@@ -1,8 +1,9 @@
 package com.clubinfo.insat.memorisia.modules;
 
 
-import java.awt.font.TextAttribute;
-
+/**
+ * Class representing an agenda, a subject, or a work type
+ */
 public class OptionModule extends Module{
     private int type;
     private String logo;

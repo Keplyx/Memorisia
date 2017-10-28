@@ -1,7 +1,9 @@
 package com.clubinfo.insat.memorisia.modules;
 
-
-public class WorkModule extends Module{
+/**
+ * Class representing a work
+ */
+public class WorkModule extends Module {
     private int agendaId;
     private int subjectId;
     private int workTypeId;

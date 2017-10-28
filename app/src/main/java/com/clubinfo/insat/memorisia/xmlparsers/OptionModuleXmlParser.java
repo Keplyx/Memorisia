@@ -1,7 +1,6 @@
 package com.clubinfo.insat.memorisia.xmlparsers;
 
 
-import android.util.Log;
 import android.util.Xml;
 
 import com.clubinfo.insat.memorisia.modules.OptionModule;
@@ -20,6 +19,14 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
     public static String OPTION_START_TAG = "optionsList";
     public static String OPTION_MODULE_START_TAG = "option";
     
+    /**
+     * Parses the modules save file and extracts a {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} list
+     *
+     * @param in   {@link java.io.InputStream InputStream} to use
+     * @param type Type of {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} to get, defined in
+     *             {@link com.clubinfo.insat.memorisia.SaveManager SaveManager}. -1 to get all
+     * @return {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} list of the parsed file
+     */
     public List<OptionModule> parse(InputStream in, int type) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
@@ -33,6 +40,14 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
         }
     }
     
+    /**
+     * Gets only the {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule}s of the given type in a list
+     *
+     * @param list {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} list to search in
+     * @param type Type of {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} to get, defined in
+     *             {@link com.clubinfo.insat.memorisia.SaveManager SaveManager}. -1 to get all
+     * @return {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} list of the given type
+     */
     private List<OptionModule> getModulesOfType(List<OptionModule> list, int type) {
         if (type < 0 || list.size() == 0)
             return list;
@@ -44,6 +59,12 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
         return modules;
     }
     
+    /**
+     * Parses every modules and gets their data
+     *
+     * @param parser xml parser to use
+     * @return {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} list of the parsed file
+     */
     private List<OptionModule> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
         List<OptionModule> entries = new ArrayList<>();
         parser.require(XmlPullParser.START_TAG, null, OPTION_START_TAG);
@@ -60,13 +81,15 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
         return entries;
     }
     
-    
-    // Parses the contents of a module. If it encounters a name, logo... hands them off
-    // to their respective "read" methods for processing. Otherwise, skips the tag.
+    /**
+     * Parses the content of a module
+     *
+     * @param parser xml parser to use
+     * @return {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} of the parsed module
+     */
     private OptionModule readModule(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, OPTION_MODULE_START_TAG);
         int[] attributes = readModuleAttributes(parser);
-        //int[] attributes = new int[] {0, 0};
         String name = null;
         String color = null;
         String logo = null;
@@ -92,6 +115,12 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
         return new OptionModule(attributes[0], attributes[1], name, logo, color, notifications);
     }
     
+    /**
+     * Reads the attributes of a module (id and type)
+     *
+     * @param parser xml parser to use
+     * @return array containing parsed data: id at index 0, type at 1
+     */
     private int[] readModuleAttributes(XmlPullParser parser) throws IOException, XmlPullParserException {
         String idString = "";
         String typeString = "";
@@ -104,6 +133,12 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
         return new int[]{Integer.parseInt(idString), Integer.parseInt(typeString)};
     }
     
+    /**
+     * Reads the color property of a module
+     *
+     * @param parser xml parser to use
+     * @return String representation of the color
+     */
     private String readColor(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "color");
         String color = readText(parser);
@@ -111,6 +146,12 @@ public class OptionModuleXmlParser extends ModuleXmlParser {
         return color;
     }
     
+    /**
+     * Reads the logo property of a module
+     *
+     * @param parser xml parser to use
+     * @return String representation of the logo path
+     */
     private String readLogo(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "logo");
         String logo = readText(parser);

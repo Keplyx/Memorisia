@@ -13,6 +13,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Class providing static methods to manage {@link com.clubinfo.insat.memorisia.modules.Module modules}
+ */
 public class ModulesUtils {
     
     /**

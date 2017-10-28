@@ -6,8 +6,18 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+/**
+ * Class providing general methods to parse a {@link com.clubinfo.insat.memorisia.modules.Module Module} xml file
+ */
 public class ModuleXmlParser {
     
+    /**
+     * Reads the string property of a given tag
+     *
+     * @param parser Reference to the xml parser
+     * @param tag    Tag to read the property from
+     * @return String representing the property
+     */
     public String readStringProperty(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, tag);
         String value = readText(parser);
@@ -15,6 +25,13 @@ public class ModuleXmlParser {
         return value;
     }
     
+    /**
+     * Reads the boolean property of a given tag
+     *
+     * @param parser Reference to the xml parser
+     * @param tag    Tag to read the property from
+     * @return boolean representing the property
+     */
     public boolean readBooleanProperty(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, tag);
         String value = readText(parser);
@@ -22,7 +39,12 @@ public class ModuleXmlParser {
         return Boolean.parseBoolean(value);
     }
     
-    // For the tags title and summary, extracts their text values.
+    /**
+     * Gets the text of the next parsing event
+     *
+     * @param parser Reference to the xml parser
+     * @return String of the read text
+     */
     public String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
@@ -32,6 +54,11 @@ public class ModuleXmlParser {
         return result;
     }
     
+    /**
+     * Skips the next tag
+     *
+     * @param parser Reference to the xml parser
+     */
     public void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             throw new IllegalStateException();
