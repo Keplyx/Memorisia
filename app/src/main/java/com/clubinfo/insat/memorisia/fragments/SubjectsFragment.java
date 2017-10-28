@@ -54,8 +54,6 @@ public class SubjectsFragment extends Fragment {
             act.generateSortMenu(act.getSortButton().getSubMenu(), true);
             act.changeSortMenuItemIcon(act.getSortButton().getSubMenu().getItem(currentSortType), reverseSort);
         }
-        
-        
         return view;
     }
     

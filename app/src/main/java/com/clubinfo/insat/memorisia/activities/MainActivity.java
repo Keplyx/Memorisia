@@ -28,10 +28,11 @@ import com.clubinfo.insat.memorisia.fragments.HomeFragment;
 import com.clubinfo.insat.memorisia.fragments.SubjectsFragment;
 import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
+import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,42 +40,37 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
-    public static String PACKAGE_NAME;
-    
-    private Context context;
-    
-    Menu menu;
-    MenuItem editButton;
-    MenuItem sortButton;
-    MenuItem agendaButton;
-    private boolean isNightMode;
-    
-    private List<Integer> selectedAgendas = new ArrayList<>();
-    
     public static final String FRAG_HOME = "HOME";
     public static final String FRAG_SUBJECTS = "SUBJECTS";
     public static final String FRAG_CALENDAR = "CALENDAR";
     public static final String FRAG_WORKS = "WORKS";
-    
-    
     private static final int MENU_SORT_NAME = Menu.FIRST;
     private static final int MENU_SORT_DONE_PERCENT = Menu.FIRST + 1;
     private static final int MENU_SORT_TOTAL_WORK = Menu.FIRST + 2;
     private static final int MENU_SORT_PRIORITY = Menu.FIRST + 3;
     private static final int MENU_SORT_WORK_TYPE = Menu.FIRST + 4;
+    public static String PACKAGE_NAME;
+    Menu menu;
+    MenuItem editButton;
+    MenuItem sortButton;
+    MenuItem agendaButton;
+    private Context context;
+    private boolean isNightMode;
+    private List<Integer> selectedAgendas = new ArrayList<>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setNightMode(this);
+        setContentView(R.layout.activity_main);
+        
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        isNightMode = nightMode;
-        if(nightMode)
-            setTheme(R.style.AppTheme_Dark_NoActionBar);
         
-        setContentView(R.layout.activity_main);
-    
-        PACKAGE_NAME = getApplicationContext().getPackageName();
+        isNightMode = nightMode;
+        context = this;
+        PACKAGE_NAME = getPackageName();
+        getSelectedAgendasFromPrefs();
         
         if (savedInstanceState == null)
             getFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
@@ -90,33 +86,32 @@ public class MainActivity extends AppCompatActivity
         
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    
-        context = this;
+        
+        
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, EditWorkActivity.class);
-                Bundle b = new Bundle();
-                b.putString("text", "");
-                b.putInt("workTypeId", -1);
-                b.putInt("subjectId", -1);
-                b.putInt("agendaId", -1);
-                b.putInt("priority", -1);
-                b.putInt("id", -1);
-                b.putBoolean("state", false);
-                b.putBoolean("notifications", false);
-                WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-                if (works != null && works.isVisible()) {
-                    SaveManager saver = new SaveManager(context);
-                    OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), works.getSubjectId());
-                    b.putInt("subjectId", module.getId());
-                }
-                intent.putExtras(b);
-                context.startActivity(intent);
+                createNewWork();
             }
         });
-        getSelectedAgendasFromPrefs();
+    }
+    
+    /**
+     * Creates a new {@link com.clubinfo.insat.memorisia.activities.EditWorkActivity EditWorkActivity}
+     * with default values.
+     */
+    private void createNewWork() {
+        Intent intent = new Intent(context, EditWorkActivity.class);
+        WorkModule work = new WorkModule(-1, -1, -1, -1, -1, "", false, false);
+        WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        if (workFragment != null && workFragment.isVisible()) {
+            SaveManager saver = new SaveManager(context);
+            OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getSubjectId());
+            work.setSubjectId(subject.getId());
+        }
+        intent.putExtras(ModulesUtils.createBundleFromModule(work));
+        context.startActivity(intent);
     }
     
     @Override
@@ -124,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        if (nightMode != isNightMode){
+        if (nightMode != isNightMode) { // Restart activity to apply night mode
             Intent intent = getIntent();
             intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Prevent loops in back button
             finish();
@@ -134,24 +129,34 @@ public class MainActivity extends AppCompatActivity
             generateAgendaMenu(agendaButton.getSubMenu());
     }
     
-    private void checkEditButtonState(){
+    /**
+     * Displays the edit subjects button if the
+     * {@link com.clubinfo.insat.memorisia.fragments.SubjectsFragment SubjectsFragment} or
+     * {@link com.clubinfo.insat.memorisia.fragments.WorkViewFragment WorkViewFragment}
+     * are active
+     */
+    private void checkEditButtonState() {
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
         if ((subjects != null && subjects.isVisible()) || (works != null && works.isVisible())) {
             editButton.setVisible(true);
-        }
-        else{
+        } else {
             editButton.setVisible(false);
         }
     }
     
-    public void checkSortButtonState(){
+    /**
+     * Displays the sort button if the
+     * {@link com.clubinfo.insat.memorisia.fragments.SubjectsFragment SubjectsFragment} or
+     * {@link com.clubinfo.insat.memorisia.fragments.WorkViewFragment WorkViewFragment}
+     * are active
+     */
+    public void checkSortButtonState() {
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
         if (subjects != null && subjects.isVisible() || (works != null && works.isVisible())) {
             sortButton.setVisible(true);
-        }
-        else{
+        } else {
             sortButton.setVisible(false);
         }
     }
@@ -180,53 +185,64 @@ public class MainActivity extends AppCompatActivity
         setToolbarIconWhite(sortButton);
         setToolbarIconWhite(agendaButton);
         
-        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
-        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
         Menu subMenu = sortButton.getSubMenu();
-        if (subjects != null && subjects.isVisible())
-            generateSortMenu(subMenu, true);
-        else if (works != null && works.isVisible())
-            generateSortMenu(subMenu, false);
+        generateSortMenu(subMenu, true);
+        
         generateAgendaMenu(agendaButton.getSubMenu());
         return true;
     }
     
-    private void setToolbarIconWhite(MenuItem item){
+    /**
+     * Sets the toolbar icons color to white to match the title
+     *
+     * @param item The menu item that will change color
+     */
+    private void setToolbarIconWhite(MenuItem item) {
         Drawable icon = item.getIcon();
         icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
         item.setIcon(icon);
     }
     
-    public void generateSortMenu(Menu menu, boolean isSubjects){
+    /**
+     * Generates the corresponding sort menu for the active fragment
+     *
+     * @param menu       Sort menu holding the sort options
+     * @param isSubjects Is the menu for subjects sorting or work sorting?
+     */
+    public void generateSortMenu(Menu menu, boolean isSubjects) {
         menu.clear();
         menu.add(0, MENU_SORT_NAME, Menu.NONE, R.string.sort_name);
         if (isSubjects) {
             menu.add(0, MENU_SORT_DONE_PERCENT, Menu.NONE, R.string.sort_percent);
             menu.add(0, MENU_SORT_TOTAL_WORK, Menu.NONE, R.string.sort_total_work);
-        }
-        else {
+        } else {
             menu.add(0, MENU_SORT_PRIORITY, Menu.NONE, R.string.sort_priority);
             menu.add(0, MENU_SORT_WORK_TYPE, Menu.NONE, R.string.sort_type);
         }
     }
     
-    public void generateAgendaMenu(final Menu menu){
+    /**
+     * Generates the agenda menu in the toolbar allowing the user to select which ones to display
+     *
+     * @param menu Menu holding the agendas
+     */
+    public void generateAgendaMenu(final Menu menu) {
         SaveManager saver = new SaveManager(this);
         List<OptionModule> modules = saver.getOptionModuleList(SaveManager.AGENDA);
         menu.clear();
         for (int i = 0; i < modules.size(); i++) {
             MenuItem item = menu.add(0, modules.get(i).getId(), Menu.NONE, modules.get(i).getText());
             item.setCheckable(true);
-            item.setChecked(selectedAgendas.contains(modules.get(i).getId()));
+            item.setChecked(selectedAgendas.contains(modules.get(i).getId())); // Check the entry if user previously selected it
+            // Update the selected agendas list on click and re-generate the corresponding list
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (!menuItem.isChecked()) {
                         menuItem.setChecked(true);
                         selectedAgendas.add(menuItem.getItemId());
-                    }
-                    else if (canDeselectAgenda(menuItem.getItemId())){
-                        for (int i = 0; i < selectedAgendas.size(); i++){
+                    } else if (canDeselectAgenda(menuItem.getItemId())) {
+                        for (int i = 0; i < selectedAgendas.size(); i++) {
                             if (selectedAgendas.get(i) == menuItem.getItemId())
                                 selectedAgendas.remove(i);
                         }
@@ -238,7 +254,7 @@ public class MainActivity extends AppCompatActivity
                         subjects.generateSubjectsList();
                     else if (works != null && works.isVisible())
                         works.generateWorksList();
-    
+                    
                     saveSelectedAgendasToPrefs();
                     return false;
                 }
@@ -246,48 +262,62 @@ public class MainActivity extends AppCompatActivity
         }
     }
     
-    private boolean canDeselectAgenda(int id){
+    /**
+     * Checks if the selected agenda in the menu is the only one active.
+     * If it is the only one, prevents the user from deselecting it.
+     *
+     * @param id Agenda id
+     * @return True if the user can deselect the agenda, false otherwise
+     */
+    private boolean canDeselectAgenda(int id) {
         Menu menu = agendaButton.getSubMenu();
-        for (int i = 0; i < menu.size(); i++){
+        for (int i = 0; i < menu.size(); i++) {
             if (menu.getItem(i).isChecked() && menu.getItem(i).getItemId() != id)
                 return true;
         }
         return false;
     }
     
-    private void saveSelectedAgendasToPrefs(){
+    /**
+     * Stores the selected agendas list to the shared preferences, to keep the selection from resetting on each app start
+     */
+    private void saveSelectedAgendasToPrefs() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         List<String> agendas = new ArrayList<>();
-        for (int i = 0; i < selectedAgendas.size(); i++){
+        for (int i = 0; i < selectedAgendas.size(); i++) {
             agendas.add(selectedAgendas.get(i).toString());
         }
-        Set<String> set = new HashSet<>(agendas);
+        Set<String> set = new HashSet<>(agendas); // Convert the int list to a Set to save it as a preference
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, set);
         editor.apply();
     }
     
-    private void getSelectedAgendasFromPrefs(){
+    /**
+     * Recovers the previously saved selected agendas list from shared preferences
+     */
+    private void getSelectedAgendasFromPrefs() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> set = sharedPref.getStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, null);
         List<String> agendas = new ArrayList<>();
         if (set != null)
             agendas = new ArrayList<>(set);
         selectedAgendas.clear();
-        for (int i = 0; i < agendas.size(); i++){
+        for (int i = 0; i < agendas.size(); i++) {
             selectedAgendas.add(Integer.parseInt(agendas.get(i)));
         }
     }
     
-    
-    public Menu getMenu() {
-        return menu;
-    }
-    
+    /**
+     * @return Reference to the {@link android.view.MenuItem MenuItem} holding the sort options
+     */
     public MenuItem getSortButton() {
         return sortButton;
     }
     
+    /**
+     * @return List of the selected agendas
+     */
     public List<Integer> getSelectedAgendas() {
         return selectedAgendas;
     }
@@ -300,77 +330,85 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        switch (id){
+        switch (id) {
             case R.id.action_edit:
                 if (works != null && works.isVisible()) {
-                    Intent intent = new Intent(this, EditOptionsActivity.class);
-                    SaveManager saver = new SaveManager(this);
-                    OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), works.getSubjectId());
-                    Bundle b = new Bundle();
-                    b.putString("name", module.getText());
-                    b.putString("logo", module.getLogo());
-                    b.putString("color", module.getColor());
-                    b.putInt("type", module.getType());
-                    b.putInt("id", module.getId());
-                    b.putBoolean("notifications", module.isNotificationsEnabled());
-                    intent.putExtras(b);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(this, OptionsListActivity.class);
-                    intent.setData(Uri.parse("0"));
-                    startActivity(intent);
+                    editCurrentSubject(works.getSubjectId());
+                } else {
+                    editSubjects();
                 }
                 break;
-            case MENU_SORT_NAME:
-                if (subjects != null && subjects.isVisible()) {
+        }
+        if (subjects != null && subjects.isVisible()) {
+            switch (id) {
+                case MENU_SORT_NAME:
                     subjects.setSortType(SubjectsFragment.SORT_NAME);
-                    changeSortMenuItemIcon(item, subjects.isReverseSort());
-                }
-                else if (works != null && works.isVisible()) {
-                    works.setSortType(WorkViewFragment.SORT_NAME);
-                    changeSortMenuItemIcon(item, works.isReverseSort());
-                }
-                break;
-            case MENU_SORT_DONE_PERCENT:
-                if (subjects != null && subjects.isVisible()) {
+                    break;
+                case MENU_SORT_DONE_PERCENT:
                     subjects.setSortType(SubjectsFragment.SORT_DONE_PERCENT);
-                    changeSortMenuItemIcon(item, subjects.isReverseSort());
-                }
-                break;
-            case MENU_SORT_TOTAL_WORK:
-                if (subjects != null && subjects.isVisible()) {
+                    break;
+                case MENU_SORT_TOTAL_WORK:
                     subjects.setSortType(SubjectsFragment.SORT_TOTAL_WORK);
-                    changeSortMenuItemIcon(item, subjects.isReverseSort());
-                }
-                break;
-            case MENU_SORT_PRIORITY:
-                if (works != null && works.isVisible()) {
+                    break;
+            }
+            changeSortMenuItemIcon(item, subjects.isReverseSort());
+        } else if (works != null && works.isVisible()) {
+            switch (id) {
+                case MENU_SORT_NAME:
+                    works.setSortType(WorkViewFragment.SORT_NAME);
+                    break;
+                case MENU_SORT_PRIORITY:
                     works.setSortType(WorkViewFragment.SORT_PRIORITY);
-                    changeSortMenuItemIcon(item, works.isReverseSort());
-                }
-                break;
-            case MENU_SORT_WORK_TYPE:
-                if (works != null && works.isVisible()) {
+                    break;
+                case MENU_SORT_WORK_TYPE:
                     works.setSortType(WorkViewFragment.SORT_WORK_TYPE);
-                    changeSortMenuItemIcon(item, works.isReverseSort());
-                }
-                break;
+                    break;
+            }
+            changeSortMenuItemIcon(item, works.isReverseSort());
         }
         return super.onOptionsItemSelected(item);
     }
     
-    public void changeSortMenuItemIcon(MenuItem item, boolean isReverse){
-        for (int i = 0; i < sortButton.getSubMenu().size(); i++){
+    /**
+     * Creates a new {@link com.clubinfo.insat.memorisia.activities.EditOptionsActivity EditOptionsActivity}
+     * corresponding to the given subject.
+     *
+     * @param subjectId Id of the subject to edit
+     */
+    private void editCurrentSubject(int subjectId) {
+        Intent intent = new Intent(this, EditOptionsActivity.class);
+        SaveManager saver = new SaveManager(this);
+        OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), subjectId);
+        intent.putExtras(ModulesUtils.createBundleFromModule(module));
+        startActivity(intent);
+    }
+    
+    /**
+     * Creates a new {@link com.clubinfo.insat.memorisia.activities.OptionsListActivity OptionsListActivity}
+     */
+    private void editSubjects() {
+        Intent intent = new Intent(this, OptionsListActivity.class);
+        intent.setData(Uri.parse("0"));
+        startActivity(intent);
+    }
+    
+    /**
+     * Changes the icon of a given MenuItem to display the current sorting order
+     *
+     * @param item      Item that will have its icon changed
+     * @param isReverse True to make the arrow point upward, false for downward
+     */
+    public void changeSortMenuItemIcon(MenuItem item, boolean isReverse) {
+        for (int i = 0; i < sortButton.getSubMenu().size(); i++) {
             MenuItem it = sortButton.getSubMenu().getItem(i);
             if (it.getItemId() != item.getItemId())
                 it.setIcon(0);
             else if (!isReverse)
-                it.setIcon(R.drawable.ic_arrow_downward_black_24dp);
-            else if (isReverse)
-                it.setIcon(R.drawable.ic_arrow_upward_black_24dp);
+                item.setIcon(R.drawable.ic_arrow_downward_black_24dp);
+            else
+                item.setIcon(R.drawable.ic_arrow_upward_black_24dp);
         }
     }
-    
     
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -380,22 +418,22 @@ public class MainActivity extends AppCompatActivity
         String tag = null;
         editButton.setVisible(false);
         sortButton.setVisible(false);
-        if (id == R.id.nav_home) {
+        if (id == R.id.nav_home) { // Display the home fragment
             fragment = new HomeFragment();
             tag = FRAG_HOME;
-        } else if (id == R.id.nav_subjects) {
+        } else if (id == R.id.nav_subjects) { // Display the subjects fragment
             fragment = new SubjectsFragment();
             tag = FRAG_SUBJECTS;
             editButton.setVisible(true);
             sortButton.setVisible(true);
-        } else if (id == R.id.nav_calendar) {
+        } else if (id == R.id.nav_calendar) { // Display the calendar fragment
             fragment = new CalendarFragment();
             tag = FRAG_CALENDAR;
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings) { // Display the settings activity
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.nav_about) {
+        } else if (id == R.id.nav_about) { // Display the about activity
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
             return true;
@@ -403,12 +441,11 @@ public class MainActivity extends AppCompatActivity
         
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-    
         ft.replace(R.id.content_frame, fragment, tag).commit();
-    
+        
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    
 }

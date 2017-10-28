@@ -87,30 +87,6 @@ public class SaveManager {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
-        Log.w("test", "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        Log.w("test", "SELECTED :");
-        Log.w("test", "SIZE " + modules.size());
-        if (agendas != null) {
-            for (int i = 0; i < agendas.size(); i++) {
-                Log.w("test", "AGENDA_ID " + agendas.get(i));
-            }
-        }
-        else
-            Log.w("test", "AGENDA_ID ALL");
-        if (subjects != null) {
-            for (int i = 0; i < subjects.size(); i++) {
-                Log.w("test", "SUBJECT_ID " + subjects.get(i));
-            }
-        }
-        else
-            Log.w("test", "SUBJECT_ID ALL");
-        if (workTypes != null) {
-            for (int i = 0; i < workTypes.size(); i++) {
-                Log.w("test", "WORK_TYPE_ID " + workTypes.get(i));
-            }
-        }
-        else
-            Log.w("test", "WORK_TYPE_ID ALL");
     
         int counter = 0;
         while (counter < modules.size()) {
@@ -120,23 +96,11 @@ public class SaveManager {
                     (subjects == null || subjects.contains(m.getSubjectId())) &&
                     (workTypes == null || workTypes.contains(m.getWorkTypeId())))) {
                 modules.remove(counter);
-                Log.w("test", "REMOVED :");
-                Log.w("test", "AGENDA_ID " + m.getAgendaId());
-                Log.w("test", "SUBJECT_ID " + m.getSubjectId());
-                Log.w("test", "WORK_TYPE_ID " + m.getWorkTypeId());
-                Log.w("test", "-----");
             }
             else {
-                Log.w("test", "KEPT :");
-                Log.w("test", "AGENDA_ID " + m.getAgendaId());
-                Log.w("test", "SUBJECT_ID " + m.getSubjectId());
-                Log.w("test", "WORK_TYPE_ID " + m.getWorkTypeId());
-                Log.w("test", "********");
                 counter++;
             }
         }
-        Log.w("test", "^^^^^^^^^^^^^");
-        Log.w("test", "SIZE " + modules.size());
         return modules;
     }
     
