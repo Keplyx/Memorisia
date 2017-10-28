@@ -56,15 +56,15 @@ public class EditWorkActivity extends AppCompatActivity {
         SaveManager saver = new SaveManager(this);
         
         agendasList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.AGENDA), false);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(agendasList));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getModulesNames(agendasList));
         agendasSpinner.setAdapter(adapter);
         
         subjectsList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), false);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(subjectsList));
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getModulesNames(subjectsList));
         subjectsSpinner.setAdapter(adapter);
         
         workTypesList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.WORKTYPE), false);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getModulesNames(workTypesList));
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getModulesNames(workTypesList));
         worksSpinner.setAdapter(adapter);
         
         Bundle b = getIntent().getExtras();
