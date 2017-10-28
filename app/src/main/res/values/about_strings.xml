@@ -6,6 +6,6 @@
     <string name="credits_icons_url">https://icons8.com/</string>
     <string name="credits_color_picker">Color picker (AmbilWarna) by Yukuku</string>
     <string name="credits_color_picker_url">https://github.com/yukuku/ambilwarna</string>
-    <string name="credits_licence">Application licenced under GPLv3</string>
-
+    <string name="credits_licence">Application licenced under GPLv3 and available on Github</string>
+    <string name="credits_github_url">https://github.com/Keplyx/Memorisia</string>
 </resources>
