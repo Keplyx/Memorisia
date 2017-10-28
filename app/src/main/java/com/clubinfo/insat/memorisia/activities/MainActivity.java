@@ -30,6 +30,9 @@ import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
@@ -40,7 +43,10 @@ public class MainActivity extends AppCompatActivity
     Menu menu;
     MenuItem editButton;
     MenuItem sortButton;
+    MenuItem agendaButton;
     private boolean isNightMode;
+    
+    private List<Integer> selectedAgendas = new ArrayList<>();
     
     public static final String FRAG_HOME = "HOME";
     public static final String FRAG_SUBJECTS = "SUBJECTS";
@@ -121,6 +127,8 @@ public class MainActivity extends AppCompatActivity
             finish();
             startActivity(intent);
         }
+        if (agendaButton != null)
+            generateAgendaMenu(agendaButton.getSubMenu());
     }
     
     private void checkEditButtonState(){
@@ -162,15 +170,13 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         editButton = menu.findItem(R.id.action_edit);
         sortButton = menu.findItem(R.id.action_sort);
+        agendaButton = menu.findItem(R.id.action_agenda);
         checkEditButtonState();
         checkSortButtonState();
-        Drawable editIcon = editButton.getIcon();
-        Drawable sortIcon = sortButton.getIcon();
-        editIcon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
-        sortIcon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
-        editButton.setIcon(editIcon);
-        sortButton.setIcon(sortIcon);
-    
+        setToolbarIconWhite(editButton);
+        setToolbarIconWhite(sortButton);
+        setToolbarIconWhite(agendaButton);
+        
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
         Menu subMenu = sortButton.getSubMenu();
@@ -178,7 +184,14 @@ public class MainActivity extends AppCompatActivity
             generateSortMenu(subMenu, true);
         else if (works != null && works.isVisible())
             generateSortMenu(subMenu, false);
+        generateAgendaMenu(agendaButton.getSubMenu());
         return true;
+    }
+    
+    private void setToolbarIconWhite(MenuItem item){
+        Drawable icon = item.getIcon();
+        icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
+        item.setIcon(icon);
     }
     
     public void generateSortMenu(Menu menu, boolean isSubjects){
@@ -194,12 +207,47 @@ public class MainActivity extends AppCompatActivity
         }
     }
     
+    public void generateAgendaMenu(final Menu menu){
+        SaveManager saver = new SaveManager(this);
+        List<OptionModule> modules = saver.getOptionModuleList(SaveManager.AGENDA);
+        menu.clear();
+        for (int i = 0; i < modules.size(); i++) {
+            MenuItem item = menu.add(0, modules.get(i).getId(), Menu.NONE, modules.get(i).getText());
+            item.setCheckable(true);
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    menuItem.setChecked(!menuItem.isChecked());
+                    if (menuItem.isChecked())
+                        selectedAgendas.add(menuItem.getItemId());
+                    else {
+                        for (int i = 0; i < selectedAgendas.size(); i++){
+                            if (selectedAgendas.get(i) == menuItem.getItemId())
+                                selectedAgendas.remove(i);
+                        }
+                    }
+                    SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
+                    WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+                    if (subjects != null && subjects.isVisible())
+                        subjects.generateSubjectsList();
+                    else if (works != null && works.isVisible())
+                        works.generateWorksList();
+                    return false;
+                }
+            });
+        }
+    }
+    
     public Menu getMenu() {
         return menu;
     }
     
     public MenuItem getSortButton() {
         return sortButton;
+    }
+    
+    public List<Integer> getSelectedAgendas() {
+        return selectedAgendas;
     }
     
     @Override

@@ -57,7 +57,6 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
                 entries.add(readModule(parser));
             }
         }
-        Log.w("test", "Entries: " + entries.size());
         return entries;
     }
     

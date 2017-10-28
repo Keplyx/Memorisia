@@ -3,6 +3,7 @@ package com.clubinfo.insat.memorisia.adapters;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -25,6 +26,7 @@ import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,6 +34,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
     
     private List<OptionModule> modules;
     private Context context;
+    private List<Integer> agendas;
     private FragmentManager fragMan;
     
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -61,9 +64,10 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         notifyItemRemoved(pos);
     }
 
-    public SubjectsRecyclerAdapter(Context context, List<OptionModule> modules, FragmentManager fragMan){
+    public SubjectsRecyclerAdapter(Context context, List<OptionModule> modules, List<Integer> agendas, FragmentManager fragMan){
         this.context = context;
         this.modules = modules;
+        this.agendas = agendas;
         this.fragMan = fragMan;
     }
 
@@ -86,7 +90,9 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         holder.logo.setColorFilter(Color.parseColor(color));
     
         SaveManager saver = new SaveManager(context);
-        List<WorkModule> worksList = saver.getWorkModuleList(-1, id, -1);
+        List<Integer> subjects = new ArrayList<>();
+        subjects.add(id);
+        List<WorkModule> worksList = saver.getWorkModuleList(agendas, subjects, null);
         if (worksList.size() != 0) {
             holder.bar.setMax(worksList.size());
             holder.bar.setProgress(ModulesUtils.getWorkDoneNumber(worksList));

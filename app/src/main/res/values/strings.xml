@@ -26,6 +26,7 @@
 
     <string name="action_add">Add</string>
     <string name="action_sort">Sort</string>
+    <string name="action_agenda">Select Agenda</string>
 
     <string name="editing">Editing</string>
     <string name="create_subject">Create New Subject</string>

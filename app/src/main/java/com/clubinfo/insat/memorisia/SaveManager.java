@@ -73,6 +73,72 @@ public class SaveManager {
         return modules;
     }
     
+    public List<WorkModule> getWorkModuleList(List<Integer> agendas, List<Integer> subjects, List<Integer> workTypes) {
+        List<WorkModule> modules = new ArrayList<>();
+        try {
+            File file = new File(context.getFilesDir().getPath() + "/" + WORKS_FILENAME);
+            if (!file.exists())
+                return new ArrayList<>();
+            readFile(context, WORKS_FILENAME);
+            FileInputStream fis = context.openFileInput(WORKS_FILENAME);
+            modules = new WorkModuleXmlParser().parse(fis, -1, -1, -1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        Log.w("test", "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        Log.w("test", "SELECTED :");
+        Log.w("test", "SIZE " + modules.size());
+        if (agendas != null) {
+            for (int i = 0; i < agendas.size(); i++) {
+                Log.w("test", "AGENDA_ID " + agendas.get(i));
+            }
+        }
+        else
+            Log.w("test", "AGENDA_ID ALL");
+        if (subjects != null) {
+            for (int i = 0; i < subjects.size(); i++) {
+                Log.w("test", "SUBJECT_ID " + subjects.get(i));
+            }
+        }
+        else
+            Log.w("test", "SUBJECT_ID ALL");
+        if (workTypes != null) {
+            for (int i = 0; i < workTypes.size(); i++) {
+                Log.w("test", "WORK_TYPE_ID " + workTypes.get(i));
+            }
+        }
+        else
+            Log.w("test", "WORK_TYPE_ID ALL");
+    
+        int counter = 0;
+        while (counter < modules.size()) {
+            WorkModule m = modules.get(counter);
+            
+            if (!((agendas == null || agendas.contains(m.getAgendaId())) &&
+                    (subjects == null || subjects.contains(m.getSubjectId())) &&
+                    (workTypes == null || workTypes.contains(m.getWorkTypeId())))) {
+                modules.remove(counter);
+                Log.w("test", "REMOVED :");
+                Log.w("test", "AGENDA_ID " + m.getAgendaId());
+                Log.w("test", "SUBJECT_ID " + m.getSubjectId());
+                Log.w("test", "WORK_TYPE_ID " + m.getWorkTypeId());
+                Log.w("test", "-----");
+            }
+            else {
+                Log.w("test", "KEPT :");
+                Log.w("test", "AGENDA_ID " + m.getAgendaId());
+                Log.w("test", "SUBJECT_ID " + m.getSubjectId());
+                Log.w("test", "WORK_TYPE_ID " + m.getWorkTypeId());
+                Log.w("test", "********");
+                counter++;
+            }
+        }
+        Log.w("test", "^^^^^^^^^^^^^");
+        Log.w("test", "SIZE " + modules.size());
+        return modules;
+    }
     
     public void deleteOptionModule(int id) {
         List<OptionModule> moduleList = getOptionModuleList(-1);

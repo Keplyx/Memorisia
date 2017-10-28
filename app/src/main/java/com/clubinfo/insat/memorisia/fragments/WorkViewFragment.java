@@ -21,6 +21,7 @@ import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkViewFragment extends Fragment {
@@ -94,9 +95,12 @@ public class WorkViewFragment extends Fragment {
         return "Subject not found";
     }
     
-    private void generateWorksList(){
+    public void generateWorksList(){
         SaveManager saver = new SaveManager(getActivity());
-        List<WorkModule> worksList = saver.getWorkModuleList(-1, subjectId, -1);
+        MainActivity act = (MainActivity) getActivity();
+        List<Integer> subjects = new ArrayList<>();
+        subjects.add(subjectId);
+        List<WorkModule> worksList = saver.getWorkModuleList(act.getSelectedAgendas(), subjects, null);
         switch (currentSortType) {
             case SORT_NAME:
                 mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(worksList, reverseSort));

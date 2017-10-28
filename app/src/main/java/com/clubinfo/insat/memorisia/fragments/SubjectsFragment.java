@@ -74,20 +74,30 @@ public class SubjectsFragment extends Fragment {
         return reverseSort;
     }
     
-    private void generateSubjectsList(){
+    public void generateSubjectsList(){
         SaveManager saver = new SaveManager(getActivity());
+        MainActivity act = (MainActivity) getActivity();
         switch (currentSortType) {
             case SORT_NAME:
-                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), reverseSort), getFragmentManager());
+                mAdapter = new SubjectsRecyclerAdapter(getActivity(),
+                        ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), reverseSort),
+                        act.getSelectedAgendas(), getFragmentManager());
                 break;
             case SORT_DONE_PERCENT:
-                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortOptionModuleListByDonePercent(saver.getOptionModuleList(SaveManager.SUBJECT), getActivity(), reverseSort), getFragmentManager());
+                mAdapter = new SubjectsRecyclerAdapter(getActivity(),
+                        ModulesUtils.sortOptionModuleListByDonePercent(
+                                saver.getOptionModuleList(SaveManager.SUBJECT), act.getSelectedAgendas(), getActivity(), reverseSort),
+                        act.getSelectedAgendas(), getFragmentManager());
                 break;
             case SORT_TOTAL_WORK:
-                mAdapter = new SubjectsRecyclerAdapter(getActivity(), ModulesUtils.sortOptionModuleListByTotalWork(saver.getOptionModuleList(SaveManager.SUBJECT), getActivity(), reverseSort), getFragmentManager());
+                mAdapter = new SubjectsRecyclerAdapter(getActivity(),
+                        ModulesUtils.sortOptionModuleListByTotalWork(
+                                saver.getOptionModuleList(SaveManager.SUBJECT), act.getSelectedAgendas(), getActivity(), reverseSort),
+                        act.getSelectedAgendas(), getFragmentManager());
                 break;
             default:
-                mAdapter = new SubjectsRecyclerAdapter(getActivity(), saver.getOptionModuleList(SaveManager.SUBJECT), getFragmentManager());
+                mAdapter = new SubjectsRecyclerAdapter(getActivity(), saver.getOptionModuleList(SaveManager.SUBJECT),
+                        act.getSelectedAgendas(), getFragmentManager());
                 break;
         }
         recyclerView.setAdapter(mAdapter);

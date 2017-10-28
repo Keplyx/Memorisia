@@ -3,12 +3,14 @@ package com.clubinfo.insat.memorisia.utils;
 
 import android.app.VoiceInteractor;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -41,13 +43,17 @@ public class ModulesUtils {
         return modules;
     }
     
-    public static List<OptionModule> sortOptionModuleListByDonePercent(List<OptionModule> modules, final Context context, final boolean reverse){
+    public static List<OptionModule> sortOptionModuleListByDonePercent(List<OptionModule> modules, final List<Integer> agendas, final Context context, final boolean reverse){
         Collections.sort(modules, new Comparator<OptionModule>() {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
                 SaveManager saver = new SaveManager(context);
-                List<WorkModule> worksList1 = saver.getWorkModuleList(-1, optionModule.getId(), -1);
-                List<WorkModule> worksList2 = saver.getWorkModuleList(-1, t1.getId(), -1);
+                List<Integer> subjectId = new ArrayList<>();
+                subjectId.add(optionModule.getId());
+                List<WorkModule> worksList1 = saver.getWorkModuleList(agendas, subjectId, null);
+                subjectId.remove(0);
+                subjectId.add(t1.getId());
+                List<WorkModule> worksList2 = saver.getWorkModuleList(agendas, subjectId, null);
                 String compare1 = "999", compare2 = "999";
                 if (reverse) {
                     compare1 = "0";
@@ -66,13 +72,17 @@ public class ModulesUtils {
         return modules;
     }
     
-    public static List<OptionModule> sortOptionModuleListByTotalWork(List<OptionModule> modules, final Context context, final boolean reverse){
+    public static List<OptionModule> sortOptionModuleListByTotalWork(List<OptionModule> modules, final List<Integer> agendas, final Context context, final boolean reverse){
         Collections.sort(modules, new Comparator<OptionModule>() {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
                 SaveManager saver = new SaveManager(context);
-                List<WorkModule> worksList1 = saver.getWorkModuleList(-1, optionModule.getId(), -1);
-                List<WorkModule> worksList2 = saver.getWorkModuleList(-1, t1.getId(), -1);
+                List<Integer> subjectId = new ArrayList<>();
+                subjectId.add(optionModule.getId());
+                List<WorkModule> worksList1 = saver.getWorkModuleList(agendas, subjectId, null);
+                subjectId.remove(0);
+                subjectId.add(t1.getId());
+                List<WorkModule> worksList2 = saver.getWorkModuleList(agendas, subjectId, null);
                 String compare1 = "0", compare2 = "0";
                 if (worksList1.size() > 0)
                     compare1 = "" + worksList1.size();
