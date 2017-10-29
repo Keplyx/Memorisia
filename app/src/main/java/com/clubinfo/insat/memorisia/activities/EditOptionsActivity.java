@@ -70,7 +70,7 @@ public class EditOptionsActivity extends AppCompatActivity {
                 case SaveManager.SUBJECT:
                     setTitle(R.string.create_subject);
                     break;
-                case SaveManager.WORKTYPE:
+                case SaveManager.WORK_TYPE:
                     setTitle(R.string.create_work);
                     break;
                 case SaveManager.AGENDA:

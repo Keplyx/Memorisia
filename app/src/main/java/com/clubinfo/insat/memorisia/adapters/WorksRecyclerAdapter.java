@@ -39,7 +39,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         this.context = context;
         this.modules = modules;
         SaveManager saver = new SaveManager(context);
-        workTypesList = saver.getOptionModuleList(SaveManager.WORKTYPE);
+        workTypesList = saver.getOptionModuleList(SaveManager.WORK_TYPE);
     }
     
     public void add(int pos, WorkModule item) {

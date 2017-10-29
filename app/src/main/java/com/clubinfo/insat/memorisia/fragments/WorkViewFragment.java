@@ -5,8 +5,6 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.adapters.WorksRecyclerAdapter;
 import com.clubinfo.insat.memorisia.SaveManager;
-import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
@@ -34,12 +31,12 @@ public class WorkViewFragment extends Fragment {
     public static final int SORT_PRIORITY = 1;
     public static final int SORT_WORK_TYPE = 2;
     
-    private OptionModule module;
+    private OptionModule subject;
     private int currentSortType = 0;
     private boolean reverseSort = false;
     
     public int getSubjectId() {
-        return module.getId();
+        return subject.getId();
     }
     
     public boolean isReverseSort() {
@@ -50,8 +47,8 @@ public class WorkViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
     
-        module = ModulesUtils.createOptionModuleFromBundle(getArguments());
-        getActivity().setTitle(module.getText());
+        subject = ModulesUtils.createOptionModuleFromBundle(getArguments());
+        getActivity().setTitle(subject.getText());
         
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
         recyclerView = Utils.setRecyclerViewDivider(recyclerView, getActivity());
@@ -93,7 +90,7 @@ public class WorkViewFragment extends Fragment {
         SaveManager saver = new SaveManager(getActivity());
         MainActivity act = (MainActivity) getActivity();
         List<Integer> subjects = new ArrayList<>();
-        subjects.add(module.getId());
+        subjects.add(subject.getId());
         List<WorkModule> worksList = saver.getWorkModuleList(act.getSelectedAgendas(), subjects, null);
         RecyclerView.Adapter mAdapter;
         switch (currentSortType) {

@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void createNewWork() {
         Intent intent = new Intent(context, EditWorkActivity.class);
-        WorkModule work = new WorkModule(-1, -1, -1, -1, -1, "", false, false);
+        WorkModule work = new WorkModule();
         WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
         if (workFragment != null && workFragment.isVisible()) {
             SaveManager saver = new SaveManager(context);

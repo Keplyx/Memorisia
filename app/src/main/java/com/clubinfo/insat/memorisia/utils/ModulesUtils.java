@@ -167,7 +167,7 @@ public class ModulesUtils {
             @Override
             public int compare(WorkModule m1, WorkModule m2) {
                 SaveManager saver = new SaveManager(context);
-                List<OptionModule> optionModules = saver.getOptionModuleList(SaveManager.WORKTYPE);
+                List<OptionModule> optionModules = saver.getOptionModuleList(SaveManager.WORK_TYPE);
                 OptionModule o1 = getModuleOfId(optionModules, m1.getWorkTypeId());
                 OptionModule o2 = getModuleOfId(optionModules, m2.getWorkTypeId());
                 if (!reverse)

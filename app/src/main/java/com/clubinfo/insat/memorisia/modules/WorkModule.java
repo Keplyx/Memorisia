@@ -18,7 +18,15 @@ public class WorkModule extends Module {
         this.workTypeId = workTypeId;
         this.priority = priority;
         this.state = state;
-        
+    }
+    
+    public WorkModule() {
+        super(-1, "", false);
+        agendaId = -1;
+        subjectId = -1;
+        workTypeId = -1;
+        priority = 0;
+        state = false;
     }
     
     public int getAgendaId() {

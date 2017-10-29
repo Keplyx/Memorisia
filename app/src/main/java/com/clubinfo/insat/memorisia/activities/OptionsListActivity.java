@@ -1,12 +1,7 @@
 package com.clubinfo.insat.memorisia.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +41,7 @@ public class OptionsListActivity extends AppCompatActivity {
             case SaveManager.SUBJECT:
                 setTitle(R.string.edit_subjects);
                 break;
-            case SaveManager.WORKTYPE:
+            case SaveManager.WORK_TYPE:
                 setTitle(R.string.edit_work);
                 break;
             case SaveManager.AGENDA:
