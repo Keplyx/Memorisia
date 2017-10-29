@@ -16,6 +16,13 @@ public class OptionModule extends Module{
         this.color = color;
     }
     
+    public OptionModule(int type) {
+        super(-1, "", false);
+        this.type = type;
+        this.logo = "";
+        this.color = "#cccccc";
+    }
+    
     public int getType() {
         return type;
     }

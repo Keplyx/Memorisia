@@ -3,11 +3,9 @@ package com.clubinfo.insat.memorisia.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextThemeWrapper;
@@ -22,6 +20,8 @@ import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.adapters.LogosListAdapter;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.utils.ModulesUtils;
+import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,79 +31,77 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class EditOptionsActivity extends AppCompatActivity {
     
-    private static String logo = "";
     private final String logosPath = "logos/";
     private Context context;
-    private TextView TextView;
+    private TextView title;
     private GridView logosGridView;
     private Button colorButton;
     private Switch notificationsSwitch;
     private Button deleteButton;
-    private int type;
-    private int id;
-    private String color;
+    
+    private OptionModule module;
+    
     private List<String> logosList = new ArrayList<>();
     
-    public static void setSelectedLogo(String l) {
-        logo = l;
+    public void setSelectedLogo(String l) {
+        module.setLogo(l);
     }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        if (nightMode)
-            setTheme(R.style.AppTheme_Dark);
+        Utils.setNightMode(this, true);
         setContentView(R.layout.activity_edit_options);
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         generateLogosList();
-        TextView = (TextView) findViewById(R.id.moduleName);
-        logosGridView = (GridView) findViewById(R.id.logosContainer);
-        colorButton = (Button) findViewById(R.id.moduleColor);
-        notificationsSwitch = (Switch) findViewById(R.id.moduleNotifications);
-        deleteButton = (Button) findViewById(R.id.deleteModule);
-        Bundle b = getIntent().getExtras();
-        // if has a TextView, we are editing, else we are creating a new option
-        if (b != null && b.getString("name") != null) {
-            id = b.getInt("id");
-            TextView.setText(b.getString("name"));
-            logo = b.getString("logo");
-            color = b.getString("color");
-            colorButton.setBackgroundColor(Color.parseColor(color));
-            type = b.getInt("type");
-            notificationsSwitch.setChecked(b.getBoolean("notifications"));
-            setTitle(getResources().getString(R.string.editing) + " " + b.getString("name"));
+        getComponents();
+        
+        module = ModulesUtils.createOptionModuleFromBundle(getIntent().getExtras());
+        colorButton.setBackgroundColor(Color.parseColor(module.getColor()));
+        notificationsSwitch.setChecked(module.isNotificationsEnabled());
+        if (module.getId() != -1) {
+            title.setText(module.getText());
+            setTitle(getResources().getString(R.string.editing) + " " + module.getText());
             if (logosList.size() > 0)
-                logosGridView.setAdapter(new LogosListAdapter(this, logosList, logo, color));
-        } else if (b != null) {
-            type = b.getInt("type");
-            id = -1;
-            switch (type) {
-                case 0:
+                logosGridView.setAdapter(new LogosListAdapter(this, logosList, module.getLogo(), module.getColor()));
+        } else {
+            switch (module.getType()) {
+                case SaveManager.SUBJECT:
                     setTitle(R.string.create_subject);
                     break;
-                case 1:
+                case SaveManager.WORKTYPE:
                     setTitle(R.string.create_work);
                     break;
-                case 2:
+                case SaveManager.AGENDA:
                     setTitle(R.string.create_agenda);
                     break;
             }
-            TextView.setText(R.string.name);
-            color = "#cccccc";
-            colorButton.setBackgroundColor(Color.parseColor(color));
+            title.setText(R.string.name);
             deleteButton.setVisibility(Button.INVISIBLE);
             deleteButton.setEnabled(false);
             if (logosList.size() > 0) {
-                logosGridView.setAdapter(new LogosListAdapter(this, logosList, logosList.get(0), color));
-                logo = logosList.get(0);
+                logosGridView.setAdapter(new LogosListAdapter(this, logosList, logosList.get(0), module.getColor()));
+                module.setLogo(logosList.get(0));
             }
         }
         context = this;
     }
     
+    /**
+     * Gets graphical components from the activity
+     */
+    private void getComponents() {
+        title = (TextView) findViewById(R.id.moduleName);
+        logosGridView = (GridView) findViewById(R.id.logosContainer);
+        colorButton = (Button) findViewById(R.id.moduleColor);
+        notificationsSwitch = (Switch) findViewById(R.id.moduleNotifications);
+        deleteButton = (Button) findViewById(R.id.deleteModule);
+    }
+    
+    /**
+     * Populates the logosList with the correct paths to the logos, stored in the logos folder
+     */
     private void generateLogosList() {
         String[] list = new String[0];
         try {
@@ -126,14 +124,19 @@ public class EditOptionsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     
+    /**
+     * Shows a color picker dialog to the user, allowing him to choose a color for the module
+     *
+     * @param v View that called the method
+     */
     public void onClickColorPicker(View v) {
-        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.parseColor(color), new AmbilWarnaDialog.OnAmbilWarnaListener() {
+        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.parseColor(module.getColor()), new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int intColor) {
                 colorButton.setBackgroundColor(intColor);
-                color = String.format("#%06X", (0xFFFFFF & intColor));
+                module.setColor(String.format("#%06X", (0xFFFFFF & intColor)));
                 if (logosList.size() > 0)
-                    logosGridView.setAdapter(new LogosListAdapter(context, logosList, logo, color));
+                    logosGridView.setAdapter(new LogosListAdapter(context, logosList, module.getLogo(), module.getColor()));
             }
             
             @Override
@@ -145,19 +148,30 @@ public class EditOptionsActivity extends AppCompatActivity {
         dialog.show();
     }
     
+    /**
+     * Saves the module corresponding to user selection and exits the activity
+     *
+     * @param v View that called the method
+     */
     public void onClickDone(View v) {
-        OptionModule module = new OptionModule(id, type, TextView.getText().toString(),
-                logo, color, notificationsSwitch.isChecked());
-        
-        SaveManager saver = new SaveManager(this);
-        saver.saveModule(module);
+        module.setText(title.getText().toString());
+        module.setNotificationsEnabled(notificationsSwitch.isChecked());
+        new SaveManager(this).saveModule(module);
         exitEditOptions();
     }
     
+    /**
+     * Shows a confirm dialog when the user clicks the delete button
+     *
+     * @param v View that called the method
+     */
     public void onClickDelete(View v) {
         showConfirmDeleteDialog();
     }
     
+    /**
+     * Shows a confirm delete dialog
+     */
     private void showConfirmDeleteDialog() {
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.AppTheme);
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
@@ -168,10 +182,10 @@ public class EditOptionsActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int i) {
                         SaveManager saver = new SaveManager(builder.getContext());
-                        if (saver.getOptionModuleList(type).size() == 1)
+                        if (saver.getOptionModuleList(module.getType()).size() == 1)
                             showErrorDialog();
                         else {
-                            saver.deleteOptionModule(id);
+                            saver.deleteOptionModule(module.getId());
                             exitEditOptions();
                         }
                         dialog.cancel();
@@ -185,24 +199,28 @@ public class EditOptionsActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
-        
         AlertDialog alert = builder.create();
         alert.show();
     }
     
+    /**
+     * Shows an error dialog telling the user he cannot delete an entry
+     */
     private void showErrorDialog() {
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.AppTheme);
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
         builder.setMessage(getResources().getString(R.string.cannot_delete));
         builder.setCancelable(true);
-        
         AlertDialog alert = builder.create();
         alert.show();
     }
     
+    /**
+     * Exits the activity without adding it to the backtrace
+     */
     private void exitEditOptions() {
         Intent intent = new Intent(this, OptionsListActivity.class);
-        intent.setData(Uri.parse(type + ""));
+        intent.setData(Uri.parse(module.getType() + ""));
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

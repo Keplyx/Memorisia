@@ -11,89 +11,76 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.activities.EditOptionsActivity;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
-import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.util.List;
 
 
 public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecyclerAdapter.ViewHolder> {
-
+    
     private List<OptionModule> modules;
     private Context context;
     
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public OptionsRecyclerAdapter(List<OptionModule> myDataset, Context context) {
+        modules = myDataset;
+        this.context = context;
+    }
+    
+    public void add(int pos, OptionModule item) {
+        modules.add(pos, item);
+        notifyItemInserted(pos);
+    }
+    
+    public void remove(int pos) {
+        modules.remove(pos);
+        notifyItemRemoved(pos);
+    }
+    
+    @Override
+    public OptionsRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View v = inflater.inflate(R.layout.optionslist_row_item, parent, false);
+        return new ViewHolder(v);
+    }
+    
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int pos) {
+        final String name = modules.get(pos).getText();
+        final String logo = modules.get(pos).getLogo();
+        final String color = modules.get(pos).getColor();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EditOptionsActivity.class);
+                Bundle b = ModulesUtils.createBundleFromModule(modules.get(holder.getAdapterPosition()));
+                intent.putExtras(b);
+                context.startActivity(intent);
+            }
+        });
+        holder.text.setText(name);
+        holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
+        holder.logo.setColorFilter(Color.parseColor(color));
+    }
+    
+    @Override
+    public int getItemCount() {
+        return modules.size();
+    }
+    
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView text;
         public ImageView logo;
         public View layout;
-
-        public ViewHolder(View v){
+        
+        public ViewHolder(View v) {
             super(v);
             layout = v;
             text = v.findViewById(R.id.workTitle);
             logo = v.findViewById(R.id.workLogo);
         }
-    }
-
-    public void add(int pos, OptionModule item){
-        modules.add(pos, item);
-        notifyItemInserted(pos);
-    }
-
-    public void remove(int pos){
-        modules.remove(pos);
-        notifyItemRemoved(pos);
-    }
-
-    public OptionsRecyclerAdapter(List<OptionModule> myDataset, Context context){
-        modules = myDataset;
-        this.context = context;
-    }
-
-    @Override
-    public OptionsRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.optionslist_row_item, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
-    }
-
-    @Override
-    public void onBindViewHolder (ViewHolder holder, final int pos){
-        final String name = modules.get(pos).getText();
-        final String logo = modules.get(pos).getLogo();
-        final String color = modules.get(pos).getColor();
-        final int type = modules.get(pos).getType();
-        final int id = modules.get(pos).getId();
-        final boolean notifications = modules.get(pos).isNotificationsEnabled();
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, EditOptionsActivity.class);
-                Bundle b = new Bundle();
-                b.putString("name", name);
-                b.putString("logo", logo);
-                b.putString("color", color);
-                b.putInt("type", type);
-                b.putInt("id", id);
-                b.putBoolean("notifications", notifications);
-                intent.putExtras(b);
-                context.startActivity(intent);
-            }
-        });
-        
-        holder.text.setText(name);
-        holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, logo));
-        holder.logo.setColorFilter(Color.parseColor(color));
-    }
-
-    
-    
-    
-    @Override
-    public int getItemCount(){
-        return modules.size();
     }
 }

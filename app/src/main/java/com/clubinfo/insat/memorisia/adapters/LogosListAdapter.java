@@ -43,10 +43,8 @@ public class LogosListAdapter extends BaseAdapter {
         return 0;
     }
     
-    // create a new button for each item referenced by the Adapter
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final ImageButton button;
-        button = new ImageButton(context);
+        final ImageButton button = new ImageButton(context);
         button.setLayoutParams(new GridView.LayoutParams(200, 200));
         button.setImageBitmap(Utils.getBitmapFromAsset(context, logosList.get(position)));
         button.setBackgroundColor(Color.TRANSPARENT);
@@ -57,14 +55,14 @@ public class LogosListAdapter extends BaseAdapter {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (int i =0; i < buttonsList.size(); i++){
+                for (int i = 0; i < buttonsList.size(); i++) {
                     buttonsList.get(i).setColorFilter(Color.GRAY);
                 }
                 button.setColorFilter(Color.parseColor(color));
-                EditOptionsActivity.setSelectedLogo(logosList.get(position));
+                EditOptionsActivity act = (EditOptionsActivity) context;
+                act.setSelectedLogo(logosList.get(position));
             }
         });
-
         buttonsList.add(button);
         return button;
     }

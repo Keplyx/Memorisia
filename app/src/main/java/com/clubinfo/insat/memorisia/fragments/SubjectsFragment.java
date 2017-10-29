@@ -12,43 +12,39 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.adapters.SubjectsRecyclerAdapter;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
+import com.clubinfo.insat.memorisia.utils.Utils;
 
 
 public class SubjectsFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    
     public static final int SORT_NAME = 0;
     public static final int SORT_DONE_PERCENT = 1;
     public static final int SORT_TOTAL_WORK = 2;
-    
+    private RecyclerView recyclerView;
     private int currentSortType = 0;
     private boolean reverseSort = false;
     
-    
+    public boolean isReverseSort() {
+        return reverseSort;
+    }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
         getActivity().setTitle(R.string.subjects_title);
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
-        mLayoutManager = new LinearLayoutManager(this.getActivity());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(mLayoutManager);
-    
-    
+        recyclerView = Utils.setRecyclerViewDivider(recyclerView, getActivity());
+        
+        
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         currentSortType = sharedPref.getInt(SettingsActivity.KEY_SUBJECTS_SORT_TYPE, 0);
         reverseSort = sharedPref.getBoolean(SettingsActivity.KEY_SUBJECTS_SORT_REVERSE, false);
         generateSubjectsList();
-    
+        
         MainActivity act = (MainActivity) getActivity();
         if (act.getSortButton() != null) {
             act.generateSortMenu(act.getSortButton().getSubMenu(), true);
@@ -57,7 +53,12 @@ public class SubjectsFragment extends Fragment {
         return view;
     }
     
-    public void setSortType(int type){
+    /**
+     * Sets the sort type to use for the subjects list, then saves it to the shared prefs
+     *
+     * @param type Sort type
+     */
+    public void setSortType(int type) {
         reverseSort = type == currentSortType && !reverseSort;
         currentSortType = type;
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -68,13 +69,13 @@ public class SubjectsFragment extends Fragment {
         generateSubjectsList();
     }
     
-    public boolean isReverseSort() {
-        return reverseSort;
-    }
-    
-    public void generateSubjectsList(){
+    /**
+     * Generates the sorted subjects list based on the selected sort type
+     */
+    public void generateSubjectsList() {
         SaveManager saver = new SaveManager(getActivity());
         MainActivity act = (MainActivity) getActivity();
+        RecyclerView.Adapter mAdapter;
         switch (currentSortType) {
             case SORT_NAME:
                 mAdapter = new SubjectsRecyclerAdapter(getActivity(),

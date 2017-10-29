@@ -233,11 +233,11 @@ public class ModulesUtils {
      */
     public static Bundle createBundleFromModule(OptionModule module) {
         Bundle b = new Bundle();
-        b.putString("name", module.getText());
+        b.putInt("id", module.getId());
+        b.putInt("type", module.getType());
+        b.putString("text", module.getText());
         b.putString("logo", module.getLogo());
         b.putString("color", module.getColor());
-        b.putInt("type", module.getType());
-        b.putInt("id", module.getId());
         b.putBoolean("notifications", module.isNotificationsEnabled());
         return b;
     }
@@ -251,15 +251,52 @@ public class ModulesUtils {
      */
     public static Bundle createBundleFromModule(WorkModule module) {
         Bundle b = new Bundle();
-        b.putString("text", module.getText());
-        b.putInt("workTypeId", module.getWorkTypeId());
-        b.putInt("subjectId", module.getSubjectId());
-        b.putInt("agendaId", module.getAgendaId());
-        b.putInt("priority", module.getPriority());
         b.putInt("id", module.getId());
-        b.putBoolean("state", module.isState());
+        b.putInt("agendaId", module.getAgendaId());
+        b.putInt("subjectId", module.getSubjectId());
+        b.putInt("workTypeId", module.getWorkTypeId());
+        b.putInt("priority", module.getPriority());
+        b.putString("text", module.getText());
         b.putBoolean("notifications", module.isNotificationsEnabled());
+        b.putBoolean("state", module.isState());
         return b;
     }
     
+    /**
+     * Creates an {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} storing the properties of a given
+     * {@link android.os.Bundle Bundle}.
+     *
+     * @param b {@link android.os.Bundle Bundle} to convert
+     * @return {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} containing the given
+     * {@link android.os.Bundle Bundle} properties
+     */
+    public static OptionModule createOptionModuleFromBundle(Bundle b) {
+        int id = b.getInt("id");
+        int type = b.getInt("type");
+        String text = b.getString("text");
+        String logo = b.getString("logo");
+        String color = b.getString("color");
+        boolean notif = b.getBoolean("notifications");
+        return new OptionModule(id, type, text, logo, color, notif);
+    }
+    
+    /**
+     * Creates a {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} storing the properties of a given
+     * {@link android.os.Bundle Bundle}.
+     *
+     * @param b {@link android.os.Bundle Bundle} to convert
+     * @return {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} containing the given
+     * {@link android.os.Bundle Bundle} properties
+     */
+    public static WorkModule createWorkModuleFromBundle(Bundle b) {
+        int id = b.getInt("id");
+        int agendaId = b.getInt("agendaId");
+        int subjectId = b.getInt("subjectId");
+        int workTypeId = b.getInt("workTypeId");
+        int priority = b.getInt("priority");
+        String text = b.getString("text");
+        boolean notif = b.getBoolean("notifications");
+        boolean state = b.getBoolean("state");
+        return new WorkModule(id, agendaId, subjectId, workTypeId, priority, text, notif, state);
+    }
 }

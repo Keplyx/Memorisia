@@ -19,44 +19,51 @@ import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.adapters.OptionsRecyclerAdapter;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
+import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.util.List;
 
 public class OptionsListActivity extends AppCompatActivity {
     int type;
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        if (nightMode)
-            setTheme(R.style.AppTheme_Dark);
-        
+        Utils.setNightMode(this, true);
         setContentView(R.layout.recyclerview_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         type = Integer.parseInt(getIntent().getData().toString());
-        mAdapter = createModulesListAdapter(type);
+        setActivityTitle();
+        setupRecyclerVIew();
+    }
+    
+    /**
+     * Sets the activity title based on the active module type
+     */
+    private void setActivityTitle(){
         switch (type) {
-            case 0:
+            case SaveManager.SUBJECT:
                 setTitle(R.string.edit_subjects);
                 break;
-            case 1:
+            case SaveManager.WORKTYPE:
                 setTitle(R.string.edit_work);
                 break;
-            case 2:
+            case SaveManager.AGENDA:
                 setTitle(R.string.edit_agendas);
                 break;
         }
-        
+    }
+    
+    /**
+     * Sets up the recycler view containing the modules based on the type
+     */
+    private void setupRecyclerVIew(){
+        RecyclerView.Adapter mAdapter = createModulesListAdapter();
         if (mAdapter != null) {
-            recyclerView = (RecyclerView) findViewById(R.id.subjectsRecyclerView);
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.subjectsRecyclerView);
             recyclerView.setHasFixedSize(true);
-            mLayoutManager = new LinearLayoutManager(this);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
             recyclerView.addItemDecoration(dividerItemDecoration);
@@ -64,20 +71,18 @@ public class OptionsListActivity extends AppCompatActivity {
         }
     }
     
-    
-    private OptionsRecyclerAdapter createModulesListAdapter(int type) {
+    /**
+     * Creates the module list based on the type, sorted by name
+     */
+    private OptionsRecyclerAdapter createModulesListAdapter() {
         final List<OptionModule> modules = ModulesUtils.sortOptionModuleListByName(new SaveManager(this).getOptionModuleList(type), false);
         return new OptionsRecyclerAdapter(modules, this);
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit, menu);
-        MenuItem editButton = menu.findItem(R.id.action_add);
-        Drawable icon = editButton.getIcon();
-        icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
-        editButton.setIcon(icon);
+        Utils.setToolbarIconWhite(menu.findItem(R.id.action_add));
         return true;
     }
     
@@ -89,13 +94,11 @@ public class OptionsListActivity extends AppCompatActivity {
                 return true;
             case R.id.action_add:
                 Intent intent = new Intent(this, EditOptionsActivity.class);
-                Bundle b = new Bundle();
-                b.putInt("type", type);
+                Bundle b = ModulesUtils.createBundleFromModule(new OptionModule(type));
                 intent.putExtras(b);
                 startActivity(intent);
                 break;
         }
-        
         return super.onOptionsItemSelected(item);
     }
 }

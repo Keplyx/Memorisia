@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.setNightMode(this);
+        Utils.setNightMode(this, false);
         setContentView(R.layout.activity_main);
         
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -181,26 +181,15 @@ public class MainActivity extends AppCompatActivity
         agendaButton = menu.findItem(R.id.action_agenda);
         checkEditButtonState();
         checkSortButtonState();
-        setToolbarIconWhite(editButton);
-        setToolbarIconWhite(sortButton);
-        setToolbarIconWhite(agendaButton);
+        Utils.setToolbarIconWhite(editButton);
+        Utils.setToolbarIconWhite(sortButton);
+        Utils.setToolbarIconWhite(agendaButton);
         
         Menu subMenu = sortButton.getSubMenu();
         generateSortMenu(subMenu, true);
         
         generateAgendaMenu(agendaButton.getSubMenu());
         return true;
-    }
-    
-    /**
-     * Sets the toolbar icons color to white to match the title
-     *
-     * @param item The menu item that will change color
-     */
-    private void setToolbarIconWhite(MenuItem item) {
-        Drawable icon = item.getIcon();
-        icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
-        item.setIcon(icon);
     }
     
     /**
