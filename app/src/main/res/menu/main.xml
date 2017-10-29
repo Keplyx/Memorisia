@@ -14,7 +14,15 @@
         android:title="@string/action_sort"
         app:showAsAction="ifRoom">
         <menu>
-
+            <item
+                android:id="@+id/sort_1"
+                android:title=""/>
+            <item
+                android:id="@+id/sort_2"
+                android:title=""/>
+            <item
+                android:id="@+id/sort_3"
+                android:title=""/>
         </menu>
     </item>
     <item

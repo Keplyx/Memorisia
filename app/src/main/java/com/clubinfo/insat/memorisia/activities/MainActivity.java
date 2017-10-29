@@ -4,9 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -44,11 +41,6 @@ public class MainActivity extends AppCompatActivity
     public static final String FRAG_SUBJECTS = "SUBJECTS";
     public static final String FRAG_CALENDAR = "CALENDAR";
     public static final String FRAG_WORKS = "WORKS";
-    private static final int MENU_SORT_NAME = Menu.FIRST;
-    private static final int MENU_SORT_DONE_PERCENT = Menu.FIRST + 1;
-    private static final int MENU_SORT_TOTAL_WORK = Menu.FIRST + 2;
-    private static final int MENU_SORT_PRIORITY = Menu.FIRST + 3;
-    private static final int MENU_SORT_WORK_TYPE = Menu.FIRST + 4;
     public static String PACKAGE_NAME;
     Menu menu;
     MenuItem editButton;
@@ -200,14 +192,15 @@ public class MainActivity extends AppCompatActivity
      */
     public void generateSortMenu(Menu menu, boolean isSubjects) {
         menu.clear();
-        menu.add(0, MENU_SORT_NAME, Menu.NONE, R.string.sort_name);
+        menu.add(0, R.id.sort_1, Menu.NONE, R.string.sort_name);
         if (isSubjects) {
-            menu.add(0, MENU_SORT_DONE_PERCENT, Menu.NONE, R.string.sort_percent);
-            menu.add(0, MENU_SORT_TOTAL_WORK, Menu.NONE, R.string.sort_total_work);
+            menu.add(0, R.id.sort_2, Menu.NONE, R.string.sort_percent);
+            menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_total_work);
         } else {
-            menu.add(0, MENU_SORT_PRIORITY, Menu.NONE, R.string.sort_priority);
-            menu.add(0, MENU_SORT_WORK_TYPE, Menu.NONE, R.string.sort_type);
+            menu.add(0, R.id.sort_2, Menu.NONE, R.string.sort_priority);
+            menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_type);
         }
+        
     }
     
     /**
@@ -321,39 +314,40 @@ public class MainActivity extends AppCompatActivity
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
         switch (id) {
             case R.id.action_edit:
-                if (works != null && works.isVisible()) {
+                if (works != null && works.isVisible())
                     editCurrentSubject(works.getSubjectId());
-                } else {
+                else
                     editSubjects();
-                }
                 break;
         }
         if (subjects != null && subjects.isVisible()) {
             switch (id) {
-                case MENU_SORT_NAME:
+                case R.id.sort_1:
                     subjects.setSortType(SubjectsFragment.SORT_NAME);
                     break;
-                case MENU_SORT_DONE_PERCENT:
+                case R.id.sort_2:
                     subjects.setSortType(SubjectsFragment.SORT_DONE_PERCENT);
                     break;
-                case MENU_SORT_TOTAL_WORK:
+                case R.id.sort_3:
                     subjects.setSortType(SubjectsFragment.SORT_TOTAL_WORK);
                     break;
             }
-            changeSortMenuItemIcon(item, subjects.isReverseSort());
+            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3)
+                changeSortMenuItemIcon(item, subjects.isReverseSort());
         } else if (works != null && works.isVisible()) {
             switch (id) {
-                case MENU_SORT_NAME:
+                case R.id.sort_1:
                     works.setSortType(WorkViewFragment.SORT_NAME);
                     break;
-                case MENU_SORT_PRIORITY:
+                case R.id.sort_2:
                     works.setSortType(WorkViewFragment.SORT_PRIORITY);
                     break;
-                case MENU_SORT_WORK_TYPE:
+                case R.id.sort_3:
                     works.setSortType(WorkViewFragment.SORT_WORK_TYPE);
                     break;
             }
-            changeSortMenuItemIcon(item, works.isReverseSort());
+            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3)
+                changeSortMenuItemIcon(item, works.isReverseSort());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -392,7 +386,7 @@ public class MainActivity extends AppCompatActivity
             MenuItem it = sortButton.getSubMenu().getItem(i);
             if (it.getItemId() != item.getItemId())
                 it.setIcon(0);
-            else if (!isReverse)
+            if (!isReverse)
                 item.setIcon(R.drawable.ic_arrow_downward_black_24dp);
             else
                 item.setIcon(R.drawable.ic_arrow_upward_black_24dp);
