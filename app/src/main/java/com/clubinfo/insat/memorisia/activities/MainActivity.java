@@ -56,10 +56,8 @@ public class MainActivity extends AppCompatActivity
         Utils.setNightMode(this, false);
         setContentView(R.layout.activity_main);
         
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean nightMode = sharedPref.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
+        isNightMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
         
-        isNightMode = nightMode;
         context = this;
         PACKAGE_NAME = getPackageName();
         getSelectedAgendasFromPrefs();
