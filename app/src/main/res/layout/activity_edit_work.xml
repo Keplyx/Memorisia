@@ -163,6 +163,7 @@
                 android:layout_below="@+id/descriptionEditText"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@+id/textView4"
+                android:onClick="showDatePickerDialog"
                 android:text="@string/pick_date"/>
 
             <TextView

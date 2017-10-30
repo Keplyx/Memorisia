@@ -105,7 +105,6 @@ public class SaveManager {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
-        
         int counter = 0;
         while (counter < modules.size()) {
             WorkModule m = modules.get(counter);
@@ -346,8 +345,11 @@ public class SaveManager {
             serializer.text(Integer.toString(module.getPriority()));
             serializer.endTag(null, "priority");
             serializer.startTag(null, "date");
-            serializer.text("");
+            serializer.text(module.getDate()[0] + "/" + module.getDate()[1] + "/" + module.getDate()[2]);
             serializer.endTag(null, "date");
+            serializer.startTag(null, "time");
+            serializer.text(module.getTime()[0] + ":" + module.getTime()[1]);
+            serializer.endTag(null, "time");
             serializer.startTag(null, "state");
             serializer.text(Boolean.toString(module.isState()));
             serializer.endTag(null, "state");

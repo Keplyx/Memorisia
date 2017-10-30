@@ -1,6 +1,7 @@
 package com.clubinfo.insat.memorisia.xmlparsers;
 
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.clubinfo.insat.memorisia.modules.WorkModule;
@@ -92,31 +93,37 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
      */
     private WorkModule readModule(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, WORK_MODULE_START_TAG);
-        int[] attributes = readModuleAttributes(parser);
-        //int[] attributes = new int[] {0, 0};
-        String name = null;
+        int[] attributes = new int[] {-1, -1, -1, -1};
+        String name = "";
         int priority = 0;
+        int[] date = new int[] {-1, -1, -1};
+        int[] time = new int[] {-1, -1};
         boolean state = false;
         boolean notifications = false;
         
+        attributes = readModuleAttributes(parser);
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String parserName = parser.getName();
             if (parserName.equals("text")) {
-                name = readStringProperty(parser, "text");
+                    name = readStringProperty(parser, "text");
             } else if (parserName.equals("priority")) {
-                priority = readPriority(parser);
+                    priority = readPriority(parser);
+            } else if (parserName.equals("date")) {
+                    date = readDate(parser);
+            } else if (parserName.equals("time")) {
+                    time = readTime(parser);
             } else if (parserName.equals("state")) {
-                state = readBooleanProperty(parser, "state");
+                    state = readBooleanProperty(parser, "state");
             } else if (parserName.equals("notifications")) {
-                notifications = readBooleanProperty(parser, "notifications");
+                    notifications = readBooleanProperty(parser, "notifications");
             } else {
                 skip(parser);
             }
         }
-        return new WorkModule(attributes[0], attributes[1], attributes[2], attributes[3], priority, name, notifications, state);
+        return new WorkModule(attributes[0], attributes[1], attributes[2], attributes[3], priority, date, time, name, notifications, state);
     }
     
     /**
@@ -153,5 +160,31 @@ public class WorkModuleXmlParser extends ModuleXmlParser {
         String prio = readText(parser);
         parser.require(XmlPullParser.END_TAG, null, "priority");
         return Integer.parseInt(prio);
+    }
+    
+    /**
+     * Reads the date property of a module
+     *
+     * @param parser xml parser to use
+     * @return Integer array representing the date
+     */
+    private int[] readDate(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, "date");
+        String date[] = readText(parser).split("/");
+        parser.require(XmlPullParser.END_TAG, null, "date");
+        return new int[] {Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2])};
+    }
+    
+    /**
+     * Reads the time property of a module
+     *
+     * @param parser xml parser to use
+     * @return Integer array representing the time
+     */
+    private int[] readTime(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, "time");
+        String time[] = readText(parser).split(":");
+        parser.require(XmlPullParser.END_TAG, null, "time");
+        return new int[] {Integer.parseInt(time[0]), Integer.parseInt(time[1])};
     }
 }

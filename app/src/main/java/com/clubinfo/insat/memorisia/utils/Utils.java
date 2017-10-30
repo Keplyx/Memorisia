@@ -19,6 +19,7 @@ import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * Class providing general utility static methods
@@ -86,4 +87,43 @@ public class Utils {
         return recyclerView;
     }
     
+    
+    /**
+     * Gets the difference between 2 arrays. (array1 - array2)
+     *
+     * @param array1 First array to compare
+     * @param array2 Second array to compare
+     * @return Array containing the difference
+     */
+    public static int[] getArrayDelta(int[] array1, int[] array2) {
+        int[] delta = new int[array1.length];
+        for (int i = 0; i < array1.length; i++){
+            delta[i] = array1[i] - array2[i];
+        }
+        return delta;
+    }
+    
+    /**
+     * Gets the string representation of a date array. (dd/mm/yyyy)
+     *
+     * @param date Date to convert
+     * @return String representing the date
+     */
+    public static String getDateText(int[] date) {
+        String day = date[0] < 10 ? "0" + date[0] : "" + date[0];
+        String month = date[1] < 10 ? "0" + date[1] : "" + date[1];
+        return day + "/" + month + "/" + date[2];
+    }
+    
+    /**
+     * Gets the string representation of a time array. (hh:mm)
+     *
+     * @param time Date to convert
+     * @return String representing the time
+     */
+    public static String getTimeText(int[] time) {
+        String hours = time[0] < 10 ? "0" + time[0] : "" + time[0];
+        String minutes = time[1] < 10 ? "0" + time[1] : "" + time[1];
+        return hours + ":" + minutes;
+    }
 }

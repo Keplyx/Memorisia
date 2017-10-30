@@ -29,10 +29,8 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<OptionModule>() {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
-                if (!reverse)
-                    return optionModule.getText().compareTo(t1.getText());
-                else
-                    return -1 * optionModule.getText().compareTo(t1.getText());
+                int r = reverse ? -1 : 1;
+                return r * optionModule.getText().compareTo(t1.getText());
             }
         });
         return modules;
@@ -49,10 +47,8 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<WorkModule>() {
             @Override
             public int compare(WorkModule optionModule, WorkModule t1) {
-                if (!reverse)
-                    return optionModule.getText().compareTo(t1.getText());
-                else
-                    return -1 * optionModule.getText().compareTo(t1.getText());
+                int r = reverse ? -1 : 1;
+                return r * optionModule.getText().compareTo(t1.getText());
             }
         });
         return modules;
@@ -60,7 +56,7 @@ public class ModulesUtils {
     
     /**
      * Sorts the given {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} list by the percent of work done,
-     * lower percent first.
+     * lower percent first. Modules without work will always be placed at the end, no matter if the sorting is reversed or not.
      *
      * @param modules {@link com.clubinfo.insat.memorisia.modules.OptionModule OptionModule} list to sort
      * @param agendas Selected agendas id to search work in
@@ -84,14 +80,12 @@ public class ModulesUtils {
                     compare1 = "0";
                     compare2 = "0";
                 }
+                int r = reverse ? -1 : 1;
                 if (worksList1.size() > 0)
                     compare1 = "" + (double) getWorkDoneNumber(worksList1) / worksList1.size();
                 if (worksList2.size() > 0)
                     compare2 = "" + (double) getWorkDoneNumber(worksList2) / worksList2.size();
-                if (!reverse)
-                    return compare1.compareTo(compare2);
-                else
-                    return -1 * compare1.compareTo(compare2);
+                return r * compare1.compareTo(compare2);
             }
         });
         return modules;
@@ -123,10 +117,8 @@ public class ModulesUtils {
                     compare1 = "" + worksList1.size();
                 if (worksList2.size() > 0)
                     compare2 = "" + worksList2.size();
-                if (!reverse)
-                    return compare1.compareTo(compare2);
-                else
-                    return -1 * compare1.compareTo(compare2);
+                int r = reverse ? -1 : 1;
+                return r * compare1.compareTo(compare2);
             }
         });
         return modules;
@@ -144,10 +136,8 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<WorkModule>() {
             @Override
             public int compare(WorkModule m1, WorkModule m2) {
-                if (!reverse)
-                    return m1.getPriority() - m2.getPriority();
-                else
-                    return -1 * (m1.getPriority() - m2.getPriority());
+                int r = reverse ? -1 : 1;
+                return r * (m1.getPriority() - m2.getPriority());
             }
         });
         return modules;
@@ -170,10 +160,45 @@ public class ModulesUtils {
                 List<OptionModule> optionModules = saver.getOptionModuleList(SaveManager.WORK_TYPE);
                 OptionModule o1 = getModuleOfId(optionModules, m1.getWorkTypeId());
                 OptionModule o2 = getModuleOfId(optionModules, m2.getWorkTypeId());
-                if (!reverse)
-                    return o1.getText().compareTo(o2.getText());
-                else
-                    return -1 * o1.getText().compareTo(o2.getText());
+                int r = reverse ? -1 : 1;
+                return r * o1.getText().compareTo(o2.getText());
+            }
+        });
+        return modules;
+    }
+    
+    /**
+     * Sorts the given {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list by due date,
+     * first comparing the date, then time if both dates are the same. Due sooner first. Works without date
+     * will be placed at the end no matter if the sorting is reversed or not.
+     *
+     * @param modules {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list to sort
+     * @param context Current context
+     * @param reverse True to reverse the sorting order (Due later first instead of sooner)
+     * @return Sorted list
+     */
+    public static List<WorkModule> sortWorkModuleListByDate(List<WorkModule> modules, final Context context, final boolean reverse) {
+        Collections.sort(modules, new Comparator<WorkModule>() {
+            @Override
+            public int compare(WorkModule m1, WorkModule m2) {
+                int r = reverse ? -1 : 1;
+                int[] dateDelta = Utils.getArrayDelta(m1.getDate(), m2.getDate());
+                if (m1.getDate()[0] == -1)
+                    return 100000;
+                if (dateDelta[2] != 0)
+                    return dateDelta[2] * r * 10000;
+                if (dateDelta[1] != 0)
+                    return dateDelta[1] * r * 1000;
+                if (dateDelta[0] != 0)
+                    return dateDelta[1] * r * 100;
+                int[] timeDelta = Utils.getArrayDelta(m1.getTime(), m2.getTime());
+                if (m1.getTime()[0] == -1)
+                    return 100;
+                if (timeDelta[0] != 0)
+                    return timeDelta[0] * r * 10;
+                if (timeDelta[1] != 0)
+                    return timeDelta[1] * r;
+                return 0;
             }
         });
         return modules;
@@ -256,6 +281,8 @@ public class ModulesUtils {
         b.putInt("subjectId", module.getSubjectId());
         b.putInt("workTypeId", module.getWorkTypeId());
         b.putInt("priority", module.getPriority());
+        b.putIntArray("date", module.getDate());
+        b.putIntArray("time", module.getTime());
         b.putString("text", module.getText());
         b.putBoolean("notifications", module.isNotificationsEnabled());
         b.putBoolean("state", module.isState());
@@ -294,9 +321,11 @@ public class ModulesUtils {
         int subjectId = b.getInt("subjectId");
         int workTypeId = b.getInt("workTypeId");
         int priority = b.getInt("priority");
+        int[] date = b.getIntArray("date");
+        int[] time = b.getIntArray("time");
         String text = b.getString("text");
         boolean notif = b.getBoolean("notifications");
         boolean state = b.getBoolean("state");
-        return new WorkModule(id, agendaId, subjectId, workTypeId, priority, text, notif, state);
+        return new WorkModule(id, agendaId, subjectId, workTypeId, priority, date, time, text, notif, state);
     }
 }

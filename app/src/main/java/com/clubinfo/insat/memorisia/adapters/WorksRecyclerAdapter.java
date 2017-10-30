@@ -10,12 +10,14 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.clubinfo.insat.memorisia.R;
@@ -69,6 +71,26 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
         holder.logo.setColorFilter(Color.parseColor(workType.getColor()));
         
+        if (work.getDate()[0] != -1)
+            holder.date.setText(Utils.getDateText(work.getDate()));
+        else {
+            holder.date.setText("");
+            holder.date.setCompoundDrawables(null, null, null, null);
+        }
+        if (work.getTime()[0] != -1)
+            holder.time.setText(Utils.getTimeText(work.getTime()));
+        else {
+            holder.time.setText("");
+            holder.time.setCompoundDrawables(null, null, null, null);
+        }
+    
+        holder.scroll.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         holder.description.setText(work.getText());
         holder.priorityBar.setRating((float) work.getPriority());
         holder.doneCheckBox.setChecked(work.isState());
@@ -131,19 +153,27 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView workTypeHeader;
         public TextView description;
+        public TextView date;
+        public TextView time;
         public ImageView logo;
         public RatingBar priorityBar;
         public CheckBox doneCheckBox;
         public View layout;
+        
+        public ScrollView scroll;
         
         public ViewHolder(View v) {
             super(v);
             layout = v;
             workTypeHeader = v.findViewById(R.id.workTitle);
             description = v.findViewById(R.id.workDescription);
+            date = v.findViewById(R.id.dateTextView);
+            time = v.findViewById(R.id.timeTextView);
             logo = v.findViewById(R.id.workLogo);
             priorityBar = v.findViewById(R.id.priorityRatingBar);
             doneCheckBox = v.findViewById(R.id.stateCheckBox);
+    
+            scroll = v.findViewById(R.id.descriptionScroll);
         }
     }
     

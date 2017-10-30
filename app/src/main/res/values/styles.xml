@@ -43,6 +43,11 @@
         <item name="android:listDivider">@color/dividerColorInverse</item>
     </style>
 
+    <style name="MyDatePicker" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:calendarViewShown">true</item>
+        <item name="android:spinnersShown">false</item>
+    </style>
+
     <style name="AppTheme.Dark.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

@@ -2,8 +2,10 @@ package com.clubinfo.insat.memorisia.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +22,12 @@ import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class EditWorkActivity extends AppCompatActivity {
@@ -192,6 +198,71 @@ public class EditWorkActivity extends AppCompatActivity {
         
         AlertDialog alert = builder.create();
         alert.show();
+    }
+    
+    /**
+     * Shows a date picker to the user, using an external library
+     *
+     * @param v View that called the method
+     */
+    public void showDatePickerDialog(View v) {
+        boolean nightMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
+        CalendarDatePickerDialogFragment picker = setupDatePicker(nightMode);
+        picker.show(getSupportFragmentManager(), "datepicker");
+    }
+    
+    /**
+     * Sets up a date picker at the current day
+     *
+     * @param nightMode Whether to use the dark theme for the picker
+     */
+    private CalendarDatePickerDialogFragment setupDatePicker(final boolean nightMode) {
+        Calendar calendar = Calendar.getInstance();
+        MonthAdapter.CalendarDay day = new MonthAdapter.CalendarDay(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        final CalendarDatePickerDialogFragment datePicker = new CalendarDatePickerDialogFragment()
+                .setFirstDayOfWeek(Calendar.MONDAY)
+                .setPreselectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+                .setDateRange(day, null)
+                .setDoneText(getResources().getString(R.string.picker_set))
+                .setCancelText(getResources().getString(R.string.picker_cancel));
+        
+        if (nightMode)
+            datePicker.setThemeDark();
+        else
+            datePicker.setThemeLight();
+        datePicker.setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+            @Override
+            public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+                actualWork.setDate(new int[] {dayOfMonth, monthOfYear + 1, year});
+                RadialTimePickerDialogFragment timerPicker = setupTimePicker(nightMode);
+                timerPicker.show(getSupportFragmentManager(), "timepicker");
+            }
+        });
+        return datePicker;
+    }
+    
+    /**
+     * Sets up a time picker at the current time
+     *
+     * @param nightMode Whether to use the dark theme for the picker
+     */
+    private RadialTimePickerDialogFragment setupTimePicker(boolean nightMode) {
+        Calendar calendar = Calendar.getInstance();
+        final RadialTimePickerDialogFragment timerPicker = new RadialTimePickerDialogFragment()
+                .setStartTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+                .setDoneText(getResources().getString(R.string.picker_set))
+                .setCancelText(getResources().getString(R.string.picker_cancel));
+        if (nightMode)
+            timerPicker.setThemeDark();
+        else
+            timerPicker.setThemeLight();
+        timerPicker.setOnTimeSetListener(new RadialTimePickerDialogFragment.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
+               actualWork.setTime(new int[] {hourOfDay, minute});
+            }
+        });
+        return timerPicker;
     }
     
     @Override

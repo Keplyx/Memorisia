@@ -8,15 +8,20 @@ public class WorkModule extends Module {
     private int subjectId;
     private int workTypeId;
     private int priority;
+    private int[] date;
+    private int[] time;
     private boolean state;
     
-    public WorkModule(int id, int agendaId, int subjectId, int workTypeId, int priority,
+    public WorkModule(int id, int agendaId, int subjectId, int workTypeId, int priority, int[] date, int[] time,
                       String text, boolean notificationsEnabled, boolean state) {
         super(id, text, notificationsEnabled);
         this.agendaId = agendaId;
         this.subjectId = subjectId;
         this.workTypeId = workTypeId;
         this.priority = priority;
+        this.date = date;
+        this.time = time;
+        
         this.state = state;
     }
     
@@ -26,6 +31,8 @@ public class WorkModule extends Module {
         subjectId = -1;
         workTypeId = -1;
         priority = 0;
+        date = new int[] {-1, -1, -1};
+        time = new int[] {-1, -1};
         state = false;
     }
     
@@ -59,6 +66,22 @@ public class WorkModule extends Module {
     
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+    
+    public int[] getDate() {
+        return date;
+    }
+    
+    public void setDate(int[] date) {
+        this.date = date;
+    }
+    
+    public int[] getTime() {
+        return time;
+    }
+    
+    public void setTime(int[] time) {
+        this.time = time;
     }
     
     public boolean isState() {

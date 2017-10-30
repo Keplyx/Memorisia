@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             menu.add(0, R.id.sort_2, Menu.NONE, R.string.sort_priority);
             menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_type);
+            menu.add(0, R.id.sort_4, Menu.NONE, R.string.sort_date);
         }
         
     }
@@ -343,8 +344,11 @@ public class MainActivity extends AppCompatActivity
                 case R.id.sort_3:
                     works.setSortType(WorkViewFragment.SORT_WORK_TYPE);
                     break;
+                case R.id.sort_4:
+                    works.setSortType(WorkViewFragment.SORT_DATE);
+                    break;
             }
-            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3)
+            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3 || id == R.id.sort_4)
                 changeSortMenuItemIcon(item, works.isReverseSort());
         }
         return super.onOptionsItemSelected(item);
