@@ -19,6 +19,10 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public static final String KEY_WORKS_SORT_REVERSE = "pref_key_works_sort_reverse";
     public static final String KEY_SELECTED_AGENDAS = "pref_set_selected_agendas";
     
+    public static final String KEY_LAST_AGENDA = "pref_key_last_selected_agenda";
+    public static final String KEY_LAST_SUBJECT = "pref_key_last_selected_subject";
+    public static final String KEY_LAST_WORK_TYPE = "pref_key_last_selected_work_type";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

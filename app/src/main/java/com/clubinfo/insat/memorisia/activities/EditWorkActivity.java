@@ -1,6 +1,7 @@
 package com.clubinfo.insat.memorisia.activities;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -123,18 +124,32 @@ public class EditWorkActivity extends AppCompatActivity {
      * If an id of the actual work is -1, it will be replaced by the id of the selected item in the spinner.
      */
     private void setDefaultComponentValues() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        int agenda = sharedPref.getInt(SettingsActivity.KEY_LAST_AGENDA, -1);
+        int subject = sharedPref.getInt(SettingsActivity.KEY_LAST_SUBJECT, -1);
+        int workType = sharedPref.getInt(SettingsActivity.KEY_LAST_WORK_TYPE, -1);
+        
         if (actualWork.getAgendaId() != -1)
             agendasSpinner.setSelection(ModulesUtils.getPosInList(agendasList, actualWork.getAgendaId()));
+        else if (agenda != -1)
+            agendasSpinner.setSelection(ModulesUtils.getPosInList(agendasList, agenda));
         else
             actualWork.setAgendaId(agendasList.get(agendasSpinner.getSelectedItemPosition()).getId());
+        
         if (actualWork.getSubjectId() != -1)
             subjectsSpinner.setSelection(ModulesUtils.getPosInList(subjectsList, actualWork.getSubjectId()));
+        else if (subject != -1)
+            subjectsSpinner.setSelection(ModulesUtils.getPosInList(subjectsList, subject));
         else
             actualWork.setSubjectId(subjectsList.get(subjectsSpinner.getSelectedItemPosition()).getId());
+        
         if (actualWork.getWorkTypeId() != -1)
             worksSpinner.setSelection(ModulesUtils.getPosInList(workTypesList, actualWork.getWorkTypeId()));
+        else if (workType != -1)
+            worksSpinner.setSelection(ModulesUtils.getPosInList(workTypesList, workType));
         else
             actualWork.setWorkTypeId(workTypesList.get(worksSpinner.getSelectedItemPosition()).getId());
+        
         priorityBar.setRating((float) actualWork.getPriority());
         descriptionTextView.setText(actualWork.getText());
         notificationsSwitch.setChecked(actualWork.isNotificationsEnabled());
@@ -187,6 +202,12 @@ public class EditWorkActivity extends AppCompatActivity {
         generateModule();
         SaveManager saver = new SaveManager(this);
         saver.saveModule(actualWork);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(SettingsActivity.KEY_LAST_AGENDA, actualWork.getAgendaId());
+        editor.putInt(SettingsActivity.KEY_LAST_SUBJECT, actualWork.getSubjectId());
+        editor.putInt(SettingsActivity.KEY_LAST_WORK_TYPE, actualWork.getWorkTypeId());
+        editor.apply();
         finish();
     }
     

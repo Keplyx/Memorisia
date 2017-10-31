@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,14 +37,13 @@ import java.util.List;
 
 public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdapter.ViewHolder> {
     
-    private List<WorkModule> modules;
-    private List<OptionModule> workTypesList;
-    private Context context;
-    
     private static final String outdatedColor = "#d20707";
     private static final String tomorrowColor = "#e75c00";
     private static final String thisWeekColor = "#e7df00";
     private static final String normalColor = "#919191";
+    private List<WorkModule> modules;
+    private List<OptionModule> workTypesList;
+    private Context context;
     
     public WorksRecyclerAdapter(Context context, List<WorkModule> modules) {
         this.context = context;
@@ -81,8 +79,8 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
         holder.logo.setColorFilter(Color.parseColor(workType.getColor()));
         
-        Calendar c = Calendar.getInstance();;
-        int[] today = new int[] {c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR)};
+        Calendar c = Calendar.getInstance();
+        int[] today = new int[]{c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR)};
         int delta = Utils.getDateDelta(today, work.getDate());
         if (delta <= 0)
             setupDateDisplay(holder.date, outdatedColor, work.getDate());
@@ -92,15 +90,15 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             setupDateDisplay(holder.date, thisWeekColor, work.getDate());
         else
             setupDateDisplay(holder.date, normalColor, work.getDate());
-    
-        if (delta == 0){
+        
+        if (delta == 0) {
             int current = c.get(Calendar.MINUTE) + c.get(Calendar.HOUR_OF_DAY) * 60;
             int due = work.getTime()[1] + work.getTime()[0] * 60;
             if (current < due)
                 setupTimeDisplay(holder.time, tomorrowColor, work.getTime());
             else
                 setupTimeDisplay(holder.time, outdatedColor, work.getTime());
-        } else if (delta < 0){
+        } else if (delta < 0) {
             setupTimeDisplay(holder.time, outdatedColor, work.getTime());
         } else {
             setupTimeDisplay(holder.time, normalColor, work.getTime());
@@ -140,9 +138,9 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     /**
      * Sets the Drawable for the date textView based on the due date
      *
-     * @param text textView used to display the date
+     * @param text  textView used to display the date
      * @param color Drawable color
-     * @param date Work due date
+     * @param date  Work due date
      */
     private void setupDateDisplay(TextView text, String color, int[] date) {
         if (date[0] != -1) {
@@ -161,9 +159,9 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     /**
      * Sets the Drawable for the time textView based on the due date
      *
-     * @param text textView used to display the time
+     * @param text  textView used to display the time
      * @param color Drawable color
-     * @param time Work due date
+     * @param time  Work due date
      */
     private void setupTimeDisplay(TextView text, String color, int[] time) {
         if (time[0] != -1) {
@@ -236,7 +234,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             logo = v.findViewById(R.id.workLogo);
             priorityBar = v.findViewById(R.id.priorityRatingBar);
             doneCheckBox = v.findViewById(R.id.stateCheckBox);
-    
+            
             scroll = v.findViewById(R.id.descriptionScroll);
         }
     }
