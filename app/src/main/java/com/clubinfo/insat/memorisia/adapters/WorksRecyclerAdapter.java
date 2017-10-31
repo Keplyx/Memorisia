@@ -71,7 +71,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     }
     
     @Override
-    public void onBindViewHolder(WorksRecyclerAdapter.ViewHolder holder, int pos) {
+    public void onBindViewHolder(final WorksRecyclerAdapter.ViewHolder holder, int pos) {
         final WorkModule work = modules.get(pos);
         OptionModule workType = ModulesUtils.getModuleOfId(workTypesList, work.getWorkTypeId());
         
@@ -107,8 +107,8 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         
         holder.scroll.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
+                if (Utils.canScroll((ScrollView) v)) // Stop parent scroll if can scroll description
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
             }
         });

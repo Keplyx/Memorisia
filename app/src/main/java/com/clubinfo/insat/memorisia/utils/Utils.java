@@ -15,6 +15,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ScrollView;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
@@ -154,5 +156,20 @@ public class Utils {
         String hours = time[0] < 10 ? "0" + time[0] : "" + time[0];
         String minutes = time[1] < 10 ? "0" + time[1] : "" + time[1];
         return hours + ":" + minutes;
+    }
+    
+    /**
+     * Checks if a ScrollView is scrollable by comparing its height to its child.
+     *
+     * @param scrollView ScrollView to check
+     * @return True if scrollable, false otherwise
+     */
+    public static boolean canScroll(ScrollView scrollView) {
+        View child = scrollView.getChildAt(0);
+        if (child != null) {
+            int childHeight = child.getHeight();
+            return scrollView.getHeight() < childHeight + scrollView.getPaddingTop() + scrollView.getPaddingBottom();
+        }
+        return false;
     }
 }
