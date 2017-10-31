@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="edit_subjects">Edit Subjects</string>
-    <string name="edit_work">Edit Work Types</string>
+    <string name="edit_work_types">Edit Work Types</string>
     <string name="edit_agendas">Edit Agendas</string>
     <string name="night_mode">Night Mode</string>
     <string name="night_mode_desc">Makes the app darker</string>

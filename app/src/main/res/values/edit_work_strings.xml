@@ -15,4 +15,5 @@
     <string name="prio_urgent">Urgent</string>
 
     <string name="add_work">Add New Work</string>
+    <string name="edit_work">Edit Work</string>
 </resources>

@@ -7,7 +7,7 @@
                     android:targetClass="com.clubinfo.insat.memorisia.activities.OptionsListActivity"
                     android:data="0" />
         </Preference>
-        <Preference android:title="@string/edit_work">
+        <Preference android:title="@string/edit_work_types">
             <intent android:action="android.intent.action.VIEW"
                     android:targetPackage="com.clubinfo.insat.memorisia"
                     android:targetClass="com.clubinfo.insat.memorisia.activities.OptionsListActivity"

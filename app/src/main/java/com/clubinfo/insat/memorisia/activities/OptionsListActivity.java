@@ -42,7 +42,7 @@ public class OptionsListActivity extends AppCompatActivity {
                 setTitle(R.string.edit_subjects);
                 break;
             case SaveManager.WORK_TYPE:
-                setTitle(R.string.edit_work);
+                setTitle(R.string.edit_work_types);
                 break;
             case SaveManager.AGENDA:
                 setTitle(R.string.edit_agendas);

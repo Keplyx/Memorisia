@@ -58,7 +58,7 @@ public class EditWorkActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         setContentView(R.layout.activity_edit_work);
-        setTitle(getResources().getString(R.string.add_work));
+        
         findComponents();
         generateModuleLists();
         createSpinners();
@@ -66,10 +66,13 @@ public class EditWorkActivity extends AppCompatActivity {
         actualWork = ModulesUtils.createWorkModuleFromBundle(getIntent().getExtras());
         setDefaultComponentValues();
         if (actualWork.getId() == -1) {
+            setTitle(getResources().getString(R.string.add_work));
             Button deleteButton = (Button) findViewById(R.id.deleteButton);
             deleteButton.setVisibility(Button.INVISIBLE);
             deleteButton.setEnabled(false);
         }
+        else
+            setTitle(getResources().getString(R.string.edit_work));
         
         if (isNightMode) {
             ImageButton clearDateButton = (ImageButton) findViewById(R.id.clearDateButton);
