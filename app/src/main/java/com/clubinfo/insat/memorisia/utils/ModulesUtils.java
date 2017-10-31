@@ -178,7 +178,7 @@ public class ModulesUtils {
      * @param reverse True to reverse the sorting order (Due later first instead of sooner)
      * @return Sorted list
      */
-    public static List<WorkModule> sortWorkModuleListByDate(List<WorkModule> modules, final Context context, final boolean reverse) {
+    public static List<WorkModule> sortWorkModuleListByDate(List<WorkModule> modules, final boolean reverse) {
         Collections.sort(modules, new Comparator<WorkModule>() {
             @Override
             public int compare(WorkModule m1, WorkModule m2) {

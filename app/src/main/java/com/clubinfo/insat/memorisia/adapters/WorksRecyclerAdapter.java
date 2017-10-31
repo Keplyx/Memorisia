@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +33,7 @@ import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdapter.ViewHolder> {
@@ -36,6 +41,11 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     private List<WorkModule> modules;
     private List<OptionModule> workTypesList;
     private Context context;
+    
+    private static final String outdatedColor = "#d20707";
+    private static final String tomorrowColor = "#e75c00";
+    private static final String thisWeekColor = "#e7df00";
+    private static final String normalColor = "#919191";
     
     public WorksRecyclerAdapter(Context context, List<WorkModule> modules) {
         this.context = context;
@@ -71,21 +81,32 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
         holder.logo.setColorFilter(Color.parseColor(workType.getColor()));
         
-        if (work.getDate()[0] != -1) {
-            holder.date.setText(Utils.getDateText(work.getDate()));
-            holder.date.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_date_range_black_24dp, 0, 0, 0);
-        } else {
-            holder.date.setText("");
-            holder.date.setCompoundDrawables(null, null, null, null);
-        }
-        if (work.getTime()[0] != -1) {
-            holder.time.setText(Utils.getTimeText(work.getTime()));
-            holder.time.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_access_time_black_24dp, 0, 0, 0);
-        } else {
-            holder.time.setText("");
-            holder.time.setCompoundDrawables(null, null, null, null);
-        }
+        Calendar c = Calendar.getInstance();;
+        int[] today = new int[] {c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR)};
+        int delta = Utils.getDateDelta(today, work.getDate());
+        if (delta <= 0)
+            setupDateDisplay(holder.date, outdatedColor, work.getDate());
+        else if (delta <= 1)
+            setupDateDisplay(holder.date, tomorrowColor, work.getDate());
+        else if (delta <= 7)
+            setupDateDisplay(holder.date, thisWeekColor, work.getDate());
+        else
+            setupDateDisplay(holder.date, normalColor, work.getDate());
     
+        if (delta == 0){
+            int current = c.get(Calendar.MINUTE) + c.get(Calendar.HOUR_OF_DAY) * 60;
+            int due = work.getTime()[1] + work.getTime()[0] * 60;
+            if (current < due)
+                setupTimeDisplay(holder.time, tomorrowColor, work.getTime());
+            else
+                setupTimeDisplay(holder.time, outdatedColor, work.getTime());
+        } else if (delta < 0){
+            setupTimeDisplay(holder.time, outdatedColor, work.getTime());
+        } else {
+            setupTimeDisplay(holder.time, normalColor, work.getTime());
+        }
+        
+        
         holder.scroll.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 // Disallow the touch request for parent scroll on touch of child view
@@ -114,6 +135,47 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
                 editSelectedWork(work);
             }
         });
+    }
+    
+    /**
+     * Sets the Drawable for the date textView based on the due date
+     *
+     * @param text textView used to display the date
+     * @param color Drawable color
+     * @param date Work due date
+     */
+    private void setupDateDisplay(TextView text, String color, int[] date) {
+        if (date[0] != -1) {
+            text.setText(Utils.getDateText(date));
+            text.setTextColor(Color.parseColor(color));
+            Drawable d = ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_date_range_black_24dp, null);
+            d.mutate().setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_IN);
+            text.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+        } else {
+            text.setText("");
+            text.setCompoundDrawables(null, null, null, null);
+        }
+    }
+    
+    
+    /**
+     * Sets the Drawable for the time textView based on the due date
+     *
+     * @param text textView used to display the time
+     * @param color Drawable color
+     * @param time Work due date
+     */
+    private void setupTimeDisplay(TextView text, String color, int[] time) {
+        if (time[0] != -1) {
+            text.setText(Utils.getTimeText(time));
+            text.setTextColor(Color.parseColor(color));
+            Drawable d = ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_access_time_black_24dp, null);
+            d.mutate().setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_IN);
+            text.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+        } else {
+            text.setText("");
+            text.setCompoundDrawables(null, null, null, null);
+        }
     }
     
     /**

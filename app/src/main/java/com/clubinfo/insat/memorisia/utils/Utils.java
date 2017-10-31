@@ -90,22 +90,6 @@ public class Utils {
         return recyclerView;
     }
     
-    
-    /**
-     * Gets the difference between 2 arrays. (array1 - array2)
-     *
-     * @param array1 First array to compare
-     * @param array2 Second array to compare
-     * @return Array containing the difference
-     */
-    public static int[] getArrayDelta(int[] array1, int[] array2) {
-        int[] delta = new int[array1.length];
-        for (int i = 0; i < array1.length; i++){
-            delta[i] = array1[i] - array2[i];
-        }
-        return delta;
-    }
-    
     /**
      * Gets the difference between 2 dates in days
      *

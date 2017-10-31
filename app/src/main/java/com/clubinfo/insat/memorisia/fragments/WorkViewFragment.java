@@ -106,7 +106,7 @@ public class WorkViewFragment extends Fragment {
                 mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(worksList, getActivity(), reverseSort));
                 break;
             case SORT_DATE:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, getActivity(), reverseSort));
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, reverseSort));
                 break;
             default:
                 mAdapter = new WorksRecyclerAdapter(getActivity(), worksList);
