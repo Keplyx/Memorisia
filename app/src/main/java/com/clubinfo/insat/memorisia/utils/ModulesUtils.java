@@ -181,19 +181,25 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<WorkModule>() {
             @Override
             public int compare(WorkModule m1, WorkModule m2) {
-                int r = reverse ? -1 : 1;
-                int[] dateDelta = Utils.getArrayDelta(m1.getDate(), m2.getDate());
+                int r = reverse ? 1 : -1;
+                int[] dateDelta;
+                
+                dateDelta = Utils.getArrayDelta(m2.getDate(), m1.getDate());
+                
                 if (m1.getDate()[0] == -1)
-                    return 100000;
+                    return r * 100000;
                 if (dateDelta[2] != 0)
                     return dateDelta[2] * r * 10000;
                 if (dateDelta[1] != 0)
                     return dateDelta[1] * r * 1000;
                 if (dateDelta[0] != 0)
-                    return dateDelta[1] * r * 100;
-                int[] timeDelta = Utils.getArrayDelta(m1.getTime(), m2.getTime());
+                    return dateDelta[0] * r * 100;
+                int[] timeDelta;
+                
+                timeDelta = Utils.getArrayDelta(m2.getTime(), m1.getTime());
+                
                 if (m1.getTime()[0] == -1)
-                    return 100;
+                    return r * 100;
                 if (timeDelta[0] != 0)
                     return timeDelta[0] * r * 10;
                 if (timeDelta[1] != 0)

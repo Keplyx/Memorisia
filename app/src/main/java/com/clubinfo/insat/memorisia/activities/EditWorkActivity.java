@@ -1,17 +1,20 @@
 package com.clubinfo.insat.memorisia.activities;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -42,8 +45,11 @@ public class EditWorkActivity extends AppCompatActivity {
     private EditText descriptionTextView;
     private RatingBar priorityBar;
     private Switch notificationsSwitch;
+    private Button datePickerButton;
     
     private WorkModule actualWork;
+    
+    private boolean isNightMode;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +62,20 @@ public class EditWorkActivity extends AppCompatActivity {
         findComponents();
         generateModuleLists();
         createSpinners();
-        
+        isNightMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
         actualWork = ModulesUtils.createWorkModuleFromBundle(getIntent().getExtras());
         setDefaultComponentValues();
         if (actualWork.getId() == -1) {
             Button deleteButton = (Button) findViewById(R.id.deleteButton);
             deleteButton.setVisibility(Button.INVISIBLE);
             deleteButton.setEnabled(false);
+        }
+        
+        if (isNightMode) {
+            ImageButton clearDateButton = (ImageButton) findViewById(R.id.clearDateButton);
+            Drawable icon = clearDateButton.getDrawable();
+            icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
+            clearDateButton.setImageDrawable(icon);
         }
     }
     
@@ -76,6 +89,7 @@ public class EditWorkActivity extends AppCompatActivity {
         descriptionTextView = (EditText) findViewById(R.id.descriptionEditText);
         priorityBar = (RatingBar) findViewById(R.id.priorityRatingBar);
         notificationsSwitch = (Switch) findViewById(R.id.notificationsSwitch);
+        datePickerButton = (Button) findViewById(R.id.pickDateButton);
     }
     
     /**
@@ -121,6 +135,19 @@ public class EditWorkActivity extends AppCompatActivity {
         priorityBar.setRating((float) actualWork.getPriority());
         descriptionTextView.setText(actualWork.getText());
         notificationsSwitch.setChecked(actualWork.isNotificationsEnabled());
+        setupDatePickerButton();
+    }
+    
+    /**
+     * Generates the text for the date picker button based on the selected date
+     */
+    private void setupDatePickerButton() {
+        if (actualWork.getDate()[0] == -1)
+            datePickerButton.setText(getResources().getString(R.string.pick_date));
+        else if (actualWork.getTime()[0] == -1)
+            datePickerButton.setText(Utils.getDateText(actualWork.getDate()));
+        else
+            datePickerButton.setText(Utils.getDateText(actualWork.getDate()) + "  |  " + Utils.getTimeText(actualWork.getTime()));
     }
     
     /**
@@ -206,35 +233,47 @@ public class EditWorkActivity extends AppCompatActivity {
      * @param v View that called the method
      */
     public void showDatePickerDialog(View v) {
-        boolean nightMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        CalendarDatePickerDialogFragment picker = setupDatePicker(nightMode);
+        CalendarDatePickerDialogFragment picker = setupDatePicker();
         picker.show(getSupportFragmentManager(), "datepicker");
     }
     
     /**
-     * Sets up a date picker at the current day
+     * Clears the selected date by the user
      *
-     * @param nightMode Whether to use the dark theme for the picker
+     * @param v View that called the method
      */
-    private CalendarDatePickerDialogFragment setupDatePicker(final boolean nightMode) {
+    public void clearDate(View v) {
+        actualWork.setDate(new int[]{-1, -1, -1});
+        actualWork.setTime(new int[]{-1, -1});
+        setupDatePickerButton();
+    }
+    
+    /**
+     * Sets up a date picker at the current day
+     */
+    private CalendarDatePickerDialogFragment setupDatePicker() {
         Calendar calendar = Calendar.getInstance();
         MonthAdapter.CalendarDay day = new MonthAdapter.CalendarDay(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         final CalendarDatePickerDialogFragment datePicker = new CalendarDatePickerDialogFragment()
                 .setFirstDayOfWeek(Calendar.MONDAY)
-                .setPreselectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
-                .setDateRange(day, null)
-                .setDoneText(getResources().getString(R.string.picker_set))
-                .setCancelText(getResources().getString(R.string.picker_cancel));
+                .setDateRange(day, null);
         
-        if (nightMode)
+        if (actualWork.getDate()[0] != -1)
+            datePicker.setPreselectedDate(actualWork.getDate()[2], actualWork.getDate()[1] - 1, actualWork.getDate()[0]);
+        else
+            datePicker.setPreselectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        
+        
+        if (isNightMode)
             datePicker.setThemeDark();
         else
             datePicker.setThemeLight();
         datePicker.setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
             @Override
             public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-                actualWork.setDate(new int[] {dayOfMonth, monthOfYear + 1, year});
-                RadialTimePickerDialogFragment timerPicker = setupTimePicker(nightMode);
+                actualWork.setDate(new int[]{dayOfMonth, monthOfYear + 1, year});
+                setupDatePickerButton();
+                RadialTimePickerDialogFragment timerPicker = setupTimePicker();
                 timerPicker.show(getSupportFragmentManager(), "timepicker");
             }
         });
@@ -243,23 +282,26 @@ public class EditWorkActivity extends AppCompatActivity {
     
     /**
      * Sets up a time picker at the current time
-     *
-     * @param nightMode Whether to use the dark theme for the picker
      */
-    private RadialTimePickerDialogFragment setupTimePicker(boolean nightMode) {
+    private RadialTimePickerDialogFragment setupTimePicker() {
         Calendar calendar = Calendar.getInstance();
-        final RadialTimePickerDialogFragment timerPicker = new RadialTimePickerDialogFragment()
-                .setStartTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-                .setDoneText(getResources().getString(R.string.picker_set))
-                .setCancelText(getResources().getString(R.string.picker_cancel));
-        if (nightMode)
+        final RadialTimePickerDialogFragment timerPicker = new RadialTimePickerDialogFragment();
+        
+        if (actualWork.getTime()[0] != -1)
+            timerPicker.setStartTime(actualWork.getTime()[0], actualWork.getTime()[1]);
+        else
+            timerPicker.setStartTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        
+        if (isNightMode)
             timerPicker.setThemeDark();
         else
             timerPicker.setThemeLight();
+        
         timerPicker.setOnTimeSetListener(new RadialTimePickerDialogFragment.OnTimeSetListener() {
             @Override
             public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
-               actualWork.setTime(new int[] {hourOfDay, minute});
+                actualWork.setTime(new int[]{hourOfDay, minute});
+                setupDatePickerButton();
             }
         });
         return timerPicker;

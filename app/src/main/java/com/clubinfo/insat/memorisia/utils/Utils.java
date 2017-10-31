@@ -110,6 +110,8 @@ public class Utils {
      * @return String representing the date
      */
     public static String getDateText(int[] date) {
+        if (date[0] < 0)
+            return "";
         String day = date[0] < 10 ? "0" + date[0] : "" + date[0];
         String month = date[1] < 10 ? "0" + date[1] : "" + date[1];
         return day + "/" + month + "/" + date[2];
@@ -122,6 +124,8 @@ public class Utils {
      * @return String representing the time
      */
     public static String getTimeText(int[] time) {
+        if (time[0] < 0)
+            return "";
         String hours = time[0] < 10 ? "0" + time[0] : "" + time[0];
         String minutes = time[1] < 10 ? "0" + time[1] : "" + time[1];
         return hours + ":" + minutes;

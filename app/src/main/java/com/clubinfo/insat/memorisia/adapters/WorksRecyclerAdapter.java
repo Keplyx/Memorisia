@@ -71,15 +71,17 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
         holder.logo.setColorFilter(Color.parseColor(workType.getColor()));
         
-        if (work.getDate()[0] != -1)
+        if (work.getDate()[0] != -1) {
             holder.date.setText(Utils.getDateText(work.getDate()));
-        else {
+            holder.date.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_date_range_black_24dp, 0, 0, 0);
+        } else {
             holder.date.setText("");
             holder.date.setCompoundDrawables(null, null, null, null);
         }
-        if (work.getTime()[0] != -1)
+        if (work.getTime()[0] != -1) {
             holder.time.setText(Utils.getTimeText(work.getTime()));
-        else {
+            holder.time.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_access_time_black_24dp, 0, 0, 0);
+        } else {
             holder.time.setText("");
             holder.time.setCompoundDrawables(null, null, null, null);
         }

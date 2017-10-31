@@ -28,6 +28,10 @@ public class SubjectsFragment extends Fragment {
     private int currentSortType = 0;
     private boolean reverseSort = false;
     
+    public int getCurrentSortType() {
+        return currentSortType;
+    }
+    
     public boolean isReverseSort() {
         return reverseSort;
     }

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         if (workFragment != null && workFragment.isVisible()) {
             SaveManager saver = new SaveManager(context);
             OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getSubjectId());
-            work.setSubjectId(subject.getId());
+            work.setSubjectId(subject != null ? subject.getId() : -1);
         }
         intent.putExtras(ModulesUtils.createBundleFromModule(work));
         context.startActivity(intent);
@@ -176,7 +177,8 @@ public class MainActivity extends AppCompatActivity
         Utils.setToolbarIconWhite(agendaButton);
         
         Menu subMenu = sortButton.getSubMenu();
-        generateSortMenu(subMenu, true);
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        generateSortMenu(subMenu, !(works != null && works.isVisible()));
         
         generateAgendaMenu(agendaButton.getSubMenu());
         return true;
@@ -199,7 +201,12 @@ public class MainActivity extends AppCompatActivity
             menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_type);
             menu.add(0, R.id.sort_4, Menu.NONE, R.string.sort_date);
         }
-        
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        if (works != null && works.isVisible())
+            changeSortMenuItemIcon(menu.getItem(works.getCurrentSortType()), works.isReverseSort());
+        else if (subjects != null && subjects.isVisible())
+            changeSortMenuItemIcon(menu.getItem(subjects.getCurrentSortType()), subjects.isReverseSort());
     }
     
     /**
@@ -396,7 +403,7 @@ public class MainActivity extends AppCompatActivity
     }
     
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = new HomeFragment();

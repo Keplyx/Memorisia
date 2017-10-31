@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
@@ -38,6 +36,10 @@ public class WorkViewFragment extends Fragment {
     
     public int getSubjectId() {
         return subject.getId();
+    }
+    
+    public int getCurrentSortType() {
+        return currentSortType;
     }
     
     public boolean isReverseSort() {
