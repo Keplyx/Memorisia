@@ -3,6 +3,7 @@ package com.clubinfo.insat.memorisia.utils;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
@@ -181,29 +182,27 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<WorkModule>() {
             @Override
             public int compare(WorkModule m1, WorkModule m2) {
-                int r = reverse ? 1 : -1;
-                int[] dateDelta;
-                
-                dateDelta = Utils.getArrayDelta(m2.getDate(), m1.getDate());
-                
+                int r = reverse ? -1 : 1;
+                int dateDelta = Utils.getDateDelta(m2.getDate(), m1.getDate());
+                if (m1.getDate()[0] == -1 && m2.getDate()[0] == -1)
+                    return 0;
+                // Put works without date at the end
                 if (m1.getDate()[0] == -1)
-                    return r * 100000;
-                if (dateDelta[2] != 0)
-                    return dateDelta[2] * r * 10000;
-                if (dateDelta[1] != 0)
-                    return dateDelta[1] * r * 1000;
-                if (dateDelta[0] != 0)
-                    return dateDelta[0] * r * 100;
-                int[] timeDelta;
+                    return 1;
+                if (m2.getDate()[0] == -1)
+                    return -1;
+                if (dateDelta != 0)
+                    return r * dateDelta;
                 
-                timeDelta = Utils.getArrayDelta(m2.getTime(), m1.getTime());
-                
+                int timeDelta = Utils.getTimeDelta(m2.getTime(), m1.getTime());
+                // Put works without time at the bottom
                 if (m1.getTime()[0] == -1)
-                    return r * 100;
-                if (timeDelta[0] != 0)
-                    return timeDelta[0] * r * 10;
-                if (timeDelta[1] != 0)
-                    return timeDelta[1] * r;
+                    return 1;
+                if (m2.getTime()[0] == -1)
+                    return -1;
+                if (timeDelta != 0)
+                    return r * timeDelta;
+
                 return 0;
             }
         });

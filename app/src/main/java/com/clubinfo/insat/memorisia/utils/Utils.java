@@ -13,13 +13,16 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Class providing general utility static methods
@@ -101,6 +104,44 @@ public class Utils {
             delta[i] = array1[i] - array2[i];
         }
         return delta;
+    }
+    
+    /**
+     * Gets the difference between 2 dates in days
+     *
+     * @param date1 First date to compare
+     * @param date2 Second date to compare
+     * @return Difference in days
+     */
+    public static int getDateDelta(int[] date1, int[] date2) {
+        if (date1[0] < 0 || date2[0] < 0)
+            return 0;
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(date1[2], date1[1] - 1, date1[0]);
+        end.set(date2[2], date2[1] - 1, date2[0]);
+        Date startDate = start.getTime();
+        Date endDate = end.getTime();
+        long startTime = startDate.getTime();
+        long endTime = endDate.getTime();
+        long diffTime = endTime - startTime;
+        long diffDays = diffTime / (1000 * 60 * 60 * 24);
+        return (int) diffDays;
+    }
+    
+    /**
+     * Gets the difference between 2 times in minutes
+     *
+     * @param time1 First time to compare
+     * @param time2 Second time to compare
+     * @return Difference in minutes
+     */
+    public static int getTimeDelta(int[] time1, int[] time2) {
+        if (time1[0] < 0 || time2[0] < 0)
+            return 0;
+        int start = time1[0] * 60 + time1[1];
+        int end = time2[0] * 60 + time2[1];
+        return end - start;
     }
     
     /**
