@@ -43,6 +43,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     private static final String normalColor = "#919191";
     private List<WorkModule> modules;
     private List<OptionModule> workTypesList;
+    private List<OptionModule> agendaList;
     private Context context;
     
     public WorksRecyclerAdapter(Context context, List<WorkModule> modules) {
@@ -50,6 +51,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         this.modules = modules;
         SaveManager saver = new SaveManager(context);
         workTypesList = saver.getOptionModuleList(SaveManager.WORK_TYPE);
+        agendaList = saver.getOptionModuleList(SaveManager.AGENDA);
     }
     
     public void add(int pos, WorkModule item) {
@@ -76,8 +78,12 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         OptionModule workType = ModulesUtils.getModuleOfId(workTypesList, work.getWorkTypeId());
         
         holder.workTypeHeader.setText(workType.getText());
-        holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
-        holder.logo.setColorFilter(Color.parseColor(workType.getColor()));
+        holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
+        holder.workLogo.setColorFilter(Color.parseColor(workType.getColor()));
+        
+        OptionModule agenda = ModulesUtils.getModuleOfId(agendaList, work.getAgendaId());
+        holder.agendaLogo.setImageBitmap(Utils.getBitmapFromAsset(context, agenda.getLogo()));
+        holder.agendaLogo.setColorFilter(Color.parseColor(agenda.getColor()));
         
         Calendar c = Calendar.getInstance();
         int[] today = new int[]{c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR)};
@@ -103,7 +109,6 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         } else {
             setupTimeDisplay(holder.time, normalColor, work.getTime());
         }
-        
         
         holder.scroll.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -217,7 +222,8 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         public TextView description;
         public TextView date;
         public TextView time;
-        public ImageView logo;
+        public ImageView workLogo;
+        public ImageView agendaLogo;
         public RatingBar priorityBar;
         public CheckBox doneCheckBox;
         public View layout;
@@ -231,7 +237,8 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             description = v.findViewById(R.id.workDescription);
             date = v.findViewById(R.id.dateTextView);
             time = v.findViewById(R.id.timeTextView);
-            logo = v.findViewById(R.id.workLogo);
+            workLogo = v.findViewById(R.id.workLogo);
+            agendaLogo = v.findViewById(R.id.agendaLogo);
             priorityBar = v.findViewById(R.id.priorityRatingBar);
             doneCheckBox = v.findViewById(R.id.stateCheckBox);
             

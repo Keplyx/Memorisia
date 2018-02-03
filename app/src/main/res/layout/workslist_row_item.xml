@@ -23,6 +23,15 @@
         android:text="@string/done"/>
 
     <ImageView
+        android:id="@+id/agendaLogo"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignEnd="@+id/stateCheckBox"
+        android:layout_alignRight="@+id/stateCheckBox"
+        android:layout_alignTop="@+id/stateCheckBox"
+        app:srcCompat="@mipmap/ic_launcher"/>
+
+    <ImageView
         android:id="@+id/workLogo"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -37,15 +46,14 @@
         android:id="@+id/workTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/workLogo"
-        android:layout_alignEnd="@+id/stateCheckBox"
-        android:layout_alignLeft="@+id/stateCheckBox"
-        android:layout_alignRight="@+id/stateCheckBox"
         android:layout_alignTop="@+id/workLogo"
+        android:layout_toEndOf="@+id/workLogo"
         android:layout_toRightOf="@+id/workLogo"
+        android:layout_toStartOf="@+id/stateCheckBox"
         android:gravity="center_vertical"
         android:text="Title"
-        android:textAppearance="@android:style/TextAppearance.Material.Menu"/>
+        android:textAppearance="@android:style/TextAppearance.Material.Menu"
+        android:layout_alignBottom="@+id/workLogo"/>
 
     <RatingBar
         android:id="@+id/priorityRatingBar"

@@ -145,7 +145,8 @@ public class MainActivity extends AppCompatActivity
     public void checkSortButtonState() {
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        if (subjects != null && subjects.isVisible() || (works != null && works.isVisible())) {
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
+        if (subjects != null && subjects.isVisible() || (works != null && works.isVisible()) || (calendar != null && calendar.isVisible())) {
             sortButton.setVisible(true);
         } else {
             sortButton.setVisible(false);
@@ -203,10 +204,13 @@ public class MainActivity extends AppCompatActivity
         }
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
         if (works != null && works.isVisible())
             changeSortMenuItemIcon(menu.getItem(works.getCurrentSortType()), works.isReverseSort());
         else if (subjects != null && subjects.isVisible())
             changeSortMenuItemIcon(menu.getItem(subjects.getCurrentSortType()), subjects.isReverseSort());
+        else if (calendar != null && calendar.isVisible())
+            changeSortMenuItemIcon(menu.getItem(calendar.getCurrentSortType()), calendar.isReverseSort());
     }
     
     /**
@@ -238,10 +242,13 @@ public class MainActivity extends AppCompatActivity
                     }
                     SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
                     WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+                    CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
                     if (subjects != null && subjects.isVisible())
                         subjects.generateSubjectsList();
                     else if (works != null && works.isVisible())
                         works.generateWorksList();
+                    else if (calendar != null && calendar.isVisible())
+                        calendar.generateWorksList();
                     
                     saveSelectedAgendasToPrefs();
                     return false;

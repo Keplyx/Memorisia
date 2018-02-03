@@ -86,8 +86,9 @@ public class Utils {
      */
     public static RecyclerView setRecyclerViewDivider(RecyclerView recyclerView, Context context) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        // Pretty ugly, removing it until finding a better one
+        // DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        //recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(mLayoutManager);
         return recyclerView;
     }

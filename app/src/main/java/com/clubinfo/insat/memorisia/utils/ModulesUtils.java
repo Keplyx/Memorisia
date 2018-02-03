@@ -174,7 +174,6 @@ public class ModulesUtils {
      * will be placed at the end no matter if the sorting is reversed or not.
      *
      * @param modules {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list to sort
-     * @param context Current context
      * @param reverse True to reverse the sorting order (Due later first instead of sooner)
      * @return Sorted list
      */
@@ -207,6 +206,32 @@ public class ModulesUtils {
             }
         });
         return modules;
+    }
+    
+    /**
+     * Gets {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} items,
+     * with the same date as the one specified.
+     *
+     * @param modules {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list to sort
+     * @param date      dateto filter the list with
+     * @return filtered list
+     */
+    public static List<WorkModule> getWorkModuleListByDate(List<WorkModule> modules, int[] date) {
+        List<WorkModule> FilteredModules = new ArrayList<>();
+        for (WorkModule work : modules){
+            if (date != null){
+                boolean valid = true;
+                for (int i = 0; i < date.length; i++){
+                    if (work.getDate() == null || work.getDate()[i] != date[i]) {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid)
+                    FilteredModules.add(work);
+            }
+        }
+        return FilteredModules;
     }
     
     /**
