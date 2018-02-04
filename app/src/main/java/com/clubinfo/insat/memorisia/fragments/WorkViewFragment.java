@@ -1,7 +1,6 @@
 package com.clubinfo.insat.memorisia.fragments;
 
 
-import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,28 +22,16 @@ import com.clubinfo.insat.memorisia.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkViewFragment extends Fragment {
+public class WorkViewFragment extends BaseFragment {
     
-    public static final int SORT_NAME = 0;
-    public static final int SORT_PRIORITY = 1;
-    public static final int SORT_WORK_TYPE = 2;
-    public static final int SORT_DATE = 3;
     private RecyclerView recyclerView;
     private OptionModule subject;
-    private int currentSortType = 0;
-    private boolean reverseSort = false;
+
     
     public int getSubjectId() {
         return subject.getId();
     }
     
-    public int getCurrentSortType() {
-        return currentSortType;
-    }
-    
-    public boolean isReverseSort() {
-        return reverseSort;
-    }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,68 +44,47 @@ public class WorkViewFragment extends Fragment {
         recyclerView = Utils.setRecyclerViewDivider(recyclerView, getActivity());
         
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        currentSortType = sharedPref.getInt(SettingsActivity.KEY_WORKS_SORT_TYPE, 0);
-        reverseSort = sharedPref.getBoolean(SettingsActivity.KEY_WORKS_SORT_REVERSE, false);
-        generateWorksList();
+        setCurrentSortType(SortType.values()[sharedPref.getInt(SettingsActivity.KEY_WORKS_SORT_TYPE, 0)]);
+        setReverseSort(sharedPref.getBoolean(SettingsActivity.KEY_WORKS_SORT_REVERSE, false));
+        generateList();
         
         MainActivity act = (MainActivity) getActivity();
         if (act.getSortButton() != null) {
             act.generateSortMenu(act.getSortButton().getSubMenu(), true);
-            act.changeSortMenuItemIcon(act.getSortButton().getSubMenu().getItem(currentSortType), reverseSort);
+            act.changeSortMenuItemIcon(act.getSortButton().getSubMenu().getItem(getCurrentSortType().ordinal()), isReverseSort());
         }
         return view;
     }
     
     /**
-     * Sets the sort type to use for the works list, then saves it to the shared prefs
-     *
-     * @param type Sort type
-     */
-    public void setSortType(int type) {
-        reverseSort = type == currentSortType && !reverseSort;
-        currentSortType = type;
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(SettingsActivity.KEY_WORKS_SORT_TYPE, currentSortType);
-        editor.putBoolean(SettingsActivity.KEY_WORKS_SORT_REVERSE, reverseSort);
-        editor.apply();
-        generateWorksList();
-    }
-    
-    /**
      * Generates the works list based on the selected sort type
      */
-    public void generateWorksList() {
+    @Override
+    public void generateList() {
         SaveManager saver = new SaveManager(getActivity());
         MainActivity act = (MainActivity) getActivity();
         List<Integer> subjects = new ArrayList<>();
         subjects.add(subject.getId());
         List<WorkModule> worksList = saver.getWorkModuleList(act.getSelectedAgendas(), subjects, null);
         RecyclerView.Adapter mAdapter;
-        switch (currentSortType) {
-            case SORT_NAME:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(worksList, reverseSort));
+        switch (getCurrentSortType()) {
+            case SORT_1:
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(worksList, isReverseSort()));
                 break;
-            case SORT_PRIORITY:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(worksList, reverseSort));
+            case SORT_2:
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(worksList, isReverseSort()));
                 break;
-            case SORT_WORK_TYPE:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(worksList, getActivity(), reverseSort));
+            case SORT_3:
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(worksList, getActivity(), isReverseSort()));
                 break;
-            case SORT_DATE:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, reverseSort));
+            case SORT_4:
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, isReverseSort()));
                 break;
             default:
                 mAdapter = new WorksRecyclerAdapter(getActivity(), worksList);
                 break;
         }
         recyclerView.setAdapter(mAdapter);
-    }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-        generateWorksList();
     }
     
 }

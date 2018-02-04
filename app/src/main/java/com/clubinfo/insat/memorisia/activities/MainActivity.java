@@ -21,6 +21,7 @@ import android.view.View;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.fragments.BaseFragment;
 import com.clubinfo.insat.memorisia.fragments.CalendarFragment;
 import com.clubinfo.insat.memorisia.fragments.HomeFragment;
 import com.clubinfo.insat.memorisia.fragments.SubjectsFragment;
@@ -38,10 +39,13 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
-    public static final String FRAG_HOME = "HOME";
-    public static final String FRAG_SUBJECTS = "SUBJECTS";
-    public static final String FRAG_CALENDAR = "CALENDAR";
-    public static final String FRAG_WORKS = "WORKS";
+    public enum Frags {
+        FRAG_HOME,
+        FRAG_SUBJECTS,
+        FRAG_CALENDAR,
+        FRAG_WORKS;
+    }
+    
     public static String PACKAGE_NAME;
     Menu menu;
     MenuItem editButton;
@@ -50,6 +54,27 @@ public class MainActivity extends AppCompatActivity
     private Context context;
     private boolean isNightMode;
     private List<Integer> selectedAgendas = new ArrayList<>();
+    
+    public Frags getActiveFragment(){
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
+        HomeFragment home = (HomeFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_HOME.name());
+        if (subjects != null && subjects.isVisible())
+            return Frags.FRAG_SUBJECTS;
+        else if (works != null && works.isVisible())
+            return Frags.FRAG_WORKS;
+        else if (calendar != null && calendar.isVisible())
+            return Frags.FRAG_CALENDAR;
+        else if (home != null && home.isVisible())
+            return Frags.FRAG_HOME;
+        else
+            return null;
+    }
+    
+    public boolean isFragmentActive(Frags Frag){
+        return getActiveFragment() == Frag;
+    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +120,8 @@ public class MainActivity extends AppCompatActivity
     private void createNewWork() {
         Intent intent = new Intent(context, EditWorkActivity.class);
         WorkModule work = new WorkModule();
-        WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        if (workFragment != null && workFragment.isVisible()) {
+        WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        if (isFragmentActive(Frags.FRAG_WORKS)) {
             SaveManager saver = new SaveManager(context);
             OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getSubjectId());
             work.setSubjectId(subject != null ? subject.getId() : -1);
@@ -127,9 +152,7 @@ public class MainActivity extends AppCompatActivity
      * are active
      */
     private void checkEditButtonState() {
-        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
-        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        if ((subjects != null && subjects.isVisible()) || (works != null && works.isVisible())) {
+        if (isFragmentActive(Frags.FRAG_SUBJECTS) || isFragmentActive(Frags.FRAG_WORKS)) {
             editButton.setVisible(true);
         } else {
             editButton.setVisible(false);
@@ -144,10 +167,7 @@ public class MainActivity extends AppCompatActivity
      * are active
      */
     public void checkSortButtonState() {
-        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
-        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
-        if (subjects != null && subjects.isVisible() || (works != null && works.isVisible()) || (calendar != null && calendar.isVisible())) {
+        if (isFragmentActive(Frags.FRAG_SUBJECTS) || isFragmentActive(Frags.FRAG_WORKS) || isFragmentActive(Frags.FRAG_CALENDAR)) {
             sortButton.setVisible(true);
         } else {
             sortButton.setVisible(false);
@@ -179,9 +199,7 @@ public class MainActivity extends AppCompatActivity
         Utils.setToolbarIconWhite(agendaButton);
         
         Menu subMenu = sortButton.getSubMenu();
-        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
-        generateSortMenu(subMenu, (works != null && works.isVisible()) || (calendar != null && calendar.isVisible()));
+        generateSortMenu(subMenu, isFragmentActive(Frags.FRAG_WORKS) || isFragmentActive(Frags.FRAG_CALENDAR));
         
         generateAgendaMenu(agendaButton.getSubMenu());
         return true;
@@ -204,15 +222,15 @@ public class MainActivity extends AppCompatActivity
             menu.add(0, R.id.sort_2, Menu.NONE, R.string.sort_percent);
             menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_total_work);
         }
-        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
-        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
-        if (works != null && works.isVisible())
-            changeSortMenuItemIcon(menu.getItem(works.getCurrentSortType()), works.isReverseSort());
-        else if (subjects != null && subjects.isVisible())
-            changeSortMenuItemIcon(menu.getItem(subjects.getCurrentSortType()), subjects.isReverseSort());
-        else if (calendar != null && calendar.isVisible())
-            changeSortMenuItemIcon(menu.getItem(calendar.getCurrentSortType()), calendar.isReverseSort());
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
+        if (isFragmentActive(Frags.FRAG_WORKS))
+            changeSortMenuItemIcon(menu.getItem(works.getCurrentSortType().ordinal()), works.isReverseSort());
+        else if (isFragmentActive(Frags.FRAG_SUBJECTS))
+            changeSortMenuItemIcon(menu.getItem(subjects.getCurrentSortType().ordinal()), subjects.isReverseSort());
+        else if (isFragmentActive(Frags.FRAG_CALENDAR))
+            changeSortMenuItemIcon(menu.getItem(calendar.getCurrentSortType().ordinal()), calendar.isReverseSort());
     }
     
     /**
@@ -242,15 +260,15 @@ public class MainActivity extends AppCompatActivity
                         }
                         menuItem.setChecked(false);
                     }
-                    SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
-                    WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-                    CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
-                    if (subjects != null && subjects.isVisible())
-                        subjects.generateSubjectsList();
-                    else if (works != null && works.isVisible())
-                        works.generateWorksList();
-                    else if (calendar != null && calendar.isVisible())
-                        calendar.generateWorksList();
+                    SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
+                    WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+                    CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
+                    if (isFragmentActive(Frags.FRAG_SUBJECTS))
+                        subjects.generateList();
+                    else if (isFragmentActive(Frags.FRAG_WORKS))
+                        works.generateList();
+                    else if (isFragmentActive(Frags.FRAG_CALENDAR))
+                        calendar.generateList();
                     
                     saveSelectedAgendasToPrefs();
                     return false;
@@ -325,66 +343,43 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
-        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
+        BaseFragment.SortType sort = BaseFragment.SortType.SORT_1;
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
         switch (id) {
             case R.id.action_edit:
-                if (works != null && works.isVisible())
+                if (isFragmentActive(Frags.FRAG_WORKS))
                     editCurrentSubject(works.getSubjectId());
                 else
                     editSubjects();
                 break;
+            case R.id.sort_1:
+                sort = BaseFragment.SortType.SORT_1;
+                break;
+            case R.id.sort_2:
+                sort = BaseFragment.SortType.SORT_2;
+                break;
+            case R.id.sort_3:
+                sort = BaseFragment.SortType.SORT_3;
+                break;
+            case R.id.sort_4:
+                sort = BaseFragment.SortType.SORT_4;
+                break;
         }
-        if (subjects != null && subjects.isVisible()) {
-            switch (id) {
-                case R.id.sort_1:
-                    subjects.setSortType(SubjectsFragment.SORT_NAME);
-                    break;
-                case R.id.sort_2:
-                    subjects.setSortType(SubjectsFragment.SORT_DONE_PERCENT);
-                    break;
-                case R.id.sort_3:
-                    subjects.setSortType(SubjectsFragment.SORT_TOTAL_WORK);
-                    break;
-            }
-            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3)
+        if ((id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3 || id == R.id.sort_4)){
+            if (isFragmentActive(Frags.FRAG_SUBJECTS)) {
+                subjects.setSortType(sort, true);
                 changeSortMenuItemIcon(item, subjects.isReverseSort());
-        } else if (works != null && works.isVisible()) {
-            switch (id) {
-                case R.id.sort_1:
-                    works.setSortType(WorkViewFragment.SORT_NAME);
-                    break;
-                case R.id.sort_2:
-                    works.setSortType(WorkViewFragment.SORT_PRIORITY);
-                    break;
-                case R.id.sort_3:
-                    works.setSortType(WorkViewFragment.SORT_WORK_TYPE);
-                    break;
-                case R.id.sort_4:
-                    works.setSortType(WorkViewFragment.SORT_DATE);
-                    break;
-            }
-            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3 || id == R.id.sort_4)
+            } else if (isFragmentActive(Frags.FRAG_WORKS)) {
+                works.setSortType(sort, false);
                 changeSortMenuItemIcon(item, works.isReverseSort());
-        } else if (calendar != null && calendar.isVisible()) {
-            switch (id) {
-                case R.id.sort_1:
-                    calendar.setSortType(WorkViewFragment.SORT_NAME);
-                    break;
-                case R.id.sort_2:
-                    calendar.setSortType(WorkViewFragment.SORT_PRIORITY);
-                    break;
-                case R.id.sort_3:
-                    calendar.setSortType(WorkViewFragment.SORT_WORK_TYPE);
-                    break;
-                case R.id.sort_4:
-                    calendar.setSortType(WorkViewFragment.SORT_DATE);
-                    break;
-            }
-            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3 || id == R.id.sort_4)
+            } else if (isFragmentActive(Frags.FRAG_CALENDAR)) {
+                calendar.setSortType(sort, false);
                 changeSortMenuItemIcon(item, calendar.isReverseSort());
+            }
         }
+        
         return super.onOptionsItemSelected(item);
     }
     
@@ -439,15 +434,15 @@ public class MainActivity extends AppCompatActivity
         sortButton.setVisible(false);
         if (id == R.id.nav_home) { // Display the home fragment
             fragment = new HomeFragment();
-            tag = FRAG_HOME;
+            tag = Frags.FRAG_HOME.name();
         } else if (id == R.id.nav_subjects) { // Display the subjects fragment
             fragment = new SubjectsFragment();
-            tag = FRAG_SUBJECTS;
+            tag = Frags.FRAG_SUBJECTS.name();
             editButton.setVisible(true);
             sortButton.setVisible(true);
         } else if (id == R.id.nav_calendar) { // Display the calendar fragment
             fragment = new CalendarFragment();
-            tag = FRAG_CALENDAR;
+            tag = Frags.FRAG_CALENDAR.name();
             editButton.setVisible(false);
             sortButton.setVisible(true);
         } else if (id == R.id.nav_settings) { // Display the settings activity

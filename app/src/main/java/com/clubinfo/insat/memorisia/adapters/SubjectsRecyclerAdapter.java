@@ -136,7 +136,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         fragment.setArguments(b);
         android.app.FragmentTransaction ft = fragMan.beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left, R.animator.slide_in_left, R.animator.slide_out_right);
-        ft.replace(R.id.content_frame, fragment, MainActivity.FRAG_WORKS);
+        ft.replace(R.id.content_frame, fragment, MainActivity.Frags.FRAG_WORKS.name());
         ft.addToBackStack(null);
         ft.commit();
     }
