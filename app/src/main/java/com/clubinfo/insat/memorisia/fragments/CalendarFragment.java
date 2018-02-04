@@ -71,7 +71,7 @@ public class CalendarFragment extends Fragment {
         
         MainActivity act = (MainActivity) getActivity();
         if (act.getSortButton() != null) {
-            act.generateSortMenu(act.getSortButton().getSubMenu(), false);
+            act.generateSortMenu(act.getSortButton().getSubMenu(), true);
             act.changeSortMenuItemIcon(act.getSortButton().getSubMenu().getItem(currentSortType), reverseSort);
         }
         return v;

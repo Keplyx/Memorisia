@@ -1,5 +1,6 @@
 package com.clubinfo.insat.memorisia.adapters;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -134,6 +135,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         Bundle b = ModulesUtils.createBundleFromModule(module);
         fragment.setArguments(b);
         android.app.FragmentTransaction ft = fragMan.beginTransaction();
+        ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left, R.animator.slide_in_left, R.animator.slide_out_right);
         ft.replace(R.id.content_frame, fragment, MainActivity.FRAG_WORKS);
         ft.addToBackStack(null);
         ft.commit();

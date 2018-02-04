@@ -36,6 +36,7 @@ public class SubjectsFragment extends Fragment {
         return reverseSort;
     }
     
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
@@ -51,7 +52,7 @@ public class SubjectsFragment extends Fragment {
         
         MainActivity act = (MainActivity) getActivity();
         if (act.getSortButton() != null) {
-            act.generateSortMenu(act.getSortButton().getSubMenu(), true);
+            act.generateSortMenu(act.getSortButton().getSubMenu(), false);
             act.changeSortMenuItemIcon(act.getSortButton().getSubMenu().getItem(currentSortType), reverseSort);
         }
         return view;

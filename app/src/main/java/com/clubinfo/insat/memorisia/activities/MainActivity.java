@@ -139,7 +139,8 @@ public class MainActivity extends AppCompatActivity
     /**
      * Displays the sort button if the
      * {@link com.clubinfo.insat.memorisia.fragments.SubjectsFragment SubjectsFragment} or
-     * {@link com.clubinfo.insat.memorisia.fragments.WorkViewFragment WorkViewFragment}
+     * {@link com.clubinfo.insat.memorisia.fragments.WorkViewFragment WorkViewFragment} or
+     * {@link com.clubinfo.insat.memorisia.fragments.CalendarFragment CalendarFragment}
      * are active
      */
     public void checkSortButtonState() {
@@ -179,7 +180,8 @@ public class MainActivity extends AppCompatActivity
         
         Menu subMenu = sortButton.getSubMenu();
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
-        generateSortMenu(subMenu, !(works != null && works.isVisible()));
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
+        generateSortMenu(subMenu, (works != null && works.isVisible()) || (calendar != null && calendar.isVisible()));
         
         generateAgendaMenu(agendaButton.getSubMenu());
         return true;
@@ -189,18 +191,18 @@ public class MainActivity extends AppCompatActivity
      * Generates the corresponding sort menu for the active fragment
      *
      * @param menu       Sort menu holding the sort options
-     * @param isSubjects Is the menu for subjects sorting or work sorting?
+     * @param isWorks    Is the menu for subjects sorting or work sorting?
      */
-    public void generateSortMenu(Menu menu, boolean isSubjects) {
+    public void generateSortMenu(Menu menu, boolean isWorks) {
         menu.clear();
         menu.add(0, R.id.sort_1, Menu.NONE, R.string.sort_name);
-        if (isSubjects) {
-            menu.add(0, R.id.sort_2, Menu.NONE, R.string.sort_percent);
-            menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_total_work);
-        } else {
+        if (isWorks) {
             menu.add(0, R.id.sort_2, Menu.NONE, R.string.sort_priority);
             menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_type);
             menu.add(0, R.id.sort_4, Menu.NONE, R.string.sort_date);
+        } else {
+            menu.add(0, R.id.sort_2, Menu.NONE, R.string.sort_percent);
+            menu.add(0, R.id.sort_3, Menu.NONE, R.string.sort_total_work);
         }
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
@@ -325,6 +327,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(FRAG_SUBJECTS);
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(FRAG_WORKS);
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(FRAG_CALENDAR);
         switch (id) {
             case R.id.action_edit:
                 if (works != null && works.isVisible())
@@ -364,6 +367,23 @@ public class MainActivity extends AppCompatActivity
             }
             if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3 || id == R.id.sort_4)
                 changeSortMenuItemIcon(item, works.isReverseSort());
+        } else if (calendar != null && calendar.isVisible()) {
+            switch (id) {
+                case R.id.sort_1:
+                    calendar.setSortType(WorkViewFragment.SORT_NAME);
+                    break;
+                case R.id.sort_2:
+                    calendar.setSortType(WorkViewFragment.SORT_PRIORITY);
+                    break;
+                case R.id.sort_3:
+                    calendar.setSortType(WorkViewFragment.SORT_WORK_TYPE);
+                    break;
+                case R.id.sort_4:
+                    calendar.setSortType(WorkViewFragment.SORT_DATE);
+                    break;
+            }
+            if (id == R.id.sort_1 || id == R.id.sort_2 || id == R.id.sort_3 || id == R.id.sort_4)
+                changeSortMenuItemIcon(item, calendar.isReverseSort());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -428,6 +448,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_calendar) { // Display the calendar fragment
             fragment = new CalendarFragment();
             tag = FRAG_CALENDAR;
+            editButton.setVisible(false);
+            sortButton.setVisible(true);
         } else if (id == R.id.nav_settings) { // Display the settings activity
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
