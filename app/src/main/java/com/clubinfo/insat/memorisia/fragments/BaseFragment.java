@@ -2,9 +2,18 @@ package com.clubinfo.insat.memorisia.fragments;
 
 import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
+import com.clubinfo.insat.memorisia.utils.Utils;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 public class BaseFragment extends Fragment {
     

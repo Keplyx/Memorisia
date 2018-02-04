@@ -21,6 +21,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -29,7 +31,7 @@ public class CalendarFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private MaterialCalendarView calendarView;
     
-    private int[] selectedDate;
+    private int[] selectedDate = {CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()};
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class CalendarFragment extends BaseFragment {
                 generateList();
             }
         });
-    
+        calendarView.setSelectedDate(CalendarDay.today());
+        generateList();
         MainActivity act = (MainActivity) getActivity();
         if (act.getSortButton() != null) {
             act.generateSortMenu(act.getSortButton().getSubMenu(), true);
