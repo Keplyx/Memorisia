@@ -8,8 +8,10 @@ import android.util.Log;
 import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -145,6 +147,23 @@ public class ModulesUtils {
     }
     
     /**
+     * Gets {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} items,
+     * with the specified priority.
+     *
+     * @param modules {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list to sort
+     * @param priority      priority to search for
+     * @return Filtered list
+     */
+    public static List<WorkModule> getWorkModuleListByPriority(List<WorkModule> modules, int priority) {
+        List<WorkModule> FilteredModules = new ArrayList<>();
+        for (WorkModule work : modules){
+            if (work.getPriority() == priority)
+                FilteredModules.add(work);
+        }
+        return FilteredModules;
+    }
+    
+    /**
      * Sorts the given {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list by work type id,
      * lower id first.
      *
@@ -210,10 +229,33 @@ public class ModulesUtils {
     
     /**
      * Gets {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} items,
+     * due for the next 7 days.
+     *
+     * @param modules {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list to sort
+     * @param date      date to start at
+     * @return Filtered list
+     */
+    public static List<WorkModule> getWorkModuleListByWeek(List<WorkModule> modules, int[] date) {
+        Calendar deadLine = CalendarDay.from(date[2], date[1] - 1, date[0]).getCalendar();
+        Calendar start = CalendarDay.from(deadLine).getCalendar();
+        deadLine.add(Calendar.DAY_OF_MONTH, 7);
+        List<WorkModule> FilteredModules = new ArrayList<>();
+        for (WorkModule work : modules){
+            Calendar current = CalendarDay.from(work.getDate()[2], work.getDate()[1] -1, work.getDate()[0]).getCalendar();
+            if (work.getDate() == null || work.getDate()[0] == -1)
+                continue;
+            if (current.before(deadLine) && current.after(start) || current.equals(start))
+                FilteredModules.add(work);
+        }
+        return FilteredModules;
+    }
+    
+    /**
+     * Gets {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} items,
      * with the same date as the one specified.
      *
      * @param modules {@link com.clubinfo.insat.memorisia.modules.WorkModule WorkModule} list to sort
-     * @param date      dateto filter the list with
+     * @param date      date to filter the list with
      * @return filtered list
      */
     public static List<WorkModule> getWorkModuleListByDate(List<WorkModule> modules, int[] date) {

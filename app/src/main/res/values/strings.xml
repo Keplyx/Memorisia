@@ -18,6 +18,9 @@
     <string name="settings_title">Settings</string>
 
 
+    <string name="home_week">Due this Week</string>
+    <string name="home_stars">5 Stars</string>
+
     <string name="name">Name</string>
     <string name="logo">Logo</string>
     <string name="color">Color</string>

@@ -263,12 +263,15 @@ public class MainActivity extends AppCompatActivity
                     SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
                     WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
                     CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
+                    HomeFragment home = (HomeFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_HOME.name());
                     if (isFragmentActive(Frags.FRAG_SUBJECTS))
                         subjects.generateList();
                     else if (isFragmentActive(Frags.FRAG_WORKS))
                         works.generateList();
                     else if (isFragmentActive(Frags.FRAG_CALENDAR))
                         calendar.generateList();
+                    else if (isFragmentActive(Frags.FRAG_HOME))
+                        home.generateList();
                     
                     saveSelectedAgendasToPrefs();
                     return false;

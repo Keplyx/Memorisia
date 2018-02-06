@@ -1,5 +1,7 @@
 package com.clubinfo.insat.memorisia.modules;
 
+import java.util.Calendar;
+
 /**
  * Class representing a work
  */
@@ -34,6 +36,7 @@ public class WorkModule extends Module {
         date = new int[] {-1, -1, -1};
         time = new int[] {-1, -1};
         state = false;
+        
     }
     
     public int getAgendaId() {
