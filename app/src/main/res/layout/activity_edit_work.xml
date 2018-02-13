@@ -32,19 +32,6 @@
                 android:layout_margin="8dp"
                 android:text="@string/notifications"/>
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_alignLeft="@+id/textView2"
-                android:layout_alignStart="@+id/textView2"
-                android:layout_below="@+id/textView2"
-                android:layout_marginTop="8dp"
-                android:layout_toLeftOf="@+id/subjectSpinner"
-                android:layout_toStartOf="@+id/subjectSpinner"
-                android:gravity="center_vertical"
-                android:text="@string/work_type"/>
-
             <EditText
                 android:id="@+id/descriptionEditText"
                 android:layout_width="wrap_content"
@@ -60,17 +47,17 @@
             <Spinner
                 android:id="@+id/subjectSpinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_alignBottom="@+id/textView2"
                 android:layout_alignEnd="@+id/agendaSpinner"
                 android:layout_alignRight="@+id/agendaSpinner"
                 android:layout_below="@+id/agendaSpinner"
                 android:layout_marginTop="8dp"
-                android:layout_toEndOf="@+id/textView"
-                android:layout_toRightOf="@+id/textView"/>
+                android:layout_toEndOf="@+id/agendaTextView"
+                android:layout_toRightOf="@+id/agendaTextView"/>
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/agendaTextView"
                 android:layout_width="96dp"
                 android:layout_height="32dp"
                 android:layout_alignParentLeft="true"
@@ -85,8 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:layout_alignBottom="@+id/descriptionEditText"
-                android:layout_alignLeft="@+id/textView"
-                android:layout_alignStart="@+id/textView"
+                android:layout_alignLeft="@+id/agendaTextView"
+                android:layout_alignStart="@+id/agendaTextView"
                 android:layout_toLeftOf="@+id/workTypeSpinner"
                 android:layout_toStartOf="@+id/workTypeSpinner"
                 android:gravity="center_vertical"
@@ -96,13 +83,11 @@
             <Spinner
                 android:id="@+id/workTypeSpinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/textView"
-                android:layout_alignEnd="@+id/subjectSpinner"
+                android:layout_height="32dp"
+                android:layout_below="@+id/subjectSpinner"
+                android:layout_toRightOf="@+id/textView2"
                 android:layout_alignRight="@+id/subjectSpinner"
-                android:layout_below="@+id/textView2"
-                android:layout_marginTop="8dp"
-                android:layout_toRightOf="@+id/textView"/>
+                android:layout_alignEnd="@+id/subjectSpinner"/>
 
             <TextView
                 android:id="@+id/textView28"
@@ -122,36 +107,24 @@
             <Spinner
                 android:id="@+id/agendaSpinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/textView"
+                android:layout_height="32dp"
+                android:layout_alignBottom="@+id/agendaTextView"
                 android:layout_below="@+id/notificationsSwitch"
                 android:layout_marginRight="8dp"
-                android:layout_toEndOf="@+id/textView"
-                android:layout_toRightOf="@+id/textView"
+                android:layout_toEndOf="@+id/agendaTextView"
+                android:layout_toRightOf="@+id/agendaTextView"
                 />
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_alignLeft="@+id/textView4"
-                android:layout_alignStart="@+id/textView4"
-                android:layout_below="@+id/textView"
-                android:layout_marginTop="8dp"
-                android:layout_toLeftOf="@+id/descriptionEditText"
-                android:layout_toStartOf="@+id/descriptionEditText"
-                android:gravity="center_vertical"
-                android:text="@string/priority"/>
 
             <RatingBar
                 android:id="@+id/priorityRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/textView13"
-                android:layout_toRightOf="@+id/textView13"
                 android:numStars="5"
                 android:rating="1"
-                android:stepSize="1"/>
+                android:stepSize="1"
+                android:layout_below="@+id/workTypeSpinner"
+                android:layout_alignRight="@+id/subjectSpinner"
+                android:layout_alignEnd="@+id/subjectSpinner"/>
 
             <Button
                 android:id="@+id/pickDateButton"
@@ -181,16 +154,36 @@
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:layout_width="96dp"
                 android:layout_height="32dp"
-                android:layout_alignEnd="@+id/textView"
-                android:layout_alignLeft="@+id/textView"
-                android:layout_alignRight="@+id/textView"
-                android:layout_alignStart="@+id/textView"
-                android:layout_below="@+id/textView"
-                android:layout_marginTop="8dp"
+                android:layout_alignLeft="@+id/agendaTextView"
+                android:layout_alignStart="@+id/agendaTextView"
+                android:layout_below="@+id/agendaTextView"
+                android:layout_toLeftOf="@+id/subjectSpinner"
+                android:layout_toStartOf="@+id/subjectSpinner"
                 android:gravity="center_vertical"
                 android:text="@string/subject"/>
+
+            <TextView
+                android:id="@+id/workTextView"
+                android:layout_width="96dp"
+                android:layout_height="32dp"
+                android:gravity="center_vertical"
+                android:text="@string/work_type"
+                android:layout_below="@+id/subjectSpinner"
+                android:layout_alignLeft="@+id/textView2"
+                android:layout_alignStart="@+id/textView2"/>
+
+            <TextView
+                android:id="@+id/priorityTextView"
+                android:layout_width="96dp"
+                android:layout_height="32dp"
+                android:gravity="center_vertical"
+                android:text="@string/priority"
+                android:layout_below="@+id/workTypeSpinner"
+                android:layout_alignLeft="@+id/textView4"
+                android:layout_alignStart="@+id/textView4"
+                android:layout_above="@+id/descriptionEditText"/>
 
             <Space
                 android:layout_width="match_parent"
