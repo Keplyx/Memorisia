@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity
                 createNewWork();
             }
         });
+    
+        Utils.checkModulesPresent(this.context);
     }
     
     /**

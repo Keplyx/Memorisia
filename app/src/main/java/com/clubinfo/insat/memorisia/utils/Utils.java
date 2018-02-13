@@ -4,6 +4,7 @@ package com.clubinfo.insat.memorisia.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -19,17 +20,64 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
+import com.clubinfo.insat.memorisia.modules.Module;
+import com.clubinfo.insat.memorisia.modules.OptionModule;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Class providing general utility static methods
  */
 public class Utils {
+    
+    /**
+     * Checks if modules are present, if one category is empty, it creates default entries
+     *
+     * @param context  Current context
+     */
+    public static void checkModulesPresent(Context context) {
+        SaveManager saver = new SaveManager(context);
+        List<OptionModule> agendas = saver.getOptionModuleList(SaveManager.AGENDA);
+        List<OptionModule> subjects = saver.getOptionModuleList(SaveManager.SUBJECT);
+        List<OptionModule> workTypes = saver.getOptionModuleList(SaveManager.WORK_TYPE);
+        
+        generateDefaultModules(context, agendas.size() == 0, subjects.size() == 0, workTypes.size() == 0);
+    }
+    
+    /**
+     * Creates a default modules if none is present
+     *
+     * @param context  Current context
+     */
+    public static void generateDefaultModules(Context context, boolean isAgenda, boolean isSubject, boolean isWorkType) {
+        SaveManager saver = new SaveManager(context);
+        List<OptionModule> modules = new ArrayList<>();
+        if (isAgenda){
+            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_home), "", "#cccccc", true));
+            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_work), "", "#cccccc", true));
+            
+        }
+        if (isSubject) {
+            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject1), "", "#cccccc", true));
+            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject2), "", "#cccccc", true));
+        }
+        if (isWorkType) {
+            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type1), "", "#cccccc", true));
+            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type2), "", "#cccccc", true));
+        }
+        
+        for (OptionModule m : modules){
+            saver.saveModule(m);
+        }
+    }
+    
     
     /**
      * Converts an image referenced by its path to a Bitmap
