@@ -88,7 +88,8 @@
                 android:layout_below="@+id/urlTextView"
                 android:layout_margin="8dp"
                 android:gravity="center"
-                android:text="@string/credits_color_picker"/>
+                android:text="@string/credits_color_picker"
+                />
 
             <TextView
                 android:id="@+id/urlTextView2"
@@ -103,8 +104,8 @@
                 android:id="@+id/textView15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/textView11"
-                android:layout_alignRight="@+id/textView11"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_below="@+id/urlTextView2"
                 android:layout_margin="8dp"
                 android:gravity="center_horizontal"
@@ -122,13 +123,35 @@
                 android:layout_alignParentStart="true"/>
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/urlTextView16"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
+                android:gravity="center_horizontal"
+                android:text="@string/credits_calendar"/>
+
+            <TextView
+                android:id="@+id/urlTextView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:gravity="center_horizontal"
+                android:text="@string/credits_calendar_url"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView"/>
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/urlTextView13"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:text="@string/credits_licence"
                 android:textSize="18sp"/>

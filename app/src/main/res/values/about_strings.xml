@@ -8,6 +8,9 @@
     <string name="credits_color_picker_url">https://github.com/yukuku/ambilwarna</string>
     <string name="credits_pickers">Date and time picker (android-betterpickers) by Code Troopers</string>
     <string name="credits_pickers_url">https://github.com/code-troopers/android-betterpickers</string>
+    <string name="credits_calendar">Material Calendar by Prolific Interactive</string>
+    <string name="credits_calendar_url">https://github.com/prolificinteractive/material-calendarview</string>
+
     <string name="credits_licence">Application licenced under GPLv3 and available on Github</string>
     <string name="credits_github_url">https://github.com/Keplyx/Memorisia</string>
 </resources>
