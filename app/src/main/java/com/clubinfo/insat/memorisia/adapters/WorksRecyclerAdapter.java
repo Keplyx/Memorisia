@@ -43,6 +43,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     private static final String normalColor = "#919191";
     private List<WorkModule> modules;
     private List<OptionModule> workTypesList;
+    private List<OptionModule> subjectsList;
     private List<OptionModule> agendaList;
     private Context context;
     
@@ -51,6 +52,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         this.modules = modules;
         SaveManager saver = new SaveManager(context);
         workTypesList = saver.getOptionModuleList(SaveManager.WORK_TYPE);
+        subjectsList = saver.getOptionModuleList(SaveManager.SUBJECT);
         agendaList = saver.getOptionModuleList(SaveManager.AGENDA);
     }
     
@@ -84,6 +86,10 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         OptionModule agenda = ModulesUtils.getModuleOfId(agendaList, work.getAgendaId());
         holder.agendaLogo.setImageBitmap(Utils.getBitmapFromAsset(context, agenda.getLogo()));
         holder.agendaLogo.setColorFilter(Color.parseColor(agenda.getColor()));
+    
+        OptionModule subject = ModulesUtils.getModuleOfId(subjectsList, work.getSubjectId());
+        holder.subjectLogo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
+        holder.subjectLogo.setColorFilter(Color.parseColor(subject.getColor()));
         
         Calendar c = Calendar.getInstance();
         int[] today = new int[]{c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR)};
@@ -110,13 +116,6 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             setupTimeDisplay(holder.time, normalColor, work.getTime());
         }
         
-        holder.scroll.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (Utils.canScroll((ScrollView) v)) // Stop parent scroll if can scroll description
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
         holder.description.setText(work.getText());
         holder.priorityBar.setRating((float) work.getPriority());
         holder.doneCheckBox.setChecked(work.isState());
@@ -223,12 +222,11 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         public TextView date;
         public TextView time;
         public ImageView workLogo;
+        public ImageView subjectLogo;
         public ImageView agendaLogo;
         public RatingBar priorityBar;
         public CheckBox doneCheckBox;
         public View layout;
-        
-        public ScrollView scroll;
         
         public ViewHolder(View v) {
             super(v);
@@ -238,11 +236,10 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             date = v.findViewById(R.id.dateTextView);
             time = v.findViewById(R.id.timeTextView);
             workLogo = v.findViewById(R.id.workLogo);
+            subjectLogo = v.findViewById(R.id.subjectLogo);
             agendaLogo = v.findViewById(R.id.agendaLogo);
             priorityBar = v.findViewById(R.id.priorityRatingBar);
             doneCheckBox = v.findViewById(R.id.stateCheckBox);
-            
-            scroll = v.findViewById(R.id.descriptionScroll);
         }
     }
     

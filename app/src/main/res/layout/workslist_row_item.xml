@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="128dp"
+                android:layout_height="96dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -12,15 +12,12 @@
         android:id="@+id/stateCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/timeTextView"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/done"/>
+        android:text="@string/done"
+        android:layout_alignTop="@+id/timeTextView"/>
 
     <ImageView
         android:id="@+id/agendaLogo"
@@ -28,8 +25,17 @@
         android:layout_height="24dp"
         android:layout_alignEnd="@+id/stateCheckBox"
         android:layout_alignRight="@+id/stateCheckBox"
-        android:layout_alignTop="@+id/stateCheckBox"
+        android:layout_alignTop="@+id/workLogo"
         app:srcCompat="@mipmap/ic_launcher"/>
+
+    <ImageView
+        android:id="@+id/agenda"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignTop="@+id/agendaLogo"
+        android:layout_toLeftOf="@+id/agendaLogo"
+        android:layout_toStartOf="@+id/agendaLogo"
+        app:srcCompat="@drawable/ic_format_list_bulleted_black_24dp"/>
 
     <ImageView
         android:id="@+id/workLogo"
@@ -45,63 +51,84 @@
     <TextView
         android:id="@+id/workTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
+        android:layout_alignBottom="@+id/agendaLogo"
         android:layout_alignTop="@+id/workLogo"
         android:layout_toEndOf="@+id/workLogo"
         android:layout_toRightOf="@+id/workLogo"
         android:layout_toStartOf="@+id/stateCheckBox"
         android:gravity="center_vertical"
         android:text="Title"
-        android:textAppearance="@android:style/TextAppearance.Material.Menu"
-        android:layout_alignBottom="@+id/workLogo"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
     <RatingBar
         android:id="@+id/priorityRatingBar"
         style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/workLogo"
-        android:layout_alignStart="@+id/workLogo"
-        android:layout_below="@+id/workLogo"
         android:numStars="5"
         android:stepSize="1"
-        />
+        android:layout_alignBottom="@+id/timeTextView"
+        android:layout_toRightOf="@+id/timeTextView"
+        android:layout_toEndOf="@+id/timeTextView"/>
 
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/priorityRatingBar"
-        android:layout_alignStart="@+id/priorityRatingBar"
-        android:layout_below="@+id/priorityRatingBar"
+        android:layout_alignLeft="@+id/workLogo"
+        android:layout_alignStart="@+id/workLogo"
+        android:layout_below="@+id/workLogo"
         android:drawableLeft="@drawable/ic_date_range_black_24dp"
         android:gravity="center_vertical"
-        android:text="99/99/9999"/>
+        android:text="99/99/9999"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
 
     <TextView
         android:id="@+id/timeTextView"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/dateTextView"
-        android:layout_alignStart="@+id/dateTextView"
-        android:layout_below="@+id/dateTextView"
+        android:layout_alignBaseline="@+id/dateTextView"
+        android:layout_alignBottom="@+id/dateTextView"
+        android:layout_toEndOf="@+id/dateTextView"
+        android:layout_toRightOf="@+id/dateTextView"
         android:drawableLeft="@drawable/ic_access_time_black_24dp"
         android:gravity="center_vertical"
-        android:text="99:99"/>
+        android:text="99:99"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
 
-    <ScrollView
-        android:id="@+id/descriptionScroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <TextView
+        android:id="@+id/workDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_alignBottom="@+id/workLogo"
         android:layout_below="@+id/workTitle"
+        android:layout_toEndOf="@+id/workLogo"
         android:layout_toLeftOf="@+id/stateCheckBox"
-        android:layout_toRightOf="@+id/dateTextView">
+        android:layout_toRightOf="@+id/workLogo"
+        android:text="Description"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
-        <TextView
-            android:id="@+id/workDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"/>
-    </ScrollView>
+    <ImageView
+        android:id="@+id/subjectLogo"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignEnd="@+id/stateCheckBox"
+        android:layout_alignRight="@+id/stateCheckBox"
+        android:layout_below="@+id/agendaLogo"
+        android:layout_toEndOf="@+id/agenda"
+        android:layout_toRightOf="@+id/agenda"
+        app:srcCompat="@mipmap/ic_launcher"
+        />
+
+    <ImageView
+        android:id="@+id/subject"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignLeft="@+id/agenda"
+        android:layout_alignStart="@+id/agenda"
+        android:layout_below="@+id/agendaLogo"
+        android:layout_toLeftOf="@+id/subjectLogo"
+        app:srcCompat="@drawable/ic_subject_black_24dp"/>
 
 </RelativeLayout>
