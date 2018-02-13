@@ -63,4 +63,10 @@ public class HomeFragment extends Fragment {
         mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false));
         starsRecyclerView.setAdapter(mAdapter);
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        generateList();
+    }
 }
