@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity
      * @param menu Menu holding the agendas
      */
     public void generateAgendaMenu(final Menu menu) {
+        getSelectedAgendasFromPrefs();
         SaveManager saver = new SaveManager(this);
         List<OptionModule> modules = saver.getOptionModuleList(SaveManager.AGENDA);
         menu.clear();
@@ -289,6 +290,17 @@ public class MainActivity extends AppCompatActivity
             });
         }
     }
+    
+    /**
+     * Adds the given agenda to the selected agenda'slist
+     *
+     * @param id agenda id to select
+     */
+    public void addAgendaToSelected(int id){
+        if (id != -1)
+            selectedAgendas.add(id);
+    }
+    
     
     /**
      * Checks if the selected agenda in the menu is the only one active.

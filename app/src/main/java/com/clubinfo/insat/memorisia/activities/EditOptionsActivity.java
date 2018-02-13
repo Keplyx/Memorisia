@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.adapters.LogosListAdapter;
+import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
@@ -54,7 +56,7 @@ public class EditOptionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_options);
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Utils.generateLogosList(this.context);
+        logosList = Utils.generateLogosList(this);
         getComponents();
         
         module = ModulesUtils.createOptionModuleFromBundle(getIntent().getExtras());

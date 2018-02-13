@@ -2,9 +2,13 @@ package com.clubinfo.insat.memorisia;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Xml;
 
+import com.clubinfo.insat.memorisia.activities.MainActivity;
+import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
@@ -23,7 +27,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SaveManager {
     
@@ -162,6 +168,20 @@ public class SaveManager {
         if (module.getId() == -1) {
             module.setId(createUniqueModuleId(moduleList));
             moduleList.add(module);
+            // Autoselect if creating a new agenda
+            if (module.getType() == AGENDA) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+                Set<String> set = sharedPref.getStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, null);
+                List<String> agendas = new ArrayList<>();
+                List<Integer> selectedAgendas = new ArrayList<>();
+                if (set != null)
+                    agendas = new ArrayList<>(set);
+                agendas.add(module.getId() + "");
+                set = new HashSet<>(agendas); // Convert the int list to a Set to save it as a preference
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, set);
+                editor.apply();
+            }
         } else
             replaceExistingModule(moduleList, module);
         writeOptionModuleToXml(moduleList);
