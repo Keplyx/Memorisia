@@ -33,6 +33,11 @@ public class CalendarFragment extends BaseFragment {
     
     private int[] selectedDate = {CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()};
     
+    public int[] getSelectedDate() {
+        return selectedDate;
+    }
+    
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.calendar_fragment, container, false);

@@ -120,12 +120,20 @@ public class MainActivity extends AppCompatActivity
     private void createNewWork() {
         Intent intent = new Intent(context, EditWorkActivity.class);
         WorkModule work = new WorkModule();
-        WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
         if (isFragmentActive(Frags.FRAG_WORKS)) {
             SaveManager saver = new SaveManager(context);
+            WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
             OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getSubjectId());
             work.setSubjectId(subject != null ? subject.getId() : -1);
         }
+        else if (isFragmentActive(Frags.FRAG_CALENDAR)){
+            CalendarFragment calendarFragment = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
+            work.setDate(calendarFragment.getSelectedDate());
+        }
+        List<Integer> agendas = getSelectedAgendas();
+        if (agendas.size() == 1)
+            work.setAgendaId(agendas.get(0));
+        
         intent.putExtras(ModulesUtils.createBundleFromModule(work));
         context.startActivity(intent);
     }
