@@ -54,7 +54,7 @@ public class EditOptionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_options);
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        generateLogosList();
+        Utils.generateLogosList(this.context);
         getComponents();
         
         module = ModulesUtils.createOptionModuleFromBundle(getIntent().getExtras());
@@ -97,21 +97,6 @@ public class EditOptionsActivity extends AppCompatActivity {
         colorButton = (Button) findViewById(R.id.moduleColor);
         notificationsSwitch = (Switch) findViewById(R.id.moduleNotifications);
         deleteButton = (Button) findViewById(R.id.deleteModule);
-    }
-    
-    /**
-     * Populates the logosList with the correct paths to the logos, stored in the logos folder
-     */
-    private void generateLogosList() {
-        String[] list = new String[0];
-        try {
-            list = getAssets().list("logos");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < list.length; i++) {
-            logosList.add(logosPath + list[i]);
-        }
     }
     
     @Override

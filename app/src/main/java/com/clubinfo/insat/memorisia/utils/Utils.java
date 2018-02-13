@@ -38,6 +38,26 @@ import java.util.List;
 public class Utils {
     
     /**
+     * Populates the logosList with the correct paths to the logos, stored in the logos folder
+     *
+     * @param context  Current context
+     */
+    public static List<String> generateLogosList(Context context) {
+        final String logosPath = "logos/";
+        List<String> logosList = new ArrayList<>();
+        String[] list = new String[0];
+        try {
+            list = context.getAssets().list("logos");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < list.length; i++) {
+            logosList.add(logosPath + list[i]);
+        }
+        return logosList;
+    }
+    
+    /**
      * Checks if modules are present, if one category is empty, it creates default entries
      *
      * @param context  Current context
@@ -59,18 +79,25 @@ public class Utils {
     public static void generateDefaultModules(Context context, boolean isAgenda, boolean isSubject, boolean isWorkType) {
         SaveManager saver = new SaveManager(context);
         List<OptionModule> modules = new ArrayList<>();
+        List<String> logosList = generateLogosList(context);
         if (isAgenda){
-            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_home), "", "#cccccc", true));
-            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_work), "", "#cccccc", true));
+            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_home),
+                    logosList.get(0), "#33b819", true));
+            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_work),
+                    logosList.get(0), "#ba4200", true));
             
         }
         if (isSubject) {
-            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject1), "", "#cccccc", true));
-            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject2), "", "#cccccc", true));
+            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject1),
+                    logosList.get(0), "#d5ce12", true));
+            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject2),
+                    logosList.get(0), "#1265d5", true));
         }
         if (isWorkType) {
-            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type1), "", "#cccccc", true));
-            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type2), "", "#cccccc", true));
+            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type1),
+                    logosList.get(0), "#d512d3", true));
+            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type2),
+                    logosList.get(0), "#12d5a5", true));
         }
         
         for (OptionModule m : modules){
