@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         getSelectedAgendasFromPrefs();
         
         if (savedInstanceState == null)
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment(), Frags.FRAG_HOME.name()).commit();
         
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -271,6 +271,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         menuItem.setChecked(false);
                     }
+                    saveSelectedAgendasToPrefs();
                     SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
                     WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
                     CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
@@ -284,7 +285,6 @@ public class MainActivity extends AppCompatActivity
                     else if (isFragmentActive(Frags.FRAG_HOME))
                         home.generateList();
                     
-                    saveSelectedAgendasToPrefs();
                     return false;
                 }
             });

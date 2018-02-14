@@ -48,8 +48,9 @@ public class HomeFragment extends Fragment {
     
     public void generateWeekList() {
         SaveManager saver = new SaveManager(getActivity());
+        MainActivity act = (MainActivity) getActivity();
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByWeek(
-                saver.getWorkModuleList(null, null, null), new int[]{CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()});
+                saver.getWorkModuleList(act.getSelectedAgendas(), null, null), new int[]{CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()});
         RecyclerView.Adapter mAdapter;
         mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false));
         weekRecyclerView.setAdapter(mAdapter);
@@ -57,8 +58,9 @@ public class HomeFragment extends Fragment {
     
     public void generateStarsList() {
         SaveManager saver = new SaveManager(getActivity());
+        MainActivity act = (MainActivity) getActivity();
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByPriority(
-                saver.getWorkModuleList(null, null, null), 5);
+                saver.getWorkModuleList(act.getSelectedAgendas(), null, null), 5);
         RecyclerView.Adapter mAdapter;
         mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false));
         starsRecyclerView.setAdapter(mAdapter);
