@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,13 +70,19 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     @Override
     public WorksRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.workslist_row_item, parent, false);
+        View v = null;
+        if (modules.size() != 0)
+            v = inflater.inflate(R.layout.workslist_row_item, parent, false);
+        else
+            v = inflater.inflate(R.layout.empty_list, parent, false);
         WorksRecyclerAdapter.ViewHolder vh = new WorksRecyclerAdapter.ViewHolder(v);
         return vh;
     }
     
     @Override
     public void onBindViewHolder(final WorksRecyclerAdapter.ViewHolder holder, int pos) {
+        if (modules.size() == 0)
+            return;
         final WorkModule work = modules.get(pos);
         OptionModule workType = ModulesUtils.getModuleOfId(workTypesList, work.getWorkTypeId());
         
@@ -213,7 +220,10 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     
     @Override
     public int getItemCount() {
-        return modules.size();
+        if (modules.size() != 0)
+            return modules.size();
+        else
+            return 1;
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -231,15 +241,17 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            workTypeHeader = v.findViewById(R.id.workTitle);
-            description = v.findViewById(R.id.workDescription);
-            date = v.findViewById(R.id.dateTextView);
-            time = v.findViewById(R.id.timeTextView);
-            workLogo = v.findViewById(R.id.workLogo);
-            subjectLogo = v.findViewById(R.id.subjectLogo);
-            agendaLogo = v.findViewById(R.id.agendaLogo);
-            priorityBar = v.findViewById(R.id.priorityRatingBar);
-            doneCheckBox = v.findViewById(R.id.stateCheckBox);
+            if (modules.size() != 0) {
+                workTypeHeader = v.findViewById(R.id.workTitle);
+                description = v.findViewById(R.id.workDescription);
+                date = v.findViewById(R.id.dateTextView);
+                time = v.findViewById(R.id.timeTextView);
+                workLogo = v.findViewById(R.id.workLogo);
+                subjectLogo = v.findViewById(R.id.subjectLogo);
+                agendaLogo = v.findViewById(R.id.agendaLogo);
+                priorityBar = v.findViewById(R.id.priorityRatingBar);
+                doneCheckBox = v.findViewById(R.id.stateCheckBox);
+            }
         }
     }
     

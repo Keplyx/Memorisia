@@ -37,6 +37,8 @@
     <string name="create_work">Create New Work Type</string>
     <string name="create_agenda">Create New Agenda</string>
 
+    <string name="empty_list">Nothing here!</string>
+
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
