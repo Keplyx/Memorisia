@@ -35,6 +35,7 @@
         android:layout_alignTop="@+id/agendaLogo"
         android:layout_toLeftOf="@+id/agendaLogo"
         android:layout_toStartOf="@+id/agendaLogo"
+        android:tint="@color/iconTint"
         app:srcCompat="@drawable/ic_format_list_bulleted_black_24dp"/>
 
     <ImageView
@@ -129,6 +130,7 @@
         android:layout_alignStart="@+id/agenda"
         android:layout_below="@+id/agendaLogo"
         android:layout_toLeftOf="@+id/subjectLogo"
+        android:tint="@color/iconTint"
         app:srcCompat="@drawable/ic_subject_black_24dp"/>
 
 </RelativeLayout>
