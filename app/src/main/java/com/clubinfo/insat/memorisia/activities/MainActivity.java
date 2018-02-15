@@ -1,6 +1,7 @@
 package com.clubinfo.insat.memorisia.activities;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -503,11 +504,13 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         }
-        
+        // Remove backstack to prevent problems when pressing back button
+        FragmentManager fm = getFragmentManager();
+        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-        ft.replace(R.id.content_frame, fragment, tag).commit();
-        
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out);
+        ft.replace(R.id.content_frame, fragment, tag);
+        ft.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
