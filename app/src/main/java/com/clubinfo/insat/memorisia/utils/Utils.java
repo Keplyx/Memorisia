@@ -153,22 +153,6 @@ public class Utils {
     }
     
     /**
-     * Adds an horizontal divider to a vertical recycler view
-     *
-     * @param recyclerView RecyclerView to add divider to
-     * @param context Current context
-     * @return RecyclerView with divider
-     */
-    public static RecyclerView setRecyclerViewDivider(RecyclerView recyclerView, Context context) {
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-        // Pretty ugly, removing it until finding a better one
-        // DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);
-        //recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(mLayoutManager);
-        return recyclerView;
-    }
-    
-    /**
      * Gets the difference between 2 dates in days
      *
      * @param date1 First date to compare

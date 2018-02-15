@@ -12,6 +12,10 @@
                     android:icon="@drawable/ic_subject_black_24dp"
                     android:title="@string/navigation_subject"/>
                 <item
+                    android:id="@+id/nav_work_types"
+                    android:icon="@drawable/ic_work_black_24dp"
+                    android:title="@string/navigation_work_types"/>
+                <item
                     android:id="@+id/nav_calendar"
                     android:icon="@drawable/ic_date_range_black_24dp"
                     android:title="@string/navigation_calendar"/>

@@ -24,8 +24,9 @@ import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.fragments.BaseFragment;
 import com.clubinfo.insat.memorisia.fragments.CalendarFragment;
 import com.clubinfo.insat.memorisia.fragments.HomeFragment;
-import com.clubinfo.insat.memorisia.fragments.SubjectsFragment;
 import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
+import com.clubinfo.insat.memorisia.fragments.SubjectsFragment;
+import com.clubinfo.insat.memorisia.fragments.WorkTypesFragment;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
@@ -42,8 +43,9 @@ public class MainActivity extends AppCompatActivity
     public enum Frags {
         FRAG_HOME,
         FRAG_SUBJECTS,
-        FRAG_CALENDAR,
-        FRAG_WORKS;
+        FRAG_WORKS,
+        FRAG_WORK_TYPES,
+        FRAG_CALENDAR
     }
     
     public static String PACKAGE_NAME;
@@ -58,12 +60,15 @@ public class MainActivity extends AppCompatActivity
     public Frags getActiveFragment(){
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        WorkTypesFragment workTypes = (WorkTypesFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORK_TYPES.name());
         CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
         HomeFragment home = (HomeFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_HOME.name());
         if (subjects != null && subjects.isVisible())
             return Frags.FRAG_SUBJECTS;
         else if (works != null && works.isVisible())
             return Frags.FRAG_WORKS;
+        else if (workTypes != null && workTypes.isVisible())
+            return Frags.FRAG_WORK_TYPES;
         else if (calendar != null && calendar.isVisible())
             return Frags.FRAG_CALENDAR;
         else if (home != null && home.isVisible())
@@ -125,7 +130,7 @@ public class MainActivity extends AppCompatActivity
         if (isFragmentActive(Frags.FRAG_WORKS)) {
             SaveManager saver = new SaveManager(context);
             WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
-            OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getSubjectId());
+            OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getModule().getId());
             work.setSubjectId(subject != null ? subject.getId() : -1);
         }
         else if (isFragmentActive(Frags.FRAG_CALENDAR)){
@@ -158,11 +163,11 @@ public class MainActivity extends AppCompatActivity
     /**
      * Displays the edit subjects button if the
      * {@link com.clubinfo.insat.memorisia.fragments.SubjectsFragment SubjectsFragment} or
-     * {@link com.clubinfo.insat.memorisia.fragments.WorkViewFragment WorkViewFragment}
+     * {@link WorkViewFragment WorkViewFragment}
      * are active
      */
     private void checkEditButtonState() {
-        if (isFragmentActive(Frags.FRAG_SUBJECTS) || isFragmentActive(Frags.FRAG_WORKS)) {
+        if (isFragmentActive(Frags.FRAG_SUBJECTS) || isFragmentActive(Frags.FRAG_WORK_TYPES) || isFragmentActive(Frags.FRAG_WORKS)) {
             editButton.setVisible(true);
         } else {
             editButton.setVisible(false);
@@ -172,12 +177,13 @@ public class MainActivity extends AppCompatActivity
     /**
      * Displays the sort button if the
      * {@link com.clubinfo.insat.memorisia.fragments.SubjectsFragment SubjectsFragment} or
-     * {@link com.clubinfo.insat.memorisia.fragments.WorkViewFragment WorkViewFragment} or
+     * {@link WorkViewFragment WorkViewFragment} or
      * {@link com.clubinfo.insat.memorisia.fragments.CalendarFragment CalendarFragment}
      * are active
      */
     public void checkSortButtonState() {
-        if (isFragmentActive(Frags.FRAG_SUBJECTS) || isFragmentActive(Frags.FRAG_WORKS) || isFragmentActive(Frags.FRAG_CALENDAR)) {
+        if (isFragmentActive(Frags.FRAG_SUBJECTS) || isFragmentActive(Frags.FRAG_WORKS)
+                || isFragmentActive(Frags.FRAG_WORK_TYPES) || isFragmentActive(Frags.FRAG_CALENDAR)) {
             sortButton.setVisible(true);
         } else {
             sortButton.setVisible(false);
@@ -234,9 +240,12 @@ public class MainActivity extends AppCompatActivity
         }
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        WorkTypesFragment workTypes = (WorkTypesFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORK_TYPES.name());
         CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
         if (isFragmentActive(Frags.FRAG_WORKS))
             changeSortMenuItemIcon(menu.getItem(works.getCurrentSortType().ordinal()), works.isReverseSort());
+        else if (isFragmentActive(Frags.FRAG_WORK_TYPES))
+            changeSortMenuItemIcon(menu.getItem(workTypes.getCurrentSortType().ordinal()), workTypes.isReverseSort());
         else if (isFragmentActive(Frags.FRAG_SUBJECTS))
             changeSortMenuItemIcon(menu.getItem(subjects.getCurrentSortType().ordinal()), subjects.isReverseSort());
         else if (isFragmentActive(Frags.FRAG_CALENDAR))
@@ -274,12 +283,15 @@ public class MainActivity extends AppCompatActivity
                     saveSelectedAgendasToPrefs();
                     SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
                     WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+                    WorkTypesFragment workTypes = (WorkTypesFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORK_TYPES.name());
                     CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
                     HomeFragment home = (HomeFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_HOME.name());
                     if (isFragmentActive(Frags.FRAG_SUBJECTS))
                         subjects.generateList();
                     else if (isFragmentActive(Frags.FRAG_WORKS))
                         works.generateList();
+                    else if (isFragmentActive(Frags.FRAG_WORK_TYPES))
+                        workTypes.generateList();
                     else if (isFragmentActive(Frags.FRAG_CALENDAR))
                         calendar.generateList();
                     else if (isFragmentActive(Frags.FRAG_HOME))
@@ -292,7 +304,7 @@ public class MainActivity extends AppCompatActivity
     }
     
     /**
-     * Adds the given agenda to the selected agenda'slist
+     * Adds the given agenda to the selected agenda's list
      *
      * @param id agenda id to select
      */
@@ -371,13 +383,16 @@ public class MainActivity extends AppCompatActivity
         BaseFragment.SortType sort = BaseFragment.SortType.SORT_1;
         SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
         WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        WorkTypesFragment workTypes = (WorkTypesFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORK_TYPES.name());
         CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
         switch (id) {
             case R.id.action_edit:
                 if (isFragmentActive(Frags.FRAG_WORKS))
-                    editCurrentSubject(works.getSubjectId());
-                else
-                    editSubjects();
+                    editCurrentModule(works.getModule().getId(), works.getModule().getId());
+                else if (isFragmentActive(Frags.FRAG_SUBJECTS))
+                    editModules(SaveManager.SUBJECT);
+                else if (isFragmentActive(Frags.FRAG_WORK_TYPES))
+                    editModules(SaveManager.WORK_TYPE);
                 break;
             case R.id.sort_1:
                 sort = BaseFragment.SortType.SORT_1;
@@ -396,7 +411,10 @@ public class MainActivity extends AppCompatActivity
             if (isFragmentActive(Frags.FRAG_SUBJECTS)) {
                 subjects.setSortType(sort, true);
                 changeSortMenuItemIcon(item, subjects.isReverseSort());
-            } else if (isFragmentActive(Frags.FRAG_WORKS)) {
+            } else if (isFragmentActive(Frags.FRAG_WORK_TYPES)) {
+                workTypes.setSortType(sort, false);
+                changeSortMenuItemIcon(item, workTypes.isReverseSort());
+            }else if (isFragmentActive(Frags.FRAG_WORKS)) {
                 works.setSortType(sort, false);
                 changeSortMenuItemIcon(item, works.isReverseSort());
             } else if (isFragmentActive(Frags.FRAG_CALENDAR)) {
@@ -412,12 +430,13 @@ public class MainActivity extends AppCompatActivity
      * Creates a new {@link com.clubinfo.insat.memorisia.activities.EditOptionsActivity EditOptionsActivity}
      * corresponding to the given subject.
      *
-     * @param subjectId Id of the subject to edit
+     * @param moduleId Id of the subject to edit
+     * @param type type of the subject to edit
      */
-    private void editCurrentSubject(int subjectId) {
+    private void editCurrentModule(int moduleId, int type) {
         Intent intent = new Intent(this, EditOptionsActivity.class);
         SaveManager saver = new SaveManager(this);
-        OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), subjectId);
+        OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(type), moduleId);
         intent.putExtras(ModulesUtils.createBundleFromModule(module));
         startActivity(intent);
     }
@@ -425,9 +444,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * Creates a new {@link com.clubinfo.insat.memorisia.activities.OptionsListActivity OptionsListActivity}
      */
-    private void editSubjects() {
+    private void editModules(int type) {
         Intent intent = new Intent(this, OptionsListActivity.class);
-        intent.setData(Uri.parse("0"));
+        intent.setData(Uri.parse(type + ""));
         startActivity(intent);
     }
     
@@ -463,6 +482,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_subjects) { // Display the subjects fragment
             fragment = new SubjectsFragment();
             tag = Frags.FRAG_SUBJECTS.name();
+            editButton.setVisible(true);
+            sortButton.setVisible(true);
+        } else if (id == R.id.nav_work_types) { // Display the work types fragment
+            fragment = new WorkTypesFragment();
+            tag = Frags.FRAG_WORK_TYPES.name();
             editButton.setVisible(true);
             sortButton.setVisible(true);
         } else if (id == R.id.nav_calendar) { // Display the calendar fragment

@@ -1,6 +1,5 @@
 package com.clubinfo.insat.memorisia.adapters;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -22,6 +21,7 @@ import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
+import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
@@ -31,14 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecyclerAdapter.ViewHolder> {
+public class OptionModulesRecyclerAdapter extends RecyclerView.Adapter<OptionModulesRecyclerAdapter.ViewHolder> {
     
     private List<OptionModule> modules;
     private Context context;
     private List<Integer> agendas;
     private FragmentManager fragMan;
     
-    public SubjectsRecyclerAdapter(Context context, List<OptionModule> modules, List<Integer> agendas, FragmentManager fragMan) {
+    public OptionModulesRecyclerAdapter(Context context, List<OptionModule> modules, List<Integer> agendas, FragmentManager fragMan) {
         this.context = context;
         this.modules = modules;
         this.agendas = agendas;
@@ -56,7 +56,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
     }
     
     @Override
-    public SubjectsRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OptionModulesRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.subjects_row_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
@@ -65,14 +65,18 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
     
     @Override
     public void onBindViewHolder(ViewHolder holder, int pos) {
-        final OptionModule subject = modules.get(pos);
-        holder.textHeader.setText(subject.getText());
-        holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
-        holder.logo.setColorFilter(Color.parseColor(subject.getColor()));
+        final OptionModule module = modules.get(pos);
+        holder.textHeader.setText(module.getText());
+        holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, module.getLogo()));
+        holder.logo.setColorFilter(Color.parseColor(module.getColor()));
         
-        List<Integer> subjects = new ArrayList<>();
-        subjects.add(subject.getId());
-        List<WorkModule> worksList = new SaveManager(context).getWorkModuleList(agendas, subjects, null);
+        List<Integer> tempModules = new ArrayList<>();
+        tempModules.add(module.getId());
+        List<WorkModule> worksList;
+        if (modules.get(0).getType() == SaveManager.SUBJECT)
+            worksList = new SaveManager(context).getWorkModuleList(agendas, tempModules, null);
+        else
+            worksList = new SaveManager(context).getWorkModuleList(agendas, null, tempModules);
         if (worksList.size() != 0) {
             holder.bar.setMax(worksList.size());
             holder.bar.setProgress(ModulesUtils.getWorkDoneNumber(worksList));
@@ -85,7 +89,7 @@ public class SubjectsRecyclerAdapter extends RecyclerView.Adapter<SubjectsRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startWorkViewFragment(subject);
+                startWorkViewFragment(module);
             }
         });
     }

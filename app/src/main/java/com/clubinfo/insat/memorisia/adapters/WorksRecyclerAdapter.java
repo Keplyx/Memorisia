@@ -48,9 +48,12 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     private List<OptionModule> agendaList;
     private Context context;
     
-    public WorksRecyclerAdapter(Context context, List<WorkModule> modules) {
+    private boolean isSubjectsParent;
+    
+    public WorksRecyclerAdapter(Context context, List<WorkModule> modules, boolean isSubjectsParent) {
         this.context = context;
         this.modules = modules;
+        this.isSubjectsParent = isSubjectsParent;
         SaveManager saver = new SaveManager(context);
         workTypesList = saver.getOptionModuleList(SaveManager.WORK_TYPE);
         subjectsList = saver.getOptionModuleList(SaveManager.SUBJECT);
@@ -70,7 +73,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     @Override
     public WorksRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = null;
+        View v;
         if (modules.size() != 0)
             v = inflater.inflate(R.layout.workslist_row_item, parent, false);
         else
@@ -85,18 +88,34 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             return;
         final WorkModule work = modules.get(pos);
         OptionModule workType = ModulesUtils.getModuleOfId(workTypesList, work.getWorkTypeId());
+        OptionModule subject = ModulesUtils.getModuleOfId(subjectsList, work.getSubjectId());
         
-        holder.workTypeHeader.setText(workType.getText());
-        holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
-        holder.workLogo.setColorFilter(Color.parseColor(workType.getColor()));
+        if (isSubjectsParent)
+            holder.workTypeHeader.setText(workType.getText());
+        else
+            holder.workTypeHeader.setText(subject.getText());
+        
+        if (isSubjectsParent) {
+            holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
+            holder.workLogo.setColorFilter(Color.parseColor(workType.getColor()));
+        } else {
+            
+            holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
+            holder.workLogo.setColorFilter(Color.parseColor(subject.getColor()));
+        }
         
         OptionModule agenda = ModulesUtils.getModuleOfId(agendaList, work.getAgendaId());
         holder.agendaLogo.setImageBitmap(Utils.getBitmapFromAsset(context, agenda.getLogo()));
         holder.agendaLogo.setColorFilter(Color.parseColor(agenda.getColor()));
     
-        OptionModule subject = ModulesUtils.getModuleOfId(subjectsList, work.getSubjectId());
-        holder.subjectLogo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
-        holder.subjectLogo.setColorFilter(Color.parseColor(subject.getColor()));
+        if (isSubjectsParent) {
+            holder.subjectLogo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
+            holder.subjectLogo.setColorFilter(Color.parseColor(subject.getColor()));
+        } else {
+            holder.subjectLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
+            holder.subjectLogo.setColorFilter(Color.parseColor(workType.getColor()));
+        }
+
         
         Calendar c = Calendar.getInstance();
         int[] today = new int[]{c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR)};

@@ -4,8 +4,8 @@ package com.clubinfo.insat.memorisia.fragments;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,6 @@ import com.clubinfo.insat.memorisia.adapters.WorksRecyclerAdapter;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
-import com.clubinfo.insat.memorisia.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +25,11 @@ import java.util.List;
 public class WorkViewFragment extends BaseFragment {
     
     private RecyclerView recyclerView;
-    private OptionModule subject;
+    private OptionModule module;
 
     
-    public int getSubjectId() {
-        return subject.getId();
+    public OptionModule getModule() {
+        return module;
     }
     
     
@@ -38,11 +37,12 @@ public class WorkViewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
         
-        subject = ModulesUtils.createOptionModuleFromBundle(getArguments());
-        getActivity().setTitle(subject.getText());
+        module = ModulesUtils.createOptionModuleFromBundle(getArguments());
+        getActivity().setTitle(module.getText());
         
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
-        recyclerView = Utils.setRecyclerViewDivider(recyclerView, getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
         
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         setCurrentSortType(SortType.values()[sharedPref.getInt(SettingsActivity.KEY_WORKS_SORT_TYPE, 0)]);
@@ -64,25 +64,31 @@ public class WorkViewFragment extends BaseFragment {
     public void generateList() {
         SaveManager saver = new SaveManager(getActivity());
         MainActivity act = (MainActivity) getActivity();
-        List<Integer> subjects = new ArrayList<>();
-        subjects.add(subject.getId());
-        List<WorkModule> worksList = saver.getWorkModuleList(act.getSelectedAgendas(), subjects, null);
+        List<Integer> modules = new ArrayList<>();
+        modules.add(module.getId());
+        boolean isParentSubject = module.getType() == SaveManager.SUBJECT;
+        List<WorkModule> workList;
+        if (isParentSubject)
+            workList = saver.getWorkModuleList(act.getSelectedAgendas(), modules, null);
+        else
+            workList = saver.getWorkModuleList(act.getSelectedAgendas(), null, modules);
         RecyclerView.Adapter mAdapter;
+        
         switch (getCurrentSortType()) {
             case SORT_1:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(worksList, isReverseSort()));
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(workList, isReverseSort()), isParentSubject);
                 break;
             case SORT_2:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(worksList, isReverseSort()));
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(workList, isReverseSort()), isParentSubject);
                 break;
             case SORT_3:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(worksList, getActivity(), isReverseSort()));
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(workList, getActivity(), isReverseSort()), isParentSubject);
                 break;
             case SORT_4:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, isReverseSort()));
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(workList, isReverseSort()), isParentSubject);
                 break;
             default:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), worksList);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), workList, isParentSubject);
                 break;
         }
         recyclerView.setAdapter(mAdapter);

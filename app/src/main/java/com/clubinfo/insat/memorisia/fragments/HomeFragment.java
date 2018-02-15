@@ -2,6 +2,7 @@ package com.clubinfo.insat.memorisia.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,8 +34,8 @@ public class HomeFragment extends Fragment {
         
         weekRecyclerView = v.findViewById(R.id.week_recycler);
         starsRecyclerView = v.findViewById(R.id.stars_recycler);
-        Utils.setRecyclerViewDivider(weekRecyclerView, getActivity());
-        Utils.setRecyclerViewDivider(starsRecyclerView, getActivity());
+        weekRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        starsRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
     
         generateList();
         
@@ -52,7 +53,7 @@ public class HomeFragment extends Fragment {
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByWeek(
                 saver.getWorkModuleList(act.getSelectedAgendas(), null, null), new int[]{CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()});
         RecyclerView.Adapter mAdapter;
-        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false));
+        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false), true);
         weekRecyclerView.setAdapter(mAdapter);
     }
     
@@ -62,7 +63,7 @@ public class HomeFragment extends Fragment {
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByPriority(
                 saver.getWorkModuleList(act.getSelectedAgendas(), null, null), 5);
         RecyclerView.Adapter mAdapter;
-        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false));
+        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false), true);
         starsRecyclerView.setAdapter(mAdapter);
     }
     

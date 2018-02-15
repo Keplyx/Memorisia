@@ -8,6 +8,7 @@
     <string name="title_navigation_views">Choose view</string>
     <string name="navigation_home">Home</string>
     <string name="navigation_subject">Subject View</string>
+    <string name="navigation_work_types">Work Types View</string>
     <string name="navigation_calendar">Calendar View</string>
     <string name="title_navigation_other">Other</string>
     <string name="navigation_settings">Settings</string>
@@ -15,6 +16,7 @@
 
     <string name="home_title">Home</string>
     <string name="subjects_title">Subjects</string>
+    <string name="work_types_title">Work Types</string>
     <string name="calendar_title">Calendar</string>
     <string name="settings_title">Settings</string>
 

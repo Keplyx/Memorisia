@@ -72,12 +72,21 @@ public class ModulesUtils {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
                 SaveManager saver = new SaveManager(context);
-                List<Integer> subjectId = new ArrayList<>();
-                subjectId.add(optionModule.getId());
-                List<WorkModule> worksList1 = saver.getWorkModuleList(agendas, subjectId, null);
-                subjectId.remove(0);
-                subjectId.add(t1.getId());
-                List<WorkModule> worksList2 = saver.getWorkModuleList(agendas, subjectId, null);
+                List<Integer> moduleIds = new ArrayList<>();
+                List<WorkModule> worksList1 = new ArrayList<>();
+                List<WorkModule> worksList2 = new ArrayList<>();
+                moduleIds.add(optionModule.getId());
+                if (optionModule.getType() == SaveManager.SUBJECT)
+                    worksList1 = saver.getWorkModuleList(agendas, moduleIds, null);
+                else if (optionModule.getType() == SaveManager.WORK_TYPE)
+                    worksList1 = saver.getWorkModuleList(agendas, null, moduleIds);
+    
+                moduleIds.set(0, t1.getId());
+                if (t1.getType() == SaveManager.SUBJECT)
+                    worksList2 = saver.getWorkModuleList(agendas, moduleIds, null);
+                else if (t1.getType() == SaveManager.WORK_TYPE)
+                    worksList2 = saver.getWorkModuleList(agendas, null, moduleIds);
+                
                 String compare1 = "999", compare2 = "999";
                 if (reverse) {
                     compare1 = "0";
@@ -109,12 +118,21 @@ public class ModulesUtils {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
                 SaveManager saver = new SaveManager(context);
-                List<Integer> subjectId = new ArrayList<>();
-                subjectId.add(optionModule.getId());
-                List<WorkModule> worksList1 = saver.getWorkModuleList(agendas, subjectId, null);
-                subjectId.remove(0);
-                subjectId.add(t1.getId());
-                List<WorkModule> worksList2 = saver.getWorkModuleList(agendas, subjectId, null);
+                List<Integer> moduleIds = new ArrayList<>();
+                List<WorkModule> worksList1 = new ArrayList<>();
+                List<WorkModule> worksList2 = new ArrayList<>();
+                moduleIds.add(optionModule.getId());
+                if (optionModule.getType() == SaveManager.SUBJECT)
+                    worksList1 = saver.getWorkModuleList(agendas, moduleIds, null);
+                else if (optionModule.getType() == SaveManager.WORK_TYPE)
+                    worksList1 = saver.getWorkModuleList(agendas, null, moduleIds);
+                
+                moduleIds.set(0, t1.getId());
+                if (t1.getType() == SaveManager.SUBJECT)
+                    worksList2 = saver.getWorkModuleList(agendas, moduleIds, null);
+                else if (t1.getType() == SaveManager.WORK_TYPE)
+                    worksList2 = saver.getWorkModuleList(agendas, null, moduleIds);
+                
                 String compare1 = "0", compare2 = "0";
                 if (worksList1.size() > 0)
                     compare1 = "" + worksList1.size();

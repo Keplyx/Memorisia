@@ -19,15 +19,14 @@ import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
 import java.util.List;
 
-
-public class SubjectsFragment extends BaseFragment {
+public class WorkTypesFragment extends BaseFragment {
     private RecyclerView recyclerView;
     
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
-        getActivity().setTitle(R.string.subjects_title);
+        getActivity().setTitle(R.string.work_types_title);
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -53,7 +52,7 @@ public class SubjectsFragment extends BaseFragment {
     public void generateList() {
         SaveManager saver = new SaveManager(getActivity());
         MainActivity act = (MainActivity) getActivity();
-        List<OptionModule> modules = saver.getOptionModuleList(SaveManager.SUBJECT);
+        List<OptionModule> modules = saver.getOptionModuleList(SaveManager.WORK_TYPE);
         RecyclerView.Adapter mAdapter;
         switch (getCurrentSortType()) {
             case SORT_1:
