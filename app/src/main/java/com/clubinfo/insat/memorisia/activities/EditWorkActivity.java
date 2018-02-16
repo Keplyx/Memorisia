@@ -22,6 +22,7 @@ import android.widget.Switch;
 
 import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.adapters.CustomSpinnerAdapter;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
@@ -111,11 +112,11 @@ public class EditWorkActivity extends AppCompatActivity {
      * Creates the spinners based on the available modules
      */
     private void createSpinners() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getModulesNames(agendasList));
+        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this, R.layout.simple_icon_spinner, agendasList);
         agendasSpinner.setAdapter(adapter);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getModulesNames(subjectsList));
+        adapter = new CustomSpinnerAdapter(this, R.layout.simple_icon_spinner, subjectsList);
         subjectsSpinner.setAdapter(adapter);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getModulesNames(workTypesList));
+        adapter = new CustomSpinnerAdapter(this, R.layout.simple_icon_spinner, workTypesList);
         worksSpinner.setAdapter(adapter);
     }
     
