@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -129,10 +130,15 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(context, EditWorkActivity.class);
         WorkModule work = new WorkModule();
         if (isFragmentActive(Frags.FRAG_WORKS)) {
-            SaveManager saver = new SaveManager(context);
             WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
-            OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getParentModule().getId());
-            work.setSubjectId(subject != null ? subject.getId() : -1);
+            OptionModule parentModule = workFragment.getParentModule();
+            if (parentModule != null){
+                if (parentModule.getType() == SaveManager.SUBJECT)
+                    work.setSubjectId(parentModule.getId());
+                
+                if (parentModule.getType() == SaveManager.WORK_TYPE)
+                    work.setWorkTypeId(parentModule.getId());
+            }
         }
         else if (isFragmentActive(Frags.FRAG_CALENDAR)){
             CalendarFragment calendarFragment = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
