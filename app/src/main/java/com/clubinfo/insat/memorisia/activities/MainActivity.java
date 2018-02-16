@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         if (isFragmentActive(Frags.FRAG_WORKS)) {
             SaveManager saver = new SaveManager(context);
             WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
-            OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getModule().getId());
+            OptionModule subject = ModulesUtils.getModuleOfId(saver.getOptionModuleList(SaveManager.SUBJECT), workFragment.getParentModule().getId());
             work.setSubjectId(subject != null ? subject.getId() : -1);
         }
         else if (isFragmentActive(Frags.FRAG_CALENDAR)){
@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.action_edit:
                 if (isFragmentActive(Frags.FRAG_WORKS))
-                    editCurrentModule(works.getModule().getId(), works.getModule().getId());
+                    editCurrentModule(works.getParentModule().getId(), works.getParentModule().getType());
                 else if (isFragmentActive(Frags.FRAG_SUBJECTS))
                     editModules(SaveManager.SUBJECT);
                 else if (isFragmentActive(Frags.FRAG_WORK_TYPES))

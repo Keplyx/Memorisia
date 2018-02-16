@@ -28,7 +28,7 @@ public class WorkViewFragment extends BaseFragment {
     private OptionModule module;
 
     
-    public OptionModule getModule() {
+    public OptionModule getParentModule() {
         return module;
     }
     
