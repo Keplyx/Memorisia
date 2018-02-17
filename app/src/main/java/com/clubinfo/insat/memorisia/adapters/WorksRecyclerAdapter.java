@@ -65,11 +65,6 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         notifyItemInserted(pos);
     }
     
-    public void remove(int pos) {
-        modules.remove(pos);
-        notifyItemRemoved(pos);
-    }
-    
     @Override
     public WorksRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -78,8 +73,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             v = inflater.inflate(R.layout.workslist_row_item, parent, false);
         else
             v = inflater.inflate(R.layout.empty_list, parent, false);
-        WorksRecyclerAdapter.ViewHolder vh = new WorksRecyclerAdapter.ViewHolder(v);
-        return vh;
+        return new WorksRecyclerAdapter.ViewHolder(v);
     }
     
     @Override

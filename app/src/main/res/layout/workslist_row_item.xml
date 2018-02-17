@@ -55,6 +55,7 @@
         android:layout_height="24dp"
         android:layout_alignBottom="@+id/agendaLogo"
         android:layout_alignTop="@+id/workLogo"
+        android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/workLogo"
         android:layout_toRightOf="@+id/workLogo"
         android:layout_toStartOf="@+id/stateCheckBox"
@@ -104,6 +105,7 @@
         android:layout_height="24dp"
         android:layout_alignBottom="@+id/workLogo"
         android:layout_below="@+id/workTitle"
+        android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/workLogo"
         android:layout_toLeftOf="@+id/stateCheckBox"
         android:layout_toRightOf="@+id/workLogo"
@@ -123,7 +125,7 @@
         />
 
     <ImageView
-        android:id="@+id/subject"
+        android:id="@+id/module"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignLeft="@+id/agenda"
