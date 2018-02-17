@@ -7,9 +7,37 @@
     <string name="night_mode_desc">Makes the app darker</string>
     <string name="notifications">Notifications</string>
     <string name="notifications_desc">Choose whether to get reminders with notifications</string>
+    <string name="delete_old">Delete old works</string>
+    <string name="delete_old_desc">Works older than specified will be deleted</string>
+    <string name="delete_old_time">Time Limit</string>
+    <string name="delete_old_time_desc">Time after which works are considered outdated</string>
+    <string name="delete_old_only_done">Only done</string>
+    <string name="delete_old_only_done_desc">Only delete work marked as done</string>
+    <string-array name="delete_old_time_range">
+        <item>Right away</item>
+        <item>1 day</item>
+        <item>2 day</item>
+        <item>3 day</item>
+        <item>1 week</item>
+        <item>1 month</item>
+        <item>6 month</item>
+        <item>1 year</item>
+    </string-array>
+
+    <string-array name="delete_old_time_range_alias">
+        <item>0</item>
+        <item>1d</item>
+        <item>2d</item>
+        <item>3d</item>
+        <item>1w</item>
+        <item>1m</item>
+        <item>6m</item>
+        <item>1y</item>
+    </string-array>
 
     <string name="prefs_personalise">Personalize App</string>
     <string name="prefs_general">General</string>
+    <string name="prefs_old_works">Outdated Works</string>
 
     <string name="confirm_delete">Are you sure you want to delete this entry?</string>
     <string name="cannot_delete_last">You cannot delete the only entry!</string>

@@ -34,5 +34,27 @@
             android:defaultValue="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/prefs_old_works" >
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="pref_key_delete_old"
+            android:summary="@string/delete_old_desc"
+            android:title="@string/delete_old"/>
+        <ListPreference
+            android:defaultValue="0"
+            android:dependency="pref_key_delete_old"
+            android:entries="@array/delete_old_time_range"
+            android:entryValues="@array/delete_old_time_range_alias"
+            android:key="pref_key_delete_old_time"
+            android:summary="@string/delete_old_time_desc"
+            android:title="@string/delete_old_time"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="pref_key_delete_old"
+            android:key="pref_key_delete_old_only_done"
+            android:summary="@string/delete_old_only_done_desc"
+            android:title="@string/delete_old_only_done"/>
+    </PreferenceCategory>
+
 
 </PreferenceScreen>
