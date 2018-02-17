@@ -12,16 +12,13 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.clubinfo.insat.memorisia.R;
@@ -85,9 +82,9 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         OptionModule subject = ModulesUtils.getModuleOfId(subjectsList, work.getSubjectId());
         
         if (isSubjectsParent)
-            holder.workTypeHeader.setText(workType.getText());
+            holder.description.setText(workType.getText());
         else
-            holder.workTypeHeader.setText(subject.getText());
+            holder.description.setText(subject.getText());
         
         if (isSubjectsParent) {
             holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
@@ -136,7 +133,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             setupTimeDisplay(holder.time, normalColor, work.getTime());
         }
         
-        holder.description.setText(work.getText());
+        holder.title.setText(work.getText());
         holder.priorityBar.setRating((float) work.getPriority());
         holder.doneCheckBox.setChecked(work.isState());
         setWorkChecked(holder.layout, work.isState());
@@ -240,7 +237,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView workTypeHeader;
+        public TextView title;
         public TextView description;
         public TextView date;
         public TextView time;
@@ -255,7 +252,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             super(v);
             layout = v;
             if (modules.size() != 0) {
-                workTypeHeader = v.findViewById(R.id.workTitle);
+                title = v.findViewById(R.id.workTitle);
                 description = v.findViewById(R.id.workDescription);
                 date = v.findViewById(R.id.dateTextView);
                 time = v.findViewById(R.id.timeTextView);
