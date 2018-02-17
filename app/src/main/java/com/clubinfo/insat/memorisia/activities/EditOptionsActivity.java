@@ -22,6 +22,7 @@ import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.adapters.LogosListAdapter;
 import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
@@ -33,7 +34,6 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class EditOptionsActivity extends AppCompatActivity {
     
-    private final String logosPath = "logos/";
     private Context context;
     private TextView title;
     private GridView logosGridView;
@@ -153,7 +153,27 @@ public class EditOptionsActivity extends AppCompatActivity {
      * @param v View that called the method
      */
     public void onClickDelete(View v) {
-        showConfirmDeleteDialog();
+        SaveManager saver = new SaveManager(this);
+        List<WorkModule> workList = null;
+        List<Integer> modules = new ArrayList<>();
+        modules.add(module.getId());
+        switch (module.getType()){
+            case SaveManager.AGENDA:
+                workList = saver.getWorkModuleList(modules, null, null);
+                break;
+            case SaveManager.SUBJECT:
+                workList = saver.getWorkModuleList(null, modules, null);
+                Log.w("test", workList.size() + "");
+                break;
+            case SaveManager.WORK_TYPE:
+                workList = saver.getWorkModuleList(null, null, modules);
+                Log.w("test", module.getId() + "");
+                break;
+        }
+        if (workList != null && workList.size() > 0)
+             showErrorDialog(getResources().getString(R.string.cannot_delete_non_empty));
+        else
+            showConfirmDeleteDialog();
     }
     
     /**
@@ -170,7 +190,7 @@ public class EditOptionsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int i) {
                         SaveManager saver = new SaveManager(builder.getContext());
                         if (saver.getOptionModuleList(module.getType()).size() == 1)
-                            showErrorDialog();
+                            showErrorDialog(getResources().getString(R.string.cannot_delete_last));
                         else {
                             saver.deleteOptionModule(module.getId());
                             exitEditOptions();
@@ -192,11 +212,13 @@ public class EditOptionsActivity extends AppCompatActivity {
     
     /**
      * Shows an error dialog telling the user he cannot delete an entry
+     *
+     * @param message       Message to display to the user
      */
-    private void showErrorDialog() {
+    private void showErrorDialog(String message) {
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.AppTheme);
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
-        builder.setMessage(getResources().getString(R.string.cannot_delete));
+        builder.setMessage(message);
         builder.setCancelable(true);
         AlertDialog alert = builder.create();
         alert.show();
