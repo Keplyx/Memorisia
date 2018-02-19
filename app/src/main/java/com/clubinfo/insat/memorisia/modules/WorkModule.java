@@ -71,18 +71,54 @@ public class WorkModule extends Module {
         this.priority = priority;
     }
     
+    /**
+     * Format : day of month / month / year
+     *
+     * @return array representing the due date
+     */
     public int[] getDate() {
         return date;
     }
     
+    /**
+     * Gets the date/time as a Calendar Object
+     *
+     * @return Calendar representing the due date/time
+     */
+    public Calendar getDateAsCalendar() {
+        Calendar cal = Calendar.getInstance();
+        if (date[0] != -1 && time[0] != -1)
+            cal.set(date[2], date[1] - 1, date[0], time[0], time[1]);
+        else if (date[0] != -1)
+            cal.set(date[2], date[1] - 1, date[0], 0, 0);
+        else
+            cal = null;
+        return cal;
+    }
+    
+    /**
+     * Format : day of month / month / year
+     *
+     * @param date array representing the due date
+     */
     public void setDate(int[] date) {
         this.date = date;
     }
     
+    /**
+     * Format : hour of day / minute
+     *
+     * @return array representing the time
+     */
     public int[] getTime() {
         return time;
     }
     
+    /**
+     * Format : hour of day / minute
+     *
+     * @param time array representing the time
+     */
     public void setTime(int[] time) {
         this.time = time;
     }

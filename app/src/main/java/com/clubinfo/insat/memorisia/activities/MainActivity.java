@@ -119,7 +119,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
     
-        Utils.checkModulesPresent(this.context);
+        Utils.checkModulesPresent(this);
+        Utils.checkWorkOutdated(this);
     }
     
     /**

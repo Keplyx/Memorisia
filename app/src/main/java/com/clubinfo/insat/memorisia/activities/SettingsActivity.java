@@ -13,6 +13,11 @@ import com.clubinfo.insat.memorisia.fragments.SettingsFragment;
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     
     public static final String KEY_NIGHT_MODE = "pref_key_night_mode";
+    
+    public static final String KEY_DELETE_OLD = "pref_key_delete_old";
+    public static final String KEY_DELETE_OLD_TIME = "pref_key_delete_old_time";
+    public static final String KEY_DELETE_OLD_ONLY_DONE = "pref_key_delete_old_only_done";
+    
     public static final String KEY_SUBJECTS_SORT_TYPE = "pref_key_subjects_sort_type";
     public static final String KEY_SUBJECTS_SORT_REVERSE = "pref_key_subjects_sort_reverse";
     public static final String KEY_WORKS_SORT_TYPE = "pref_key_works_sort_type";

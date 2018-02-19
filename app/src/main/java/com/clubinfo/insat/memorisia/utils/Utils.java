@@ -24,6 +24,7 @@ import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
+import com.clubinfo.insat.memorisia.modules.WorkModule;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -72,11 +73,58 @@ public class Utils {
     }
     
     /**
+     * Checks if works are outdated, based on preferences. If yes, they are deleted
+     *
+     * @param context  Current context
+     */
+    public static void checkWorkOutdated(Context context) {
+        SaveManager saver = new SaveManager(context);
+        List<WorkModule> workModuleList = saver.getWorkModuleList(null,  null, null);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPref.getBoolean(SettingsActivity.KEY_DELETE_OLD, false)) {
+            Calendar limit = getOutdatedWorkLimit(context);
+            for (WorkModule m : workModuleList) {
+                Calendar current = m.getDateAsCalendar();
+                if (current != null && limit.after(current)){
+                    if (!sharedPref.getBoolean(SettingsActivity.KEY_DELETE_OLD_ONLY_DONE, false) || m.isState()) {
+                        saver.deleteWorkModule(m.getId());
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Gets the outdated limit from preferences as a Calendar
+     *
+     * @param context  Current context
+     * @return Calender representing the date limit
+     */
+    private static Calendar getOutdatedWorkLimit(Context context) {
+        Calendar limit = Calendar.getInstance();
+        String selected = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsActivity.KEY_DELETE_OLD_TIME, "");
+        String[] aliasArray = context.getResources().getStringArray(R.array.delete_old_time_range_alias);
+        for (int i = 0; i <= 3; i++) {
+            if (selected.equals(aliasArray[i]))
+                limit.add(Calendar.DAY_OF_MONTH, -i);
+        }
+        if (selected.equals(aliasArray[4]))
+            limit.add(Calendar.WEEK_OF_MONTH, -1);
+        if (selected.equals(aliasArray[5]))
+            limit.add(Calendar.MONTH, -1);
+        if (selected.equals(aliasArray[6]))
+            limit.add(Calendar.MONTH, -6);
+        if (selected.equals(aliasArray[7]))
+            limit.add(Calendar.YEAR, -1);
+        return limit;
+    }
+    
+    /**
      * Creates a default modules if none is present
      *
      * @param context  Current context
      */
-    public static void generateDefaultModules(Context context, boolean isAgenda, boolean isSubject, boolean isWorkType) {
+    private static void generateDefaultModules(Context context, boolean isAgenda, boolean isSubject, boolean isWorkType) {
         SaveManager saver = new SaveManager(context);
         List<OptionModule> modules = new ArrayList<>();
         List<String> logosList = generateLogosList(context);
