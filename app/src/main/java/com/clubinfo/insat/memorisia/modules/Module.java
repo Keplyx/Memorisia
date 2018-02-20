@@ -1,9 +1,12 @@
 package com.clubinfo.insat.memorisia.modules;
 
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Module that can contain an int, a String, and a boolean, serving as a base for more complexe modules
  */
 public class Module {
+    @PrimaryKey (autoGenerate = true)
     private int id;
     private String text;
     private boolean notificationsEnabled;

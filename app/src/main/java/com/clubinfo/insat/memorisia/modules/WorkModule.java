@@ -1,10 +1,13 @@
 package com.clubinfo.insat.memorisia.modules;
 
+import android.arch.persistence.room.Entity;
+
 import java.util.Calendar;
 
 /**
  * Class representing a work
  */
+@Entity (tableName = "work_modules")
 public class WorkModule extends Module {
     private int agendaId;
     private int subjectId;
@@ -25,18 +28,6 @@ public class WorkModule extends Module {
         this.time = time;
         
         this.state = state;
-    }
-    
-    public WorkModule() {
-        super(-1, "", false);
-        agendaId = -1;
-        subjectId = -1;
-        workTypeId = -1;
-        priority = 0;
-        date = new int[] {-1, -1, -1};
-        time = new int[] {-1, -1};
-        state = false;
-        
     }
     
     public int getAgendaId() {

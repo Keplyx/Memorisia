@@ -32,4 +32,8 @@ dependencies {
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
     testCompile 'junit:junit:4.12'
+
+    // Room (use 1.1.0-alpha2 for latest alpha)
+    compile "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 }

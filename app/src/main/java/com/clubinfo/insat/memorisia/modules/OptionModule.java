@@ -1,9 +1,12 @@
 package com.clubinfo.insat.memorisia.modules;
 
 
+import android.arch.persistence.room.Entity;
+
 /**
  * Class representing an agenda, a subject, or a work type
  */
+@Entity (tableName = "option_modules")
 public class OptionModule extends Module{
     private int type;
     private String logo;
@@ -14,13 +17,6 @@ public class OptionModule extends Module{
         this.type = type;
         this.logo = logo;
         this.color = color;
-    }
-    
-    public OptionModule(int type) {
-        super(-1, "", false);
-        this.type = type;
-        this.logo = "";
-        this.color = "#cccccc";
     }
     
     public int getType() {

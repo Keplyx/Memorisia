@@ -87,7 +87,7 @@ public class OptionsListActivity extends AppCompatActivity {
                 return true;
             case R.id.action_add:
                 Intent intent = new Intent(this, EditOptionsActivity.class);
-                Bundle b = ModulesUtils.createBundleFromModule(new OptionModule(type));
+                Bundle b = ModulesUtils.createBundleFromModule(new OptionModule(-1, type, "", "", "#cccccc", false));
                 intent.putExtras(b);
                 startActivity(intent);
                 break;

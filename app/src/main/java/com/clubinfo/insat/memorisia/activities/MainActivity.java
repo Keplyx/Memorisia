@@ -16,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,30 +58,6 @@ public class MainActivity extends AppCompatActivity
     private boolean isNightMode;
     private List<Integer> selectedAgendas = new ArrayList<>();
     
-    public Frags getActiveFragment(){
-        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
-        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
-        WorkTypesFragment workTypes = (WorkTypesFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORK_TYPES.name());
-        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
-        HomeFragment home = (HomeFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_HOME.name());
-        if (subjects != null && subjects.isVisible())
-            return Frags.FRAG_SUBJECTS;
-        else if (works != null && works.isVisible())
-            return Frags.FRAG_WORKS;
-        else if (workTypes != null && workTypes.isVisible())
-            return Frags.FRAG_WORK_TYPES;
-        else if (calendar != null && calendar.isVisible())
-            return Frags.FRAG_CALENDAR;
-        else if (home != null && home.isVisible())
-            return Frags.FRAG_HOME;
-        else
-            return null;
-    }
-    
-    public boolean isFragmentActive(Frags Frag){
-        return getActiveFragment() == Frag;
-    }
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         
         isNightMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        
+
         context = this;
         PACKAGE_NAME = getPackageName();
         getSelectedAgendasFromPrefs();
@@ -98,27 +73,27 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null)
             getFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment(), Frags.FRAG_HOME.name()).commit();
         
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         
         
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createNewWork();
             }
         });
-    
+        
         Utils.checkModulesPresent(this);
         Utils.checkWorkOutdated(this);
     }
@@ -129,7 +104,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void createNewWork() {
         Intent intent = new Intent(context, EditWorkActivity.class);
-        WorkModule work = new WorkModule();
+        WorkModule work = new WorkModule(-1, -1, -1, -1, 0, new int[]{-1, -1, -1}, new int[]{-1, -1}, "", false, false);
         if (isFragmentActive(Frags.FRAG_WORKS)) {
             WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
             OptionModule parentModule = workFragment.getParentModule();
@@ -200,7 +175,7 @@ public class MainActivity extends AppCompatActivity
     
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -518,9 +493,33 @@ public class MainActivity extends AppCompatActivity
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out);
         ft.replace(R.id.content_frame, fragment, tag);
         ft.commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    
+    public Frags getActiveFragment(){
+        SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
+        WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
+        WorkTypesFragment workTypes = (WorkTypesFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORK_TYPES.name());
+        CalendarFragment calendar = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
+        HomeFragment home = (HomeFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_HOME.name());
+        if (subjects != null && subjects.isVisible())
+            return Frags.FRAG_SUBJECTS;
+        else if (works != null && works.isVisible())
+            return Frags.FRAG_WORKS;
+        else if (workTypes != null && workTypes.isVisible())
+            return Frags.FRAG_WORK_TYPES;
+        else if (calendar != null && calendar.isVisible())
+            return Frags.FRAG_CALENDAR;
+        else if (home != null && home.isVisible())
+            return Frags.FRAG_HOME;
+        else
+            return null;
+    }
+    
+    public boolean isFragmentActive(Frags Frag){
+        return getActiveFragment() == Frag;
     }
     
 }
