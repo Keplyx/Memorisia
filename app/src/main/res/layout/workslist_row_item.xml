@@ -17,16 +17,16 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="8dp"
         android:text="@string/done"
-        android:layout_alignTop="@+id/timeTextView"/>
+        android:layout_alignTop="@+id/agendaLogo"/>
 
     <ImageView
         android:id="@+id/agendaLogo"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_alignEnd="@+id/stateCheckBox"
-        android:layout_alignRight="@+id/stateCheckBox"
+        app:srcCompat="@mipmap/ic_launcher"
         android:layout_alignTop="@+id/workLogo"
-        app:srcCompat="@mipmap/ic_launcher"/>
+        android:layout_toLeftOf="@+id/stateCheckBox"
+        android:layout_toStartOf="@+id/stateCheckBox"/>
 
     <ImageView
         android:id="@+id/agenda"
@@ -51,17 +51,16 @@
 
     <TextView
         android:id="@+id/workTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_alignBottom="@+id/agendaLogo"
         android:layout_alignTop="@+id/workLogo"
-        android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/workLogo"
-        android:layout_toRightOf="@+id/workLogo"
-        android:layout_toStartOf="@+id/stateCheckBox"
+        android:layout_toLeftOf="@+id/agenda"
         android:gravity="center_vertical"
         android:text="Title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:layout_toRightOf="@+id/workLogo"
+        android:layout_toEndOf="@+id/workLogo"/>
 
     <RatingBar
         android:id="@+id/priorityRatingBar"
@@ -116,13 +115,10 @@
         android:id="@+id/subjectLogo"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_alignEnd="@+id/stateCheckBox"
-        android:layout_alignRight="@+id/stateCheckBox"
-        android:layout_below="@+id/agendaLogo"
-        android:layout_toEndOf="@+id/agenda"
-        android:layout_toRightOf="@+id/agenda"
         app:srcCompat="@mipmap/ic_launcher"
-        />
+        android:layout_below="@+id/agendaLogo"
+        android:layout_toRightOf="@+id/agenda"
+        android:layout_toEndOf="@+id/agenda"/>
 
     <ImageView
         android:id="@+id/module"

@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/subjectTitle"
         android:layout_width="0dp"
-        android:layout_height="16dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -40,7 +40,7 @@
     <TextView
         android:id="@+id/SubjectDescription"
         android:layout_width="0dp"
-        android:layout_height="16dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"

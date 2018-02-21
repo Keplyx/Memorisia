@@ -74,7 +74,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     }
     
     @Override
-    public void onBindViewHolder(final WorksRecyclerAdapter.ViewHolder holder, int pos) {
+    public void onBindViewHolder(final WorksRecyclerAdapter.ViewHolder holder, final int pos) {
         if (modules.size() == 0)
             return;
         final WorkModule work = modules.get(pos);
@@ -141,7 +141,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.doneCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                                            @Override
                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                               work.setState(isChecked);
+                                                               modules.get(pos).setState(isChecked);
                                                                setWorkChecked(holderLayout, isChecked);
                                                                MemorisiaDatabase.getInstance(context).workModuleDao().updateWorkModules(work);
                                                            }
@@ -235,7 +235,7 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             return 1;
     }
     
-    class ViewHolder extends RecyclerView.ViewHolder {
+class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView description;
         TextView date;

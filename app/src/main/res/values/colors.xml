@@ -20,6 +20,6 @@
     <color name="colorPrioImportant">#dc2cf7</color>
     <color name="colorPrioUrgent">#f7d516</color>
 
-    <color name="colorWorkDoneLight">#9eed68</color>
-    <color name="colorWorkDoneDark">#334c22</color>
+    <color name="colorWorkDoneLight">#FFE159</color>
+    <color name="colorWorkDoneDark">#5b3a06</color>
 </resources>
