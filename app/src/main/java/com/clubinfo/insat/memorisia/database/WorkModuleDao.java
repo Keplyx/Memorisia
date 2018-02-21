@@ -26,14 +26,25 @@ public interface WorkModuleDao {
     @Query("SELECT * FROM work_modules")
     List<WorkModule> getAllWorkModules();
     
+    @Query("SELECT * FROM work_modules WHERE agendaId = :agenda")
+    List<WorkModule> getWorkModulesOfAgenda(int agenda);
+    
     @Query("SELECT * FROM work_modules WHERE agendaId IN (:agendas)")
-    List<WorkModule> getWorkModules(List<Integer> agendas);
+    List<WorkModule> getWorkModulesOfAgenda(List<Integer> agendas);
     
-    @Query("SELECT * FROM work_modules WHERE agendaId IN (:agendas) AND subjectID IN (:subjects)")
-    List<WorkModule> getWorkModules(List<Integer> agendas, List<Integer> subjects);
+    @Query("SELECT * FROM work_modules WHERE subjectId = :subject")
+    List<WorkModule> getWorkModulesOfSubject(int subject);
     
-    @Query("SELECT * FROM work_modules WHERE agendaId IN (:agendas) AND subjectID IN (:subjects) AND workTypeId IN (:workTypes)")
-    List<WorkModule> getWorkModules(List<Integer> agendas, List<Integer> subjects, List<Integer> workTypes);
+    @Query("SELECT * FROM work_modules WHERE agendaId IN (:agendas) AND subjectID = :subjects")
+    List<WorkModule> getWorkModulesOfSubject(List<Integer> agendas, int subjects);
+    
+    @Query("SELECT * FROM work_modules WHERE workTypeId = :workType")
+    List<WorkModule> getWorkModulesOfWorkType(int workType);
+    
+    @Query("SELECT * FROM work_modules WHERE agendaId IN (:agendas) AND workTypeId = :workTypes")
+    List<WorkModule> getWorkModulesOfWorkType(List<Integer> agendas, int workTypes);
+    
+    
     
     @Query("SELECT * FROM work_modules WHERE id = :id")
     WorkModule getWorkModuleOfId(int id);

@@ -4,21 +4,18 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.adapters.WorksRecyclerAdapter;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
-import com.clubinfo.insat.memorisia.utils.Utils;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,20 +45,20 @@ public class HomeFragment extends Fragment {
     }
     
     public void generateWeekList() {
-        SaveManager saver = new SaveManager(getActivity());
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(getActivity());
         MainActivity act = (MainActivity) getActivity();
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByWeek(
-                saver.getWorkModuleList(act.getSelectedAgendas(), null, null), new int[]{CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()});
+                db.workModuleDao().getWorkModulesOfAgenda(act.getSelectedAgendas()), new int[]{CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()});
         RecyclerView.Adapter mAdapter;
         mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false), true);
         weekRecyclerView.setAdapter(mAdapter);
     }
     
     public void generateStarsList() {
-        SaveManager saver = new SaveManager(getActivity());
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(getActivity());
         MainActivity act = (MainActivity) getActivity();
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByPriority(
-                saver.getWorkModuleList(act.getSelectedAgendas(), null, null), 5);
+                db.workModuleDao().getWorkModulesOfAgenda(act.getSelectedAgendas()), 5);
         RecyclerView.Adapter mAdapter;
         mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false), true);
         starsRecyclerView.setAdapter(mAdapter);

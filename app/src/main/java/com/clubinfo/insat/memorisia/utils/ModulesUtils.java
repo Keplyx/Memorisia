@@ -3,9 +3,8 @@ package com.clubinfo.insat.memorisia.utils;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -71,21 +70,18 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<OptionModule>() {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
-                SaveManager saver = new SaveManager(context);
-                List<Integer> moduleIds = new ArrayList<>();
+                MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
                 List<WorkModule> worksList1 = new ArrayList<>();
                 List<WorkModule> worksList2 = new ArrayList<>();
-                moduleIds.add(optionModule.getId());
-                if (optionModule.getType() == SaveManager.SUBJECT)
-                    worksList1 = saver.getWorkModuleList(agendas, moduleIds, null);
-                else if (optionModule.getType() == SaveManager.WORK_TYPE)
-                    worksList1 = saver.getWorkModuleList(agendas, null, moduleIds);
+                if (optionModule.getType() == OptionModule.SUBJECT)
+                    worksList1 = db.workModuleDao().getWorkModulesOfSubject(agendas, optionModule.getId());
+                else if (optionModule.getType() == OptionModule.WORK_TYPE)
+                    worksList1 = db.workModuleDao().getWorkModulesOfWorkType(agendas, optionModule.getId());
     
-                moduleIds.set(0, t1.getId());
-                if (t1.getType() == SaveManager.SUBJECT)
-                    worksList2 = saver.getWorkModuleList(agendas, moduleIds, null);
-                else if (t1.getType() == SaveManager.WORK_TYPE)
-                    worksList2 = saver.getWorkModuleList(agendas, null, moduleIds);
+                if (t1.getType() == OptionModule.SUBJECT)
+                    worksList2 = db.workModuleDao().getWorkModulesOfSubject(agendas, t1.getId());
+                else if (t1.getType() == OptionModule.WORK_TYPE)
+                    worksList2 = db.workModuleDao().getWorkModulesOfWorkType(agendas, t1.getId());
                 
                 String compare1 = "999", compare2 = "999";
                 if (reverse) {
@@ -117,21 +113,18 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<OptionModule>() {
             @Override
             public int compare(OptionModule optionModule, OptionModule t1) {
-                SaveManager saver = new SaveManager(context);
-                List<Integer> moduleIds = new ArrayList<>();
+                MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
                 List<WorkModule> worksList1 = new ArrayList<>();
                 List<WorkModule> worksList2 = new ArrayList<>();
-                moduleIds.add(optionModule.getId());
-                if (optionModule.getType() == SaveManager.SUBJECT)
-                    worksList1 = saver.getWorkModuleList(agendas, moduleIds, null);
-                else if (optionModule.getType() == SaveManager.WORK_TYPE)
-                    worksList1 = saver.getWorkModuleList(agendas, null, moduleIds);
+                if (optionModule.getType() == OptionModule.SUBJECT)
+                    worksList1 = db.workModuleDao().getWorkModulesOfSubject(agendas, optionModule.getId());
+                else if (optionModule.getType() == OptionModule.WORK_TYPE)
+                    worksList1 = db.workModuleDao().getWorkModulesOfWorkType(agendas, optionModule.getId());
                 
-                moduleIds.set(0, t1.getId());
-                if (t1.getType() == SaveManager.SUBJECT)
-                    worksList2 = saver.getWorkModuleList(agendas, moduleIds, null);
-                else if (t1.getType() == SaveManager.WORK_TYPE)
-                    worksList2 = saver.getWorkModuleList(agendas, null, moduleIds);
+                if (t1.getType() == OptionModule.SUBJECT)
+                    worksList2 = db.workModuleDao().getWorkModulesOfSubject(agendas, t1.getId());
+                else if (t1.getType() == OptionModule.WORK_TYPE)
+                    worksList2 = db.workModuleDao().getWorkModulesOfWorkType(agendas, t1.getId());
                 
                 String compare1 = "0", compare2 = "0";
                 if (worksList1.size() > 0)
@@ -194,10 +187,9 @@ public class ModulesUtils {
         Collections.sort(modules, new Comparator<WorkModule>() {
             @Override
             public int compare(WorkModule m1, WorkModule m2) {
-                SaveManager saver = new SaveManager(context);
-                List<OptionModule> optionModules = saver.getOptionModuleList(SaveManager.WORK_TYPE);
-                OptionModule o1 = getModuleOfId(optionModules, m1.getWorkTypeId());
-                OptionModule o2 = getModuleOfId(optionModules, m2.getWorkTypeId());
+                MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
+                OptionModule o1 = db.optionModuleDao().getOptionModuleOfId(m1.getWorkTypeId());
+                OptionModule o2 = db.optionModuleDao().getOptionModuleOfId(m2.getWorkTypeId());
                 int r = reverse ? -1 : 1;
                 return r * o1.getText().compareTo(o2.getText());
             }
@@ -388,13 +380,12 @@ public class ModulesUtils {
      * {@link android.os.Bundle Bundle} properties
      */
     public static OptionModule createOptionModuleFromBundle(Bundle b) {
-        int id = b.getInt("id");
         int type = b.getInt("type");
         String text = b.getString("text");
         String logo = b.getString("logo");
         String color = b.getString("color");
         boolean notif = b.getBoolean("notifications");
-        return new OptionModule(id, type, text, logo, color, notif);
+        return new OptionModule(type, text, logo, color, notif);
     }
     
     /**
@@ -406,7 +397,6 @@ public class ModulesUtils {
      * {@link android.os.Bundle Bundle} properties
      */
     public static WorkModule createWorkModuleFromBundle(Bundle b) {
-        int id = b.getInt("id");
         int agendaId = b.getInt("agendaId");
         int subjectId = b.getInt("subjectId");
         int workTypeId = b.getInt("workTypeId");
@@ -416,6 +406,6 @@ public class ModulesUtils {
         String text = b.getString("text");
         boolean notif = b.getBoolean("notifications");
         boolean state = b.getBoolean("state");
-        return new WorkModule(id, agendaId, subjectId, workTypeId, priority, date, time, text, notif, state);
+        return new WorkModule(agendaId, subjectId, workTypeId, priority, date, time, text, notif, state);
     }
 }

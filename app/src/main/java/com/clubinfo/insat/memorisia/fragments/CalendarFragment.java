@@ -11,19 +11,16 @@ import android.view.ViewGroup;
 
 import com.clubinfo.insat.memorisia.CalendarEventDecorator;
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.adapters.WorksRecyclerAdapter;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
-import com.clubinfo.insat.memorisia.utils.Utils;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -74,10 +71,9 @@ public class CalendarFragment extends BaseFragment {
      */
     @Override
     public void generateList() {
-        SaveManager saver = new SaveManager(getActivity());
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(getActivity());
         MainActivity act = (MainActivity) getActivity();
-        List<WorkModule> worksList = ModulesUtils.getWorkModuleListByDate(
-                saver.getWorkModuleList(act.getSelectedAgendas(), null, null), selectedDate);
+        List<WorkModule> worksList = ModulesUtils.getWorkModuleListByDate(db.workModuleDao().getWorkModulesOfAgenda(act.getSelectedAgendas()), selectedDate);
         RecyclerView.Adapter mAdapter;
         switch (getCurrentSortType()) {
             case SORT_1:
@@ -101,10 +97,10 @@ public class CalendarFragment extends BaseFragment {
     }
     
     private void setDecorator() {
-        SaveManager saver = new SaveManager(getActivity());
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(getActivity());
         MainActivity act = (MainActivity) getActivity();
         List<CalendarDay> dates = new ArrayList<>();
-        List<WorkModule> worksList = saver.getWorkModuleList(act.getSelectedAgendas(), null, null);
+        List<WorkModule> worksList = db.workModuleDao().getWorkModulesOfAgenda(act.getSelectedAgendas());
         for (WorkModule work : worksList) {
             if (work.getDate() != null && work.getDate()[0] != -1 && work.getDate()[1] != -1 && work.getDate()[2] != -1){
                 dates.add(new CalendarDay(work.getDate()[2], work.getDate()[1] - 1, work.getDate()[0]));

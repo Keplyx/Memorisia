@@ -18,16 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.fragments.WorkViewFragment;
-import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,8 +57,7 @@ public class OptionModulesRecyclerAdapter extends RecyclerView.Adapter<OptionMod
     public OptionModulesRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.subjects_row_item, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
     
     @Override
@@ -70,13 +67,11 @@ public class OptionModulesRecyclerAdapter extends RecyclerView.Adapter<OptionMod
         holder.logo.setImageBitmap(Utils.getBitmapFromAsset(context, module.getLogo()));
         holder.logo.setColorFilter(Color.parseColor(module.getColor()));
         
-        List<Integer> tempModules = new ArrayList<>();
-        tempModules.add(module.getId());
         List<WorkModule> worksList;
-        if (modules.get(0).getType() == SaveManager.SUBJECT)
-            worksList = new SaveManager(context).getWorkModuleList(agendas, tempModules, null);
+        if (modules.get(0).getType() == OptionModule.SUBJECT)
+            worksList = MemorisiaDatabase.getInstance(context).workModuleDao().getWorkModulesOfSubject(agendas, module.getId());
         else
-            worksList = new SaveManager(context).getWorkModuleList(agendas, null, tempModules);
+            worksList = MemorisiaDatabase.getInstance(context).workModuleDao().getWorkModulesOfWorkType(agendas, module.getId());
         if (worksList.size() != 0) {
             holder.bar.setMax(worksList.size());
             holder.bar.setProgress(ModulesUtils.getWorkDoneNumber(worksList));
@@ -136,7 +131,10 @@ public class OptionModulesRecyclerAdapter extends RecyclerView.Adapter<OptionMod
      */
     private void startWorkViewFragment(OptionModule module) {
         Fragment fragment = new WorkViewFragment();
-        Bundle b = ModulesUtils.createBundleFromModule(module);
+        Bundle b = new Bundle();
+        b.putInt("id", module.getId());
+        b.putInt("type", module.getType());
+        b.putString("text", module.getText());
         fragment.setArguments(b);
         android.app.FragmentTransaction ft = fragMan.beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left, R.animator.slide_in_left, R.animator.slide_out_right);
@@ -150,14 +148,14 @@ public class OptionModulesRecyclerAdapter extends RecyclerView.Adapter<OptionMod
         return modules.size();
     }
     
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textHeader;
-        public TextView textFooter;
-        public ImageView logo;
-        public ProgressBar bar;
-        public View layout;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textHeader;
+        TextView textFooter;
+        ImageView logo;
+        ProgressBar bar;
+        View layout;
         
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             layout = v;
             textHeader = v.findViewById(R.id.subjectTitle);

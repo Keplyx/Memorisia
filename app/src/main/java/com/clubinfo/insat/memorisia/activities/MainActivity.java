@@ -21,7 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.fragments.BaseFragment;
 import com.clubinfo.insat.memorisia.fragments.CalendarFragment;
 import com.clubinfo.insat.memorisia.fragments.HomeFragment;
@@ -104,17 +104,16 @@ public class MainActivity extends AppCompatActivity
      */
     private void createNewWork() {
         Intent intent = new Intent(context, EditWorkActivity.class);
-        WorkModule work = new WorkModule(-1, -1, -1, -1, 0, new int[]{-1, -1, -1}, new int[]{-1, -1}, "", false, false);
+        WorkModule work = new WorkModule( -1, -1, -1, 0, new int[]{-1, -1, -1}, new int[]{-1, -1}, "", false, false);
+        work.setId(-1);
         if (isFragmentActive(Frags.FRAG_WORKS)) {
             WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
-            OptionModule parentModule = workFragment.getParentModule();
-            if (parentModule != null){
-                if (parentModule.getType() == SaveManager.SUBJECT)
-                    work.setSubjectId(parentModule.getId());
-                
-                if (parentModule.getType() == SaveManager.WORK_TYPE)
-                    work.setWorkTypeId(parentModule.getId());
-            }
+            if (workFragment.getParentType() == OptionModule.SUBJECT)
+                work.setSubjectId(workFragment.getParentId());
+            
+            if (workFragment.getParentType() == OptionModule.WORK_TYPE)
+                work.setWorkTypeId(workFragment.getParentId());
+            
         }
         else if (isFragmentActive(Frags.FRAG_CALENDAR)){
             CalendarFragment calendarFragment = (CalendarFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_CALENDAR.name());
@@ -242,8 +241,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void generateAgendaMenu(final Menu menu) {
         getSelectedAgendasFromPrefs();
-        SaveManager saver = new SaveManager(this);
-        List<OptionModule> modules = saver.getOptionModuleList(SaveManager.AGENDA);
+        List<OptionModule> modules = MemorisiaDatabase.getInstance(context).optionModuleDao().getOptionModulesOfType(OptionModule.AGENDA);
         menu.clear();
         for (int i = 0; i < modules.size(); i++) {
             MenuItem item = menu.add(0, modules.get(i).getId(), Menu.NONE, modules.get(i).getText());
@@ -285,17 +283,6 @@ public class MainActivity extends AppCompatActivity
             });
         }
     }
-    
-    /**
-     * Adds the given agenda to the selected agenda's list
-     *
-     * @param id agenda id to select
-     */
-    public void addAgendaToSelected(int id){
-        if (id != -1)
-            selectedAgendas.add(id);
-    }
-    
     
     /**
      * Checks if the selected agenda in the menu is the only one active.
@@ -371,11 +358,11 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.action_edit:
                 if (isFragmentActive(Frags.FRAG_WORKS))
-                    editCurrentModule(works.getParentModule().getId(), works.getParentModule().getType());
+                    editCurrentOptionModule(works.getParentId());
                 else if (isFragmentActive(Frags.FRAG_SUBJECTS))
-                    editModules(SaveManager.SUBJECT);
+                    editModules(OptionModule.SUBJECT);
                 else if (isFragmentActive(Frags.FRAG_WORK_TYPES))
-                    editModules(SaveManager.WORK_TYPE);
+                    editModules(OptionModule.WORK_TYPE);
                 break;
             case R.id.sort_1:
                 sort = BaseFragment.SortType.SORT_1;
@@ -413,14 +400,13 @@ public class MainActivity extends AppCompatActivity
      * Creates a new {@link com.clubinfo.insat.memorisia.activities.EditOptionsActivity EditOptionsActivity}
      * corresponding to the given subject.
      *
-     * @param moduleId Id of the subject to edit
-     * @param type type of the subject to edit
+     * @param id Id of the option module to edit
      */
-    private void editCurrentModule(int moduleId, int type) {
+    private void editCurrentOptionModule(int id) {
         Intent intent = new Intent(this, EditOptionsActivity.class);
-        SaveManager saver = new SaveManager(this);
-        OptionModule module = ModulesUtils.getModuleOfId(saver.getOptionModuleList(type), moduleId);
-        intent.putExtras(ModulesUtils.createBundleFromModule(module));
+        Bundle b = new Bundle();
+        b.putInt("id", id);
+        intent.putExtras(b);
         startActivity(intent);
     }
     

@@ -3,15 +3,14 @@ package com.clubinfo.insat.memorisia.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.adapters.OptionsRecyclerAdapter;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
@@ -38,13 +37,13 @@ public class OptionsListActivity extends AppCompatActivity {
      */
     private void setActivityTitle(){
         switch (type) {
-            case SaveManager.SUBJECT:
+            case OptionModule.SUBJECT:
                 setTitle(R.string.edit_subjects);
                 break;
-            case SaveManager.WORK_TYPE:
+            case OptionModule.WORK_TYPE:
                 setTitle(R.string.edit_work_types);
                 break;
-            case SaveManager.AGENDA:
+            case OptionModule.AGENDA:
                 setTitle(R.string.edit_agendas);
                 break;
         }
@@ -56,7 +55,7 @@ public class OptionsListActivity extends AppCompatActivity {
     private void setupRecyclerVIew(){
         RecyclerView.Adapter mAdapter = createModulesListAdapter();
         if (mAdapter != null) {
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.subjectsRecyclerView);
+            RecyclerView recyclerView = findViewById(R.id.subjectsRecyclerView);
             recyclerView.setHasFixedSize(true);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
@@ -68,7 +67,8 @@ public class OptionsListActivity extends AppCompatActivity {
      * Creates the module list based on the type, sorted by name
      */
     private OptionsRecyclerAdapter createModulesListAdapter() {
-        final List<OptionModule> modules = ModulesUtils.sortOptionModuleListByName(new SaveManager(this).getOptionModuleList(type), false);
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(this);
+        final List<OptionModule> modules = ModulesUtils.sortOptionModuleListByName(db.optionModuleDao().getOptionModulesOfType(type), false);
         return new OptionsRecyclerAdapter(modules, this);
     }
     
@@ -87,7 +87,9 @@ public class OptionsListActivity extends AppCompatActivity {
                 return true;
             case R.id.action_add:
                 Intent intent = new Intent(this, EditOptionsActivity.class);
-                Bundle b = ModulesUtils.createBundleFromModule(new OptionModule(-1, type, "", "", "#cccccc", false));
+                OptionModule module = new OptionModule(type, "", "", "#cccccc", false);
+                module.setId(-1);
+                Bundle b = ModulesUtils.createBundleFromModule(module);
                 intent.putExtras(b);
                 startActivity(intent);
                 break;

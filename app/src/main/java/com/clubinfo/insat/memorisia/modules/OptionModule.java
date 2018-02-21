@@ -2,6 +2,7 @@ package com.clubinfo.insat.memorisia.modules;
 
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 
 /**
  * Class representing an agenda, a subject, or a work type
@@ -12,8 +13,15 @@ public class OptionModule extends Module{
     private String logo;
     private String color;
     
-    public OptionModule(int id, int type, String text, String logo, String color, boolean notificationsEnabled) {
-        super(id, text, notificationsEnabled);
+    @Ignore
+    public static final int SUBJECT = 0;
+    @Ignore
+    public static final int WORK_TYPE = 1;
+    @Ignore
+    public static final int AGENDA = 2;
+    
+    public OptionModule(int type, String text, String logo, String color, boolean notificationsEnabled) {
+        super(text, notificationsEnabled);
         this.type = type;
         this.logo = logo;
         this.color = color;

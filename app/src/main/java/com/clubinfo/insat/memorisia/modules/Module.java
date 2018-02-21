@@ -11,8 +11,7 @@ public class Module {
     private String text;
     private boolean notificationsEnabled;
     
-    public Module(int id, String text, boolean notificationsEnabled) {
-        this.id = id;
+    public Module(String text, boolean notificationsEnabled) {
         this.text = text;
         this.notificationsEnabled = notificationsEnabled;
     }

@@ -4,30 +4,23 @@ package com.clubinfo.insat.memorisia.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
-import com.clubinfo.insat.memorisia.modules.Module;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,13 +57,48 @@ public class Utils {
      * @param context  Current context
      */
     public static void checkModulesPresent(Context context) {
-        SaveManager saver = new SaveManager(context);
-        List<OptionModule> agendas = saver.getOptionModuleList(SaveManager.AGENDA);
-        List<OptionModule> subjects = saver.getOptionModuleList(SaveManager.SUBJECT);
-        List<OptionModule> workTypes = saver.getOptionModuleList(SaveManager.WORK_TYPE);
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
+        List<OptionModule> agendas = db.optionModuleDao().getOptionModulesOfType(OptionModule.AGENDA);
+        List<OptionModule> subjects = db.optionModuleDao().getOptionModulesOfType(OptionModule.SUBJECT);
+        List<OptionModule> workTypes = db.optionModuleDao().getOptionModulesOfType(OptionModule.WORK_TYPE);
         
         generateDefaultModules(context, agendas.size() == 0, subjects.size() == 0, workTypes.size() == 0);
     }
+
+    /**
+     * Creates a default modules if none is present
+     *
+     * @param context  Current context
+     */
+    private static void generateDefaultModules(Context context, boolean isAgenda, boolean isSubject, boolean isWorkType) {
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
+        List<OptionModule> modules = new ArrayList<>();
+        List<String> logosList = generateLogosList(context);
+        if (isAgenda){
+            modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_home),
+                    logosList.get(0), "#33b819", true));
+            modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_work),
+                    logosList.get(0), "#ba4200", true));
+            
+        }
+        if (isSubject) {
+            modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject1),
+                    logosList.get(0), "#d5ce12", true));
+            modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject2),
+                    logosList.get(0), "#1265d5", true));
+        }
+        if (isWorkType) {
+            modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type1),
+                    logosList.get(0), "#d512d3", true));
+            modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type2),
+                    logosList.get(0), "#12d5a5", true));
+        }
+        
+        for (OptionModule m : modules){
+            db.optionModuleDao().insertOptionModules(m);
+        }
+    }
+    
     
     /**
      * Checks if works are outdated, based on preferences. If yes, they are deleted
@@ -78,8 +106,8 @@ public class Utils {
      * @param context  Current context
      */
     public static void checkWorkOutdated(Context context) {
-        SaveManager saver = new SaveManager(context);
-        List<WorkModule> workModuleList = saver.getWorkModuleList(null,  null, null);
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
+        List<WorkModule> workModuleList = db.workModuleDao().getAllWorkModules();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         if (sharedPref.getBoolean(SettingsActivity.KEY_DELETE_OLD, false)) {
             Calendar limit = getOutdatedWorkLimit(context);
@@ -87,7 +115,7 @@ public class Utils {
                 Calendar current = m.getDateAsCalendar();
                 if (current != null && limit.after(current)){
                     if (!sharedPref.getBoolean(SettingsActivity.KEY_DELETE_OLD_ONLY_DONE, false) || m.isState()) {
-                        saver.deleteWorkModule(m.getId());
+                        db.workModuleDao().deleteWorkModules(m);
                     }
                 }
             }
@@ -117,40 +145,6 @@ public class Utils {
         if (selected.equals(aliasArray[7]))
             limit.add(Calendar.YEAR, -1);
         return limit;
-    }
-    
-    /**
-     * Creates a default modules if none is present
-     *
-     * @param context  Current context
-     */
-    private static void generateDefaultModules(Context context, boolean isAgenda, boolean isSubject, boolean isWorkType) {
-        SaveManager saver = new SaveManager(context);
-        List<OptionModule> modules = new ArrayList<>();
-        List<String> logosList = generateLogosList(context);
-        if (isAgenda){
-            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_home),
-                    logosList.get(0), "#33b819", true));
-            modules.add(new OptionModule(-1, SaveManager.AGENDA, context.getString(R.string.default_module_work),
-                    logosList.get(0), "#ba4200", true));
-            
-        }
-        if (isSubject) {
-            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject1),
-                    logosList.get(0), "#d5ce12", true));
-            modules.add(new OptionModule(-1, SaveManager.SUBJECT, context.getString(R.string.default_module_subject2),
-                    logosList.get(0), "#1265d5", true));
-        }
-        if (isWorkType) {
-            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type1),
-                    logosList.get(0), "#d512d3", true));
-            modules.add(new OptionModule(-1, SaveManager.WORK_TYPE, context.getString(R.string.default_module_work_type2),
-                    logosList.get(0), "#12d5a5", true));
-        }
-        
-        for (OptionModule m : modules){
-            saver.saveModule(m);
-        }
     }
     
     
@@ -230,7 +224,7 @@ public class Utils {
      * @param time2 Second time to compare
      * @return Difference in minutes
      */
-    public static int getTimeDelta(int[] time1, int[] time2) {
+    static int getTimeDelta(int[] time1, int[] time2) {
         if (time1[0] < 0 || time2[0] < 0)
             return 0;
         int start = time1[0] * 60 + time1[1];
@@ -266,18 +260,4 @@ public class Utils {
         return hours + ":" + minutes;
     }
     
-    /**
-     * Checks if a ScrollView is scrollable by comparing its height to its child.
-     *
-     * @param scrollView ScrollView to check
-     * @return True if scrollable, false otherwise
-     */
-    public static boolean canScroll(ScrollView scrollView) {
-        View child = scrollView.getChildAt(0);
-        if (child != null) {
-            int childHeight = child.getHeight();
-            return scrollView.getHeight() < childHeight + scrollView.getPaddingTop() + scrollView.getPaddingBottom();
-        }
-        return false;
-    }
 }

@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.adapters.OptionModulesRecyclerAdapter;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
@@ -50,9 +50,9 @@ public class WorkTypesFragment extends BaseFragment {
      */
     @Override
     public void generateList() {
-        SaveManager saver = new SaveManager(getActivity());
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(getActivity());
         MainActivity act = (MainActivity) getActivity();
-        List<OptionModule> modules = saver.getOptionModuleList(SaveManager.WORK_TYPE);
+        List<OptionModule> modules = db.optionModuleDao().getOptionModulesOfType(OptionModule.WORK_TYPE);
         RecyclerView.Adapter mAdapter;
         switch (getCurrentSortType()) {
             case SORT_1:

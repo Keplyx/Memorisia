@@ -18,15 +18,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.adapters.LogosListAdapter;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.Module;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,23 +58,28 @@ public class EditOptionsActivity extends AppCompatActivity {
         logosList = Utils.generateLogosList(this);
         getComponents();
         
-        module = ModulesUtils.createOptionModuleFromBundle(getIntent().getExtras());
+        int id = getIntent().getExtras().getInt("id");
+        if (id != -1)
+            module = MemorisiaDatabase.getInstance(context).optionModuleDao().getOptionModuleOfId(id);
+        else
+            module = ModulesUtils.createOptionModuleFromBundle(getIntent().getExtras());
+        
         colorButton.setBackgroundColor(Color.parseColor(module.getColor()));
         notificationsSwitch.setChecked(module.isNotificationsEnabled());
-        if (module.getId() != -1) {
+        if (id != -1) {
             title.setText(module.getText());
             setTitle(getResources().getString(R.string.editing) + " " + module.getText());
             if (logosList.size() > 0)
                 logosGridView.setAdapter(new LogosListAdapter(this, logosList, module.getLogo(), module.getColor()));
         } else {
             switch (module.getType()) {
-                case SaveManager.SUBJECT:
+                case OptionModule.SUBJECT:
                     setTitle(R.string.create_subject);
                     break;
-                case SaveManager.WORK_TYPE:
+                case OptionModule.WORK_TYPE:
                     setTitle(R.string.create_work);
                     break;
-                case SaveManager.AGENDA:
+                case OptionModule.AGENDA:
                     setTitle(R.string.create_agenda);
                     break;
             }
@@ -94,11 +98,11 @@ public class EditOptionsActivity extends AppCompatActivity {
      * Gets graphical components from the activity
      */
     private void getComponents() {
-        title = (TextView) findViewById(R.id.moduleName);
-        logosGridView = (GridView) findViewById(R.id.logosContainer);
-        colorButton = (Button) findViewById(R.id.moduleColor);
-        notificationsSwitch = (Switch) findViewById(R.id.moduleNotifications);
-        deleteButton = (Button) findViewById(R.id.deleteModule);
+        title = findViewById(R.id.moduleName);
+        logosGridView = findViewById(R.id.logosContainer);
+        colorButton = findViewById(R.id.moduleColor);
+        notificationsSwitch = findViewById(R.id.moduleNotifications);
+        deleteButton = findViewById(R.id.deleteModule);
     }
     
     @Override
@@ -143,7 +147,7 @@ public class EditOptionsActivity extends AppCompatActivity {
     public void onClickDone(View v) {
         module.setText(title.getText().toString());
         module.setNotificationsEnabled(notificationsSwitch.isChecked());
-        new SaveManager(this).saveModule(module);
+        MemorisiaDatabase.getInstance(context).optionModuleDao().insertOptionModules(module);
         exitEditOptions();
     }
     
@@ -153,21 +157,16 @@ public class EditOptionsActivity extends AppCompatActivity {
      * @param v View that called the method
      */
     public void onClickDelete(View v) {
-        SaveManager saver = new SaveManager(this);
         List<WorkModule> workList = null;
-        List<Integer> modules = new ArrayList<>();
-        modules.add(module.getId());
         switch (module.getType()){
-            case SaveManager.AGENDA:
-                workList = saver.getWorkModuleList(modules, null, null);
+            case OptionModule.AGENDA:
+                workList = MemorisiaDatabase.getInstance(context).workModuleDao().getWorkModulesOfAgenda(module.getId());
                 break;
-            case SaveManager.SUBJECT:
-                workList = saver.getWorkModuleList(null, modules, null);
-                Log.w("test", workList.size() + "");
+            case OptionModule.SUBJECT:
+                workList = MemorisiaDatabase.getInstance(context).workModuleDao().getWorkModulesOfSubject(module.getId());
                 break;
-            case SaveManager.WORK_TYPE:
-                workList = saver.getWorkModuleList(null, null, modules);
-                Log.w("test", module.getId() + "");
+            case OptionModule.WORK_TYPE:
+                workList = MemorisiaDatabase.getInstance(context).workModuleDao().getWorkModulesOfWorkType(module.getId());
                 break;
         }
         if (workList != null && workList.size() > 0)
@@ -188,11 +187,11 @@ public class EditOptionsActivity extends AppCompatActivity {
                 getResources().getString(R.string.yes),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int i) {
-                        SaveManager saver = new SaveManager(builder.getContext());
-                        if (saver.getOptionModuleList(module.getType()).size() == 1)
+                        MemorisiaDatabase data = MemorisiaDatabase.getInstance(context);
+                        if (data.optionModuleDao().getOptionModulesOfType(module.getType()).size() == 1)
                             showErrorDialog(getResources().getString(R.string.cannot_delete_last));
                         else {
-                            saver.deleteOptionModule(module.getId());
+                            data.optionModuleDao().deleteOptionModules(module);
                             exitEditOptions();
                         }
                         dialog.cancel();

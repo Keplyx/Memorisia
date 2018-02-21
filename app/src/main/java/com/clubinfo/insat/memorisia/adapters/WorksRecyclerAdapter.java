@@ -22,9 +22,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.EditWorkActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
@@ -51,10 +51,10 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         this.context = context;
         this.modules = modules;
         this.isSubjectsParent = isSubjectsParent;
-        SaveManager saver = new SaveManager(context);
-        workTypesList = saver.getOptionModuleList(SaveManager.WORK_TYPE);
-        subjectsList = saver.getOptionModuleList(SaveManager.SUBJECT);
-        agendaList = saver.getOptionModuleList(SaveManager.AGENDA);
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
+        workTypesList = db.optionModuleDao().getOptionModulesOfType(OptionModule.WORK_TYPE);
+        subjectsList = db.optionModuleDao().getOptionModulesOfType(OptionModule.SUBJECT);
+        agendaList = db.optionModuleDao().getOptionModulesOfType(OptionModule.AGENDA);
     }
     
     public void add(int pos, WorkModule item) {
@@ -141,10 +141,9 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         holder.doneCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                                            @Override
                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                               SaveManager saver = new SaveManager(context);
                                                                work.setState(isChecked);
                                                                setWorkChecked(holderLayout, isChecked);
-                                                               saver.saveModule(work);
+                                                               MemorisiaDatabase.getInstance(context).workModuleDao().updateWorkModules(work);
                                                            }
                                                        }
         );
@@ -236,19 +235,19 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
             return 1;
     }
     
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
-        public TextView description;
-        public TextView date;
-        public TextView time;
-        public ImageView workLogo;
-        public ImageView subjectLogo;
-        public ImageView agendaLogo;
-        public RatingBar priorityBar;
-        public CheckBox doneCheckBox;
-        public View layout;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+        TextView description;
+        TextView date;
+        TextView time;
+        ImageView workLogo;
+        ImageView subjectLogo;
+        ImageView agendaLogo;
+        RatingBar priorityBar;
+        CheckBox doneCheckBox;
+        View layout;
         
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             layout = v;
             if (modules.size() != 0) {

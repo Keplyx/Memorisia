@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,8 +20,8 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.adapters.CustomSpinnerAdapter;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
@@ -65,19 +64,23 @@ public class EditWorkActivity extends AppCompatActivity {
         generateModuleLists();
         createSpinners();
         isNightMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
-        actualWork = ModulesUtils.createWorkModuleFromBundle(getIntent().getExtras());
-        setDefaultComponentValues();
-        if (actualWork.getId() == -1) {
+        
+        int id = getIntent().getExtras().getInt("id");
+        if (id == -1) {
             setTitle(getResources().getString(R.string.add_work));
-            Button deleteButton = (Button) findViewById(R.id.deleteButton);
+            actualWork = ModulesUtils.createWorkModuleFromBundle(getIntent().getExtras());
+            Button deleteButton = findViewById(R.id.deleteButton);
             deleteButton.setVisibility(Button.INVISIBLE);
             deleteButton.setEnabled(false);
-        }
-        else
+        } else {
             setTitle(getResources().getString(R.string.edit_work));
+            actualWork = MemorisiaDatabase.getInstance(this).workModuleDao().getWorkModuleOfId(id);
+        }
+    
+        setDefaultComponentValues();
         
         if (isNightMode) {
-            ImageButton clearDateButton = (ImageButton) findViewById(R.id.clearDateButton);
+            ImageButton clearDateButton = findViewById(R.id.clearDateButton);
             Drawable icon = clearDateButton.getDrawable();
             icon.mutate().setColorFilter(Color.argb(255, 255, 255, 255), PorterDuff.Mode.SRC_IN);
             clearDateButton.setImageDrawable(icon);
@@ -88,13 +91,13 @@ public class EditWorkActivity extends AppCompatActivity {
      * Finds all necessary components in the activity
      */
     private void findComponents() {
-        agendasSpinner = (Spinner) findViewById(R.id.agendaSpinner);
-        subjectsSpinner = (Spinner) findViewById(R.id.subjectSpinner);
-        worksSpinner = (Spinner) findViewById(R.id.workTypeSpinner);
-        descriptionTextView = (EditText) findViewById(R.id.descriptionEditText);
-        priorityBar = (RatingBar) findViewById(R.id.priorityRatingBar);
-        notificationsSwitch = (Switch) findViewById(R.id.notificationsSwitch);
-        datePickerButton = (Button) findViewById(R.id.pickDateButton);
+        agendasSpinner = findViewById(R.id.agendaSpinner);
+        subjectsSpinner = findViewById(R.id.subjectSpinner);
+        worksSpinner = findViewById(R.id.workTypeSpinner);
+        descriptionTextView = findViewById(R.id.descriptionEditText);
+        priorityBar = findViewById(R.id.priorityRatingBar);
+        notificationsSwitch = findViewById(R.id.notificationsSwitch);
+        datePickerButton = findViewById(R.id.pickDateButton);
     }
     
     /**
@@ -102,10 +105,10 @@ public class EditWorkActivity extends AppCompatActivity {
      * Sorted alphabetically.
      */
     private void generateModuleLists() {
-        SaveManager saver = new SaveManager(this);
-        agendasList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.AGENDA), false);
-        subjectsList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.SUBJECT), false);
-        workTypesList = ModulesUtils.sortOptionModuleListByName(saver.getOptionModuleList(SaveManager.WORK_TYPE), false);
+        MemorisiaDatabase data = MemorisiaDatabase.getInstance(this);
+        agendasList = ModulesUtils.sortOptionModuleListByName(data.optionModuleDao().getOptionModulesOfType(OptionModule.AGENDA), false);
+        subjectsList = ModulesUtils.sortOptionModuleListByName(data.optionModuleDao().getOptionModulesOfType(OptionModule.SUBJECT), false);
+        workTypesList = ModulesUtils.sortOptionModuleListByName(data.optionModuleDao().getOptionModulesOfType(OptionModule.WORK_TYPE), false);
     }
     
     /**
@@ -180,20 +183,6 @@ public class EditWorkActivity extends AppCompatActivity {
         actualWork.setText(descriptionTextView.getText().toString());
         actualWork.setNotificationsEnabled(notificationsSwitch.isChecked());
     }
-    
-    /**
-     * Gets the names of each OptionModule in a list
-     *
-     * @param modules OptionModule list to extract names from
-     */
-    public String[] getModulesNames(List<OptionModule> modules) {
-        List<String> names = new ArrayList<>();
-        for (int i = 0; i < modules.size(); i++) {
-            names.add(modules.get(i).getText());
-        }
-        return names.toArray(new String[names.size()]);
-    }
-    
     /**
      * Generates and saves the actual module, then exits the activity.
      *
@@ -201,8 +190,7 @@ public class EditWorkActivity extends AppCompatActivity {
      */
     public void onClickDoneWork(View v) {
         generateModule();
-        SaveManager saver = new SaveManager(this);
-        saver.saveModule(actualWork);
+        MemorisiaDatabase.getInstance(this).workModuleDao().insertWorkModules(actualWork);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(SettingsActivity.KEY_LAST_AGENDA, actualWork.getAgendaId());
@@ -233,8 +221,7 @@ public class EditWorkActivity extends AppCompatActivity {
                 getResources().getString(R.string.yes),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int i) {
-                        SaveManager saver = new SaveManager(builder.getContext());
-                        saver.deleteWorkModule(actualWork.getId());
+                        MemorisiaDatabase.getInstance(builder.getContext()).workModuleDao().deleteWorkModules(actualWork);
                         finish();
                         dialog.cancel();
                     }

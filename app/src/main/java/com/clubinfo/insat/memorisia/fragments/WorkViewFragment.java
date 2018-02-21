@@ -6,39 +6,43 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.clubinfo.insat.memorisia.R;
-import com.clubinfo.insat.memorisia.SaveManager;
 import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.adapters.WorksRecyclerAdapter;
+import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
 import com.clubinfo.insat.memorisia.modules.WorkModule;
 import com.clubinfo.insat.memorisia.utils.ModulesUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WorkViewFragment extends BaseFragment {
     
     private RecyclerView recyclerView;
-    private OptionModule module;
-
+    private int parentId;
+    private int parentType;
     
-    public OptionModule getParentModule() {
-        return module;
+    public int getParentId() {
+        return parentId;
     }
     
+    public int getParentType() {
+        return parentType;
+    }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_layout, container, false);
-        
-        module = ModulesUtils.createOptionModuleFromBundle(getArguments());
-        getActivity().setTitle(module.getText());
+    
+        parentId = getArguments().getInt("id");
+        parentType = getArguments().getInt("type");
+        getActivity().setTitle(getArguments().getString("text"));
         
         recyclerView = view.findViewById(R.id.subjectsRecyclerView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
@@ -62,18 +66,16 @@ public class WorkViewFragment extends BaseFragment {
      */
     @Override
     public void generateList() {
-        SaveManager saver = new SaveManager(getActivity());
+        MemorisiaDatabase db = MemorisiaDatabase.getInstance(getActivity());
         MainActivity act = (MainActivity) getActivity();
-        List<Integer> modules = new ArrayList<>();
-        modules.add(module.getId());
-        boolean isParentSubject = module.getType() == SaveManager.SUBJECT;
+        boolean isParentSubject = parentType == OptionModule.SUBJECT;
         List<WorkModule> workList;
         if (isParentSubject)
-            workList = saver.getWorkModuleList(act.getSelectedAgendas(), modules, null);
+            workList = db.workModuleDao().getWorkModulesOfSubject(act.getSelectedAgendas(), parentId);
         else
-            workList = saver.getWorkModuleList(act.getSelectedAgendas(), null, modules);
+            workList = db.workModuleDao().getWorkModulesOfWorkType(act.getSelectedAgendas(), parentId);
         RecyclerView.Adapter mAdapter;
-        
+        Log.w("test", workList.size() + "");
         switch (getCurrentSortType()) {
             case SORT_1:
                 mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(workList, isReverseSort()), isParentSubject);
