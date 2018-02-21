@@ -3,11 +3,14 @@ package com.clubinfo.insat.memorisia.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
@@ -51,6 +54,7 @@ public class EditOptionsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         Utils.setNightMode(this, true);
         setContentView(R.layout.activity_edit_options);
         
@@ -91,7 +95,6 @@ public class EditOptionsActivity extends AppCompatActivity {
                 module.setLogo(logosList.get(0));
             }
         }
-        context = this;
     }
     
     /**
@@ -147,7 +150,13 @@ public class EditOptionsActivity extends AppCompatActivity {
     public void onClickDone(View v) {
         module.setText(title.getText().toString());
         module.setNotificationsEnabled(notificationsSwitch.isChecked());
-        MemorisiaDatabase.getInstance(context).optionModuleDao().insertOptionModules(module);
+        long id = MemorisiaDatabase.getInstance(context).optionModuleDao().insertOptionModules(module)[0];
+        // Add to selected agendas list if module is agenda
+        if (module.getType() == OptionModule.AGENDA){
+            List<Integer> selectedAgendas = Utils.getSelectedAgendasFromPrefs(context);
+            selectedAgendas.add((int) id);
+            Utils.saveSelectedAgendasToPrefs(context, selectedAgendas);
+        }
         exitEditOptions();
     }
     

@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
         context = this;
         PACKAGE_NAME = getPackageName();
-        getSelectedAgendasFromPrefs();
+        selectedAgendas = Utils.getSelectedAgendasFromPrefs(context);
         
         if (savedInstanceState == null)
             getFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment(), Frags.FRAG_HOME.name()).commit();
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity
      * @param menu Menu holding the agendas
      */
     public void generateAgendaMenu(final Menu menu) {
-        getSelectedAgendasFromPrefs();
+        selectedAgendas = Utils.getSelectedAgendasFromPrefs(context);
         List<OptionModule> modules = MemorisiaDatabase.getInstance(context).optionModuleDao().getOptionModulesOfType(OptionModule.AGENDA);
         menu.clear();
         for (int i = 0; i < modules.size(); i++) {
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         menuItem.setChecked(false);
                     }
-                    saveSelectedAgendasToPrefs();
+                    Utils.saveSelectedAgendasToPrefs(context, selectedAgendas);
                     SubjectsFragment subjects = (SubjectsFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_SUBJECTS.name());
                     WorkViewFragment works = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());
                     WorkTypesFragment workTypes = (WorkTypesFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORK_TYPES.name());
@@ -301,36 +301,6 @@ public class MainActivity extends AppCompatActivity
     }
     
     /**
-     * Stores the selected agendas list to the shared preferences, to keep the selection from resetting on each app start
-     */
-    private void saveSelectedAgendasToPrefs() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        List<String> agendas = new ArrayList<>();
-        for (int i = 0; i < selectedAgendas.size(); i++) {
-            agendas.add(selectedAgendas.get(i).toString());
-        }
-        Set<String> set = new HashSet<>(agendas); // Convert the int list to a Set to save it as a preference
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, set);
-        editor.apply();
-    }
-    
-    /**
-     * Recovers the previously saved selected agendas list from shared preferences
-     */
-    private void getSelectedAgendasFromPrefs() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        Set<String> set = sharedPref.getStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, null);
-        List<String> agendas = new ArrayList<>();
-        if (set != null)
-            agendas = new ArrayList<>(set);
-        selectedAgendas.clear();
-        for (int i = 0; i < agendas.size(); i++) {
-            selectedAgendas.add(Integer.parseInt(agendas.get(i)));
-        }
-    }
-    
-    /**
      * @return Reference to the {@link android.view.MenuItem MenuItem} holding the sort options
      */
     public MenuItem getSortButton() {
@@ -342,6 +312,14 @@ public class MainActivity extends AppCompatActivity
      */
     public List<Integer> getSelectedAgendas() {
         return selectedAgendas;
+    }
+    
+    /**
+     * @param id id of the agenda to select
+     */
+    public void addAgendaToSelected(int id) {
+        selectedAgendas.add(id);
+        Utils.saveSelectedAgendasToPrefs(this, selectedAgendas);
     }
     
     @Override

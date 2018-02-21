@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import com.clubinfo.insat.memorisia.R;
+import com.clubinfo.insat.memorisia.activities.MainActivity;
 import com.clubinfo.insat.memorisia.activities.SettingsActivity;
 import com.clubinfo.insat.memorisia.database.MemorisiaDatabase;
 import com.clubinfo.insat.memorisia.modules.OptionModule;
@@ -24,7 +25,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class providing general utility static methods
@@ -76,26 +79,27 @@ public class Utils {
         List<String> logosList = generateLogosList(context);
         if (isAgenda){
             modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_home),
-                    logosList.get(0), "#33b819", true));
+                    logosList.get(7), "#33b819", true));
             modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_work),
-                    logosList.get(0), "#ba4200", true));
+                    logosList.get(7), "#ba4200", true));
             
         }
         if (isSubject) {
             modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject1),
-                    logosList.get(0), "#d5ce12", true));
+                    logosList.get(3), "#d5ce12", true));
             modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject2),
-                    logosList.get(0), "#1265d5", true));
+                    logosList.get(3), "#1265d5", true));
         }
         if (isWorkType) {
             modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type1),
-                    logosList.get(0), "#d512d3", true));
+                    logosList.get(11), "#d512d3", true));
             modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type2),
-                    logosList.get(0), "#12d5a5", true));
+                    logosList.get(11), "#12d5a5", true));
         }
         
         for (OptionModule m : modules){
-            db.optionModuleDao().insertOptionModules(m);
+            MainActivity act = (MainActivity) context;
+            act.addAgendaToSelected((int)db.optionModuleDao().insertOptionModules(m)[0]);
         }
     }
     
@@ -260,4 +264,42 @@ public class Utils {
         return hours + ":" + minutes;
     }
     
+    
+    /**
+     * Stores the selected agendas list to the shared preferences, to keep the selection from resetting on each app start
+     *
+     * @param context Current context
+     * @param selected selected agendas to save
+     */
+    public static void saveSelectedAgendasToPrefs(Context context, List<Integer> selected) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        List<String> agendas = new ArrayList<>();
+        for (int i = 0; i < selected.size(); i++) {
+            agendas.add(selected.get(i).toString());
+        }
+        Set<String> set = new HashSet<>(agendas); // Convert the int list to a Set to save it as a preference
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, set);
+        editor.apply();
+    }
+    
+    /**
+     * Recovers the previously saved selected agendas list from shared preferences
+     *
+     * @param context Current context
+     *
+     * @return list of selected agendas Ids
+     */
+    public static List<Integer> getSelectedAgendasFromPrefs(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> set = sharedPref.getStringSet(SettingsActivity.KEY_SELECTED_AGENDAS, null);
+        List<String> agendas = new ArrayList<>();
+        if (set != null)
+            agendas = new ArrayList<>(set);
+        List<Integer> selected = new ArrayList<>();
+        for (int i = 0; i < agendas.size(); i++) {
+            selected.add(Integer.parseInt(agendas.get(i)));
+        }
+        return selected;
+    }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public interface OptionModuleDao {
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOptionModules(OptionModule... optionModules);
+    long[] insertOptionModules(OptionModule... optionModules);
     
     @Update
     void updateOptionModules(OptionModule... optionModules);
