@@ -1,5 +1,3 @@
-# Memorisia
-
 ### Memorise your things!
 
 This is a project made in my spare time to learn android app development, so do not expect anything crazy.
