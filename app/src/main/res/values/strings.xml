@@ -52,12 +52,4 @@
     <string name="sort_type">Sort by type</string>
     <string name="sort_date">Sort by date</string>
 
-
-    <string name="default_module_work">Work</string>
-    <string name="default_module_home">Home</string>
-    <string name="default_module_subject1">Subject 1</string>
-    <string name="default_module_subject2">Subject 2</string>
-    <string name="default_module_work_type1">Work Type 1</string>
-    <string name="default_module_work_type2">Work Type 2</string>
-
 </resources>

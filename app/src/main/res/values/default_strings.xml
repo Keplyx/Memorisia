@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_module_work">Work</string>
+    <string name="default_module_home">Home</string>
+    <string name="default_module_start">Get Started</string>
+    <string name="default_module_tuto">Tutorial</string>
+    <string name="default_module_important">Important</string>
+    <string name="default_module_misc">Misc</string>
+
+    <string name="default_work_drawer">Use the left drawer to navigate</string>
+    <string name="default_work_add">Use the button below to add a work</string>
+
+    <string name="default_work_edit">Click on a work to edit it</string>
+    <string name="default_work_delete">Click on a work to delete it</string>
+    <string name="default_work_date">Add due dates for works</string>
+    <string name="default_work_prio">Set priority for works</string>
+
+    <string name="default_work_commands">Use the toolbar to control the list</string>
+    <string name="default_work_settings">Go to the Settings for more options</string>
+    <string name="default_work_night">Night mode is available</string>
+
+</resources>

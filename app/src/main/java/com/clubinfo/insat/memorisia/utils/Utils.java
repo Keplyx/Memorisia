@@ -48,8 +48,8 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < list.length; i++) {
-            logosList.add(logosPath + list[i]);
+        for (String s : list) {
+            logosList.add(logosPath + s);
         }
         return logosList;
     }
@@ -64,8 +64,8 @@ public class Utils {
         List<OptionModule> agendas = db.optionModuleDao().getOptionModulesOfType(OptionModule.AGENDA);
         List<OptionModule> subjects = db.optionModuleDao().getOptionModulesOfType(OptionModule.SUBJECT);
         List<OptionModule> workTypes = db.optionModuleDao().getOptionModulesOfType(OptionModule.WORK_TYPE);
-        
-        generateDefaultModules(context, agendas.size() == 0, subjects.size() == 0, workTypes.size() == 0);
+        if (agendas.size() == 0 && subjects.size() == 0 && workTypes.size() == 0)
+            generateDefaultModules(context);
     }
 
     /**
@@ -73,34 +73,62 @@ public class Utils {
      *
      * @param context  Current context
      */
-    private static void generateDefaultModules(Context context, boolean isAgenda, boolean isSubject, boolean isWorkType) {
+    private static void generateDefaultModules(Context context) {
         MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
         List<OptionModule> modules = new ArrayList<>();
         List<String> logosList = generateLogosList(context);
-        if (isAgenda){
-            modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_home),
-                    logosList.get(7), "#33b819"));
-            modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_work),
-                    logosList.get(7), "#ba4200"));
-            
-        }
-        if (isSubject) {
-            modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject1),
-                    logosList.get(3), "#d5ce12"));
-            modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject2),
-                    logosList.get(3), "#1265d5"));
-        }
-        if (isWorkType) {
-            modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type1),
-                    logosList.get(11), "#d512d3"));
-            modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type2),
-                    logosList.get(11), "#12d5a5"));
+        List<Integer> moduleIds = new ArrayList<>();
+        
+        modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_home),
+                logosList.get(7), "#33b819")); // 0
+        modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_work),
+                logosList.get(7), "#ba4200")); // 1
+        
+        modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_start),
+                logosList.get(3), "#d5ce12")); // 2
+        modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_tuto),
+                logosList.get(3), "#1265d5")); // 3
+    
+
+        modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_important),
+                logosList.get(11), "#d512d3")); // 4
+        modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_misc),
+                logosList.get(11), "#12d5a5")); // 5
+        
+        for (int i = 0; i < modules.size(); i++){
+            moduleIds.add((int)db.optionModuleDao().insertOptionModules(modules.get(i))[0]);
+            if (modules.get(i).getType() == OptionModule.AGENDA) {
+                MainActivity act = (MainActivity) context;
+                act.addAgendaToSelected(moduleIds.get(i));
+            }
         }
         
-        for (OptionModule m : modules){
-            MainActivity act = (MainActivity) context;
-            act.addAgendaToSelected((int)db.optionModuleDao().insertOptionModules(m)[0]);
+        List<WorkModule> workModuleList = new ArrayList<>();
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(2), moduleIds.get(4), 5, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_drawer), false));
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(2), moduleIds.get(4), 5, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_add), false));
+    
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(3), moduleIds.get(4), 3, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_edit), false));
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(3), moduleIds.get(4), 3, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_delete), false));
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(3), moduleIds.get(4), 3, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_date), false));
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(3), moduleIds.get(4), 3, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_prio), false));
+        
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(3), moduleIds.get(5), 0, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_commands), false));
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(3), moduleIds.get(5), 0, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_settings), false));
+        workModuleList.add(new WorkModule(moduleIds.get(1), moduleIds.get(3), moduleIds.get(5), 0, new int[]{-1, -1, -1}, new int[]{-1, -1},
+                context.getString(R.string.default_work_night), false));
+    
+        for (WorkModule w : workModuleList){
+            db.workModuleDao().insertWorkModules(w);
         }
+
     }
     
     
