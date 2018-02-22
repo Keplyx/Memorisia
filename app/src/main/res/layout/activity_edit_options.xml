@@ -33,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/validateModule"
         android:layout_alignRight="@+id/validateModule"
-        android:layout_below="@+id/moduleNotifications"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/textView4"
@@ -87,8 +86,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/moduleName"
         android:layout_alignBottom="@+id/moduleName"
-        android:layout_alignLeft="@+id/moduleNotifications"
-        android:layout_alignStart="@+id/moduleNotifications"
         android:layout_marginLeft="8dp"
         android:text="@string/name"/>
 
