@@ -18,14 +18,13 @@
   -->
 
 <resources>
+    <color name="black">#000000</color>
     <color name="colorPrimary">#E2261B</color>
-    <color name="colorPrimaryDark">#960808</color>
+    <color name="colorPrimaryDark">#760404</color>
     <color name="colorAccent">#e49009</color>
     <color name="colorWhite">#ffffff</color>
     <color name="iconTint">#7d7d7d</color>
     <color name="colorRed">#E31C17</color>
-    <color name="colorNo">#f35555</color>
-    <color name="colorYes">#35d93d</color>
     <color name="backgroundDark">#2A2A2A</color>
     <color name="textColorInverse">#dbdbdb</color>
     <color name="textColorInverseDarker">#a0a0a0</color>
@@ -33,10 +32,8 @@
     <color name="buttonColor">#d3c9c2</color>
     <color name="buttonColorDark">#858585</color>
 
-    <color name="colorPrioLow">#5ebc05</color>
-    <color name="colorPrioNormal">#28cced</color>
-    <color name="colorPrioImportant">#dc2cf7</color>
-    <color name="colorPrioUrgent">#f7d516</color>
+    <color name="color_yes">#fad458</color>
+    <color name="color_no">#f53d3a</color>
 
     <color name="colorWorkDoneLight">#FFE159</color>
     <color name="colorWorkDoneDark">#5b3a06</color>

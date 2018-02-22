@@ -44,70 +44,70 @@
     <Button
         android:id="@+id/moduleColor"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/moduleName"
-        android:layout_alignLeft="@+id/moduleName"
         android:layout_alignRight="@+id/moduleName"
-        android:layout_alignStart="@+id/moduleName"
         android:layout_below="@+id/moduleName"
-        android:layout_marginTop="14dp"
-        android:onClick="onClickColorPicker"/>
+        android:layout_margin="8dp"
+        android:onClick="onClickColorPicker"
+        android:text="@string/color"/>
 
     <Button
         android:id="@+id/validateModule"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="8dp"
-        android:backgroundTint="@color/colorYes"
+        android:backgroundTint="@color/color_yes"
         android:drawableLeft="@drawable/ic_done_black_24dp"
         android:onClick="onClickDone"
         android:text="@string/done"
-        android:textColor="@color/backgroundDark"/>
+        android:textColor="@android:color/background_dark"/>
 
     <Button
         android:id="@+id/deleteModule"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_margin="8dp"
-        android:backgroundTint="@color/colorNo"
+        android:backgroundTint="@color/color_no"
         android:drawableRight="@drawable/ic_delete_forever_black_24dp"
         android:onClick="onClickDelete"
         android:text="@string/delete"
-        android:textColor="@color/backgroundDark"/>
+        android:textColor="@android:color/background_dark"/>
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/moduleName"
         android:layout_alignBottom="@+id/moduleName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/moduleName"
         android:layout_marginLeft="8dp"
-        android:text="@string/name"/>
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/moduleColor"
-        android:layout_alignBottom="@+id/moduleColor"
-        android:layout_alignLeft="@+id/textView4"
-        android:layout_alignStart="@+id/textView4"
-        android:text="@string/color"/>
+        android:gravity="center_vertical"
+        android:text="@string/name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:text="@string/logo"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/moduleColor"
-        android:layout_alignRight="@+id/textView5"
-        android:layout_alignEnd="@+id/textView5"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center"
+        android:text="@string/logo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
     <GridView
         android:id="@+id/logosContainer"
@@ -118,9 +118,11 @@
         android:layout_alignLeft="@+id/moduleColor"
         android:layout_alignRight="@+id/validateModule"
         android:layout_alignStart="@+id/moduleColor"
-        android:layout_below="@+id/moduleColor"
+        android:layout_below="@+id/textView6"
+        android:layout_toRightOf="@+id/textView6"
         android:choiceMode="singleChoice"
         android:columnWidth="64dp"
+        android:gravity="center_horizontal"
         android:numColumns="auto_fit"/>
 
 

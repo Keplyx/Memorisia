@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018.
+  ~ This file is part of Memorisia.
+  ~
+  ~ Memorisia is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Memorisia is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with Memorisia.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="calendar_title">Calendrier</string>
+    <string name="cannot_delete_last">Vous ne pouvez pas supprimer la seule entrée !</string>
+    <string name="action_add">Ajouter</string>
+    <string name="action_agenda">Sélectionner un Agenda</string>
+    <string name="action_sort">Trier</string>
+    <string name="add_work">Ajouter un nouveau travail</string>
+    <string name="agenda">Agenda</string>
+    <string name="app_desc">Mémorisez vos trucs !</string>
+    <string name="cannot_delete_non_empty">Veuillez supprimer tous les travaux utilisant ce module avant de le supprimer</string>
+    <string name="color">Couleur</string>
+    <string name="confirm_delete">Êtes vous sûr de vouloir supprimer cette entrée ?</string>
+    <string name="create_agenda">Créer un nouvel Agenda</string>
+    <string name="create_subject">Créer un nouveau sujet</string>
+    <string name="create_work">Créer un nouveau type de travail</string>
+    <string name="credits_about">Memorisia est une application de mémo, faite pour prendre note de devoirs</string>
+    <string name="credits_calendar">Material Calendar par Prolific Interactive</string>
+    <string name="credits_color_picker">Pipette à couleurs (AmbilWarna) par Yukuku</string>
+    <string name="credits_icons">Icones crées par Icons8</string>
+    <string name="credits_licence">Application sous licence GPLv3 et disponible sur GitHub</string>
+    <string name="credits_maker">Créée par Arnaud Vergnet, avec l\'aide du club\'info de l\'INSA Toulouse</string>
+    <string name="credits_pickers">Sélecteur de date et heure (android-betterpickers) par Code Troopers</string>
+    <string name="default_module_home">Menu</string>
+    <string name="default_module_important">Important</string>
+    <string name="default_module_misc">Divers</string>
+    <string name="default_module_start">Pour commencer</string>
+    <string name="default_module_tuto">Tutoriel</string>
+    <string name="default_module_work">Travail</string>
+    <string name="default_work_add">Utilisez le bouton ci-dessous pour ajouter un travail</string>
+    <string name="default_work_commands">Utilisez la barre d\'outils pour controler la liste</string>
+    <string name="default_work_date">Ajoutez des dates pour les travaux</string>
+    <string name="default_work_delete">Cliquez sur un travail pour le supprimer</string>
+    <string name="default_work_drawer">Utilisez le menu de gauche pour naviguer</string>
+    <string name="default_work_edit">Cliquez sur un travail pour le modifier</string>
+    <string name="default_work_night">Mode nuit disponible</string>
+    <string name="default_work_prio">Définissez une priorité pour chaque travail</string>
+    <string name="default_work_settings">Allez dans les paramètres pour plus d\'options</string>
+    <string name="delete">Supprimer</string>
+    <string name="delete_old">Supprimer les anciens travaux</string>
+    <string name="delete_old_desc">Les travaux plus anciens que spécifié serons supprimés</string>
+    <string name="delete_old_only_done">Seulements les travaux Faits</string>
+    <string name="delete_old_only_done_desc">Ne supprimer que les travaux marqués en tant que Fait</string>
+    <string name="delete_old_time">Limite de temps</string>
+    <string name="delete_old_time_desc">Temps à partir duquel les travaux serons considérés anciens</string>
+    <string name="description">Description</string>
+    <string name="done">Fait</string>
+    <string name="due_date">Date d\'échéance</string>
+    <string name="edit_agendas">Éditer les agendas</string>
+    <string name="edit_subjects">Éditer les Sujets</string>
+    <string name="edit_work">Éditer le travail</string>
+    <string name="edit_work_types">Éditer les types de travail</string>
+    <string name="editing">Édition</string>
+    <string name="empty_list">Rien à afficher !</string>
+    <string name="home_stars">5 Étoiles</string>
+    <string name="home_title">Menu</string>
+    <string name="home_week">À faire pour les 7 prochains jours</string>
+    <string name="logo">Logo</string>
+    <string name="name">Nom</string>
+    <string name="navigation_about">À Propos</string>
+    <string name="navigation_calendar">Vue par Calendrier</string>
+    <string name="navigation_drawer_close">Fermer le panneau de navigation</string>
+    <string name="navigation_drawer_open">Ouvrir le panneua de navigation</string>
+    <string name="navigation_home">Menu</string>
+    <string name="navigation_settings">Paramètres</string>
+    <string name="navigation_subject">Vue par Sujets</string>
+    <string name="navigation_work_types">Vue par Types de Travail</string>
+    <string name="night_mode">Mode Nuit</string>
+    <string name="night_mode_desc">Rend l\'application plus sombre</string>
+    <string name="no">Non</string>
+    <string name="pick_date">Choisir Date</string>
+    <string name="prefs_general">Général</string>
+    <string name="prefs_old_works">Anciens Travaux</string>
+    <string name="prefs_personalise">Personaliser l\'application</string>
+    <string name="priority">Priorité</string>
+    <string name="settings_title">Paramètres</string>
+    <string name="sort_date">Trier par date</string>
+    <string name="sort_name">Trier par nom</string>
+    <string name="sort_percent">Trier par pourcentage fait</string>
+    <string name="sort_priority">Trier par priorité</string>
+    <string name="sort_total_work">Trier par travail total</string>
+    <string name="sort_type">Trier par type</string>
+    <string name="subject">Sujet</string>
+    <string name="subjects_title">Sujets</string>
+    <string name="title_navigation_other">Autre</string>
+    <string name="title_navigation_views">Choisir vue</string>
+    <string name="work_done">Travail Fait</string>
+    <string name="work_type">Type de Travail</string>
+    <string name="work_types_title">Types de Travaux</string>
+    <string name="yes">Oui</string>
+    <string-array name="delete_old_time_range">
+        <item>Tout de suite</item>
+        <item>1 jour</item>
+        <item>2 jour</item>
+        <item>3 jour</item>
+        <item>1 semaine</item>
+        <item>1 mois</item>
+        <item>6 mois</item>
+        <item>1 an</item>
+    </string-array>
+</resources>

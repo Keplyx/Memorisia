@@ -23,8 +23,6 @@
     <string name="edit_agendas">Edit Agendas</string>
     <string name="night_mode">Night Mode</string>
     <string name="night_mode_desc">Makes the app darker</string>
-    <string name="notifications">Notifications</string>
-    <string name="notifications_desc">Choose whether to get reminders with notifications</string>
     <string name="delete_old">Delete old works</string>
     <string name="delete_old_desc">Works older than specified will be deleted</string>
     <string name="delete_old_time">Time Limit</string>
@@ -42,7 +40,7 @@
         <item>1 year</item>
     </string-array>
 
-    <string-array name="delete_old_time_range_alias">
+    <string-array name="delete_old_time_range_alias" translatable="false">
         <item>0</item>
         <item>1d</item>
         <item>2d</item>

@@ -26,6 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
+import com.clubinfo.insat.memorisia.R;
 import com.clubinfo.insat.memorisia.activities.EditOptionsActivity;
 import com.clubinfo.insat.memorisia.utils.Utils;
 
@@ -63,7 +64,9 @@ public class LogosListAdapter extends BaseAdapter {
     
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ImageButton button = new ImageButton(context);
-        button.setLayoutParams(new GridView.LayoutParams(200, 200));
+        int size = (int) context.getResources().getDimension(R.dimen.logo_size);
+        
+        button.setLayoutParams(new GridView.LayoutParams(size, size));
         button.setImageBitmap(Utils.getBitmapFromAsset(context, logosList.get(position)));
         button.setBackgroundColor(Color.TRANSPARENT);
         if (logosList.get(position).equals(selected))

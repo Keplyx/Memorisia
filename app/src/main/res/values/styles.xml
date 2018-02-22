@@ -59,6 +59,7 @@
         <item name="android:textColorHintInverse">@color/textColorInverse</item>
         <item name="android:searchButtonText">@color/textColorInverse</item>
         <item name="android:listDivider">@color/dividerColorInverse</item>
+        <item name="android:windowBackground">@color/backgroundDark</item>
     </style>
 
     <style name="MyDatePicker" parent="Theme.AppCompat.Light.Dialog.Alert">
