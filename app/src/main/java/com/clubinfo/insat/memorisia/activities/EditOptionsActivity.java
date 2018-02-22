@@ -40,7 +40,6 @@ public class EditOptionsActivity extends AppCompatActivity {
     private TextView title;
     private GridView logosGridView;
     private Button colorButton;
-    private Switch notificationsSwitch;
     private Button deleteButton;
     
     private OptionModule module;
@@ -69,7 +68,6 @@ public class EditOptionsActivity extends AppCompatActivity {
             module = ModulesUtils.createOptionModuleFromBundle(getIntent().getExtras());
         
         colorButton.setBackgroundColor(Color.parseColor(module.getColor()));
-        notificationsSwitch.setChecked(module.isNotificationsEnabled());
         if (id != -1) {
             title.setText(module.getText());
             setTitle(getResources().getString(R.string.editing) + " " + module.getText());
@@ -104,7 +102,6 @@ public class EditOptionsActivity extends AppCompatActivity {
         title = findViewById(R.id.moduleName);
         logosGridView = findViewById(R.id.logosContainer);
         colorButton = findViewById(R.id.moduleColor);
-        notificationsSwitch = findViewById(R.id.moduleNotifications);
         deleteButton = findViewById(R.id.deleteModule);
     }
     
@@ -149,7 +146,6 @@ public class EditOptionsActivity extends AppCompatActivity {
      */
     public void onClickDone(View v) {
         module.setText(title.getText().toString());
-        module.setNotificationsEnabled(notificationsSwitch.isChecked());
         long id = MemorisiaDatabase.getInstance(context).optionModuleDao().insertOptionModules(module)[0];
         // Add to selected agendas list if module is agenda
         if (module.getType() == OptionModule.AGENDA){

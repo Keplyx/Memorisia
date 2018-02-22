@@ -18,8 +18,8 @@ public class WorkModule extends Module {
     private boolean state;
     
     public WorkModule(int agendaId, int subjectId, int workTypeId, int priority, int[] date, int[] time,
-                      String text, boolean notificationsEnabled, boolean state) {
-        super(text, notificationsEnabled);
+                      String text, boolean state) {
+        super(text);
         this.agendaId = agendaId;
         this.subjectId = subjectId;
         this.workTypeId = workTypeId;

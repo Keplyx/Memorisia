@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void createNewWork() {
         Intent intent = new Intent(context, EditWorkActivity.class);
-        WorkModule work = new WorkModule( -1, -1, -1, 0, new int[]{-1, -1, -1}, new int[]{-1, -1}, "", false, false);
+        WorkModule work = new WorkModule( -1, -1, -1, 0, new int[]{-1, -1, -1}, new int[]{-1, -1}, "", false);
         work.setId(-1);
         if (isFragmentActive(Frags.FRAG_WORKS)) {
             WorkViewFragment workFragment = (WorkViewFragment) getFragmentManager().findFragmentByTag(Frags.FRAG_WORKS.name());

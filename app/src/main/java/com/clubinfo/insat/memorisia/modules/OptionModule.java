@@ -20,8 +20,8 @@ public class OptionModule extends Module{
     @Ignore
     public static final int AGENDA = 2;
     
-    public OptionModule(int type, String text, String logo, String color, boolean notificationsEnabled) {
-        super(text, notificationsEnabled);
+    public OptionModule(int type, String text, String logo, String color) {
+        super(text);
         this.type = type;
         this.logo = logo;
         this.color = color;

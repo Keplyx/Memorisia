@@ -13,11 +13,11 @@
         android:id="@+id/moduleName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/moduleNotifications"
-        android:layout_alignRight="@+id/moduleNotifications"
+        android:layout_alignEnd="@+id/validateModule"
+        android:layout_alignRight="@+id/validateModule"
         android:layout_below="@+id/moduleNotifications"
         android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/textView4"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/textView4"
         android:ems="10"
         android:inputType="textPersonName"
@@ -35,16 +35,6 @@
         android:layout_below="@+id/moduleName"
         android:layout_marginTop="14dp"
         android:onClick="onClickColorPicker"/>
-
-    <Switch
-        android:id="@+id/moduleNotifications"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="8dp"
-        android:text="@string/notifications"/>
 
     <Button
         android:id="@+id/validateModule"
@@ -77,11 +67,12 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/name"
         android:layout_alignBaseline="@+id/moduleName"
         android:layout_alignBottom="@+id/moduleName"
         android:layout_alignLeft="@+id/moduleNotifications"
-        android:layout_alignStart="@+id/moduleNotifications"/>
+        android:layout_alignStart="@+id/moduleNotifications"
+        android:layout_marginLeft="8dp"
+        android:text="@string/name"/>
 
     <TextView
         android:id="@+id/textView5"

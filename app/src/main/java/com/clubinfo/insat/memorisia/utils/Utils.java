@@ -79,22 +79,22 @@ public class Utils {
         List<String> logosList = generateLogosList(context);
         if (isAgenda){
             modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_home),
-                    logosList.get(7), "#33b819", true));
+                    logosList.get(7), "#33b819"));
             modules.add(new OptionModule(OptionModule.AGENDA, context.getString(R.string.default_module_work),
-                    logosList.get(7), "#ba4200", true));
+                    logosList.get(7), "#ba4200"));
             
         }
         if (isSubject) {
             modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject1),
-                    logosList.get(3), "#d5ce12", true));
+                    logosList.get(3), "#d5ce12"));
             modules.add(new OptionModule(OptionModule.SUBJECT, context.getString(R.string.default_module_subject2),
-                    logosList.get(3), "#1265d5", true));
+                    logosList.get(3), "#1265d5"));
         }
         if (isWorkType) {
             modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type1),
-                    logosList.get(11), "#d512d3", true));
+                    logosList.get(11), "#d512d3"));
             modules.add(new OptionModule(OptionModule.WORK_TYPE, context.getString(R.string.default_module_work_type2),
-                    logosList.get(11), "#12d5a5", true));
+                    logosList.get(11), "#12d5a5"));
         }
         
         for (OptionModule m : modules){

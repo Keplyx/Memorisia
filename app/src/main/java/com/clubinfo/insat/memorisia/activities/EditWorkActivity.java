@@ -14,6 +14,7 @@ import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
@@ -46,8 +47,8 @@ public class EditWorkActivity extends AppCompatActivity {
     private Spinner worksSpinner;
     private EditText descriptionTextView;
     private RatingBar priorityBar;
-    private Switch notificationsSwitch;
     private Button datePickerButton;
+    private CheckBox stateCheckBox;
     
     private WorkModule actualWork;
     
@@ -97,7 +98,7 @@ public class EditWorkActivity extends AppCompatActivity {
         worksSpinner = findViewById(R.id.workTypeSpinner);
         descriptionTextView = findViewById(R.id.descriptionEditText);
         priorityBar = findViewById(R.id.priorityRatingBar);
-        notificationsSwitch = findViewById(R.id.notificationsSwitch);
+        stateCheckBox = findViewById(R.id.workStateCheckBox);
         datePickerButton = findViewById(R.id.pickDateButton);
     }
     
@@ -157,7 +158,7 @@ public class EditWorkActivity extends AppCompatActivity {
         
         priorityBar.setRating((float) actualWork.getPriority());
         descriptionTextView.setText(actualWork.getText());
-        notificationsSwitch.setChecked(actualWork.isNotificationsEnabled());
+        stateCheckBox.setChecked(actualWork.isState());
         setupDatePickerButton();
     }
     
@@ -182,7 +183,7 @@ public class EditWorkActivity extends AppCompatActivity {
         actualWork.setWorkTypeId(workTypesList.get(worksSpinner.getSelectedItemPosition()).getId());
         actualWork.setPriority((int) priorityBar.getRating());
         actualWork.setText(descriptionTextView.getText().toString());
-        actualWork.setNotificationsEnabled(notificationsSwitch.isChecked());
+        actualWork.setState(stateCheckBox.isChecked());
     }
     /**
      * Generates and saves the actual module, then exits the activity.

@@ -27,6 +27,7 @@
     <string name="name">Name</string>
     <string name="logo">Logo</string>
     <string name="color">Color</string>
+    <string name="work_done">Work Done</string>
     <string name="done">Done</string>
     <string name="delete">Delete</string>
 

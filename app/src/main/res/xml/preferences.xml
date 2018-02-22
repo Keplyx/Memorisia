@@ -27,11 +27,6 @@
             android:title="@string/night_mode"
             android:summary="@string/night_mode_desc"
             android:defaultValue="false" />
-        <CheckBoxPreference
-            android:key="pref_key_notifications"
-            android:title="@string/notifications"
-            android:summary="@string/notifications_desc"
-            android:defaultValue="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/prefs_old_works" >

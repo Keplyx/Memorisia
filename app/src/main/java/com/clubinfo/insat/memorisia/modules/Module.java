@@ -9,11 +9,9 @@ public class Module {
     @PrimaryKey (autoGenerate = true)
     private int id;
     private String text;
-    private boolean notificationsEnabled;
     
-    public Module(String text, boolean notificationsEnabled) {
+    public Module(String text) {
         this.text = text;
-        this.notificationsEnabled = notificationsEnabled;
     }
     
     public int getId() {
@@ -32,11 +30,4 @@ public class Module {
         this.text = text;
     }
     
-    public boolean isNotificationsEnabled() {
-        return notificationsEnabled;
-    }
-    
-    public void setNotificationsEnabled(boolean notificationsEnabled) {
-        this.notificationsEnabled = notificationsEnabled;
-    }
 }

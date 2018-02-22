@@ -345,7 +345,6 @@ public class ModulesUtils {
         b.putString("text", module.getText());
         b.putString("logo", module.getLogo());
         b.putString("color", module.getColor());
-        b.putBoolean("notifications", module.isNotificationsEnabled());
         return b;
     }
     
@@ -366,7 +365,6 @@ public class ModulesUtils {
         b.putIntArray("date", module.getDate());
         b.putIntArray("time", module.getTime());
         b.putString("text", module.getText());
-        b.putBoolean("notifications", module.isNotificationsEnabled());
         b.putBoolean("state", module.isState());
         return b;
     }
@@ -384,8 +382,7 @@ public class ModulesUtils {
         String text = b.getString("text");
         String logo = b.getString("logo");
         String color = b.getString("color");
-        boolean notif = b.getBoolean("notifications");
-        return new OptionModule(type, text, logo, color, notif);
+        return new OptionModule(type, text, logo, color);
     }
     
     /**
@@ -404,8 +401,7 @@ public class ModulesUtils {
         int[] date = b.getIntArray("date");
         int[] time = b.getIntArray("time");
         String text = b.getString("text");
-        boolean notif = b.getBoolean("notifications");
         boolean state = b.getBoolean("state");
-        return new WorkModule(agendaId, subjectId, workTypeId, priority, date, time, text, notif, state);
+        return new WorkModule(agendaId, subjectId, workTypeId, priority, date, time, text, state);
     }
 }
