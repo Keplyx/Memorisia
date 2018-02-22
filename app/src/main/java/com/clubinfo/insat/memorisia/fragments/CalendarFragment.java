@@ -97,6 +97,7 @@ public class CalendarFragment extends BaseFragment {
     }
     
     private void setDecorator() {
+        calendarView.removeDecorators();
         MemorisiaDatabase db = MemorisiaDatabase.getInstance(getActivity());
         MainActivity act = (MainActivity) getActivity();
         List<CalendarDay> dates = new ArrayList<>();
