@@ -114,8 +114,7 @@ a {
 }
 
 a:hover, a:focus {
-  text-decoration: underline;
-  font-weight:bold;
+  color: #e49009;
 }
 
 footer a {
@@ -275,7 +274,7 @@ Full-Width Styles
   z-index: 10;
   padding: 10px 50px 10px 10px;
   color: #fff;
-  background: url('../images/blacktocat.png') #0090ff no-repeat 95% 50%;
+  background: url('../images/blacktocat.png') #E2261B no-repeat 95% 50%;
   font-weight: 700;
   box-shadow: 0 0 10px rgba(0,0,0,.5);
   border-bottom-left-radius: 2px;
@@ -496,8 +495,7 @@ Small Device Styles
 
 /* Change the color of links on hover */
 .topnav a:hover {
-    background-color: #ddd;
-    color: black;
+    background-color: #e49009;
     text-decoration: none;
     font-weight: normal;
     box-shadow: 1px 0px 3px #000;
@@ -505,53 +503,7 @@ Small Device Styles
 
 /* Add a color to the active/current link */
 .topnav a.active {
-    background-color: #0090FF;
+    background-color: #E2261B;
     color: white;
     box-shadow: 1px 0px 3px #000;
-}
-
-.list-group{
-    list-style: none;
-    display: block;
-    border-radius: 2px;
-}
-
-.list-group li{
-    border: 1px solid #d5d5d5;
-    float: left;
-    text-align: center;
-    padding: 10px;
-    border-radius: 2px;
-}
-
-.success{
-    background-color: #DFF0D8;
-}
-
-.success:hover{
-    background-color: #ceecc2;
-}
-
-.wip{
-    background-color: #D9EDF7;
-}
-
-.wip:hover{
-    background-color: #c0e2f3;
-}
-
-.unstable{
-    background-color: #FCF8E3;
-}
-
-.unstable:hover{
-    background-color: #f9f2cd;
-}
-
-.broken{
-    background-color: #F2DEDE;
-}
-
-.broken:hover{
-    background-color: #efc7c7;
 }
