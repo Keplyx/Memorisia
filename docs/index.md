@@ -11,10 +11,10 @@ For each work, you can set a due date, a priority and a description.
 
 And that's about it, hope you will find it useful !
 
+<img src="images/preview/Screenshot_20180223-170801.png" width="50%"><img><img src="images/preview/Screenshot_20180223-170911.png" width="50%">
 
 ## Contribution
 Feel free to contribute to the project, either by reporting bugs, helping with the code or simply with translations.
 
 ## Translations
 App is currently available in English and French.
-
