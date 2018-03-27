@@ -30,6 +30,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,9 +67,15 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     
     private boolean isSubjectsParent;
     
+    // boolean array for checking the state of works (prevents unwanted unchecking when recycling)
+    private SparseBooleanArray worksStateArray= new SparseBooleanArray();
+    
     public WorksRecyclerAdapter(Context context, List<WorkModule> modules, boolean isSubjectsParent) {
         this.context = context;
         this.modules = modules;
+        for (int i = 0; i < modules.size(); i++){
+            worksStateArray.put(i, modules.get(i).isState());
+        }
         this.isSubjectsParent = isSubjectsParent;
         MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
         workTypesList = db.optionModuleDao().getOptionModulesOfType(OptionModule.WORK_TYPE);
@@ -153,18 +161,18 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         
         holder.title.setText(work.getText());
         holder.priorityBar.setRating((float) work.getPriority());
-        holder.doneCheckBox.setChecked(work.isState());
-        setWorkChecked(holder.layout, work.isState());
+        holder.doneCheckBox.setChecked(worksStateArray.get(pos, false));
+        setWorkChecked(holder.layout, worksStateArray.get(pos, false));
         final View holderLayout = holder.layout;
-        holder.doneCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                           @Override
-                                                           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                               modules.get(pos).setState(isChecked);
-                                                               setWorkChecked(holderLayout, isChecked);
-                                                               MemorisiaDatabase.getInstance(context).workModuleDao().updateWorkModules(work);
-                                                           }
-                                                       }
-        );
+        holder.doneCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                worksStateArray.put(pos, !worksStateArray.get(pos, false));
+                modules.get(pos).setState(worksStateArray.get(pos, false));
+                setWorkChecked(holderLayout, worksStateArray.get(pos, false));
+                MemorisiaDatabase.getInstance(context).workModuleDao().updateWorkModules(work);
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
