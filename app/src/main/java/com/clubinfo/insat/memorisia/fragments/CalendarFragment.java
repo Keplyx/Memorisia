@@ -95,19 +95,19 @@ public class CalendarFragment extends BaseFragment {
         RecyclerView.Adapter mAdapter;
         switch (getCurrentSortType()) {
             case SORT_1:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(worksList, isReverseSort()), true);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(worksList, isReverseSort()));
                 break;
             case SORT_2:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(worksList, isReverseSort()), true);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(worksList, isReverseSort()));
                 break;
             case SORT_3:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(worksList, getActivity(), isReverseSort()), true);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(worksList, getActivity(), isReverseSort()));
                 break;
             case SORT_4:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, isReverseSort()), true);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, isReverseSort()));
                 break;
             default:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), worksList, true);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), worksList);
                 break;
         }
         recyclerView.setAdapter(mAdapter);

@@ -96,19 +96,19 @@ public class WorkViewFragment extends BaseFragment {
         Log.w("test", workList.size() + "");
         switch (getCurrentSortType()) {
             case SORT_1:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(workList, isReverseSort()), isParentSubject);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByName(workList, isReverseSort()));
                 break;
             case SORT_2:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(workList, isReverseSort()), isParentSubject);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByPriority(workList, isReverseSort()));
                 break;
             case SORT_3:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(workList, getActivity(), isReverseSort()), isParentSubject);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByWorkType(workList, getActivity(), isReverseSort()));
                 break;
             case SORT_4:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(workList, isReverseSort()), isParentSubject);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(workList, isReverseSort()));
                 break;
             default:
-                mAdapter = new WorksRecyclerAdapter(getActivity(), workList, isParentSubject);
+                mAdapter = new WorksRecyclerAdapter(getActivity(), workList);
                 break;
         }
         recyclerView.setAdapter(mAdapter);

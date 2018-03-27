@@ -65,18 +65,15 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     private List<OptionModule> agendaList;
     private Context context;
     
-    private boolean isSubjectsParent;
-    
     // boolean array for checking the state of works (prevents unwanted unchecking when recycling)
     private SparseBooleanArray worksStateArray= new SparseBooleanArray();
     
-    public WorksRecyclerAdapter(Context context, List<WorkModule> modules, boolean isSubjectsParent) {
+    public WorksRecyclerAdapter(Context context, List<WorkModule> modules) {
         this.context = context;
         this.modules = modules;
         for (int i = 0; i < modules.size(); i++){
             worksStateArray.put(i, modules.get(i).isState());
         }
-        this.isSubjectsParent = isSubjectsParent;
         MemorisiaDatabase db = MemorisiaDatabase.getInstance(context);
         workTypesList = db.optionModuleDao().getOptionModulesOfType(OptionModule.WORK_TYPE);
         subjectsList = db.optionModuleDao().getOptionModulesOfType(OptionModule.SUBJECT);
@@ -106,32 +103,21 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
         final WorkModule work = modules.get(pos);
         OptionModule workType = ModulesUtils.getModuleOfId(workTypesList, work.getWorkTypeId());
         OptionModule subject = ModulesUtils.getModuleOfId(subjectsList, work.getSubjectId());
-        
-        if (isSubjectsParent)
-            holder.description.setText(workType.getText());
-        else
-            holder.description.setText(subject.getText());
-        
-        if (isSubjectsParent) {
-            holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
-            holder.workLogo.setColorFilter(Color.parseColor(workType.getColor()));
-        } else {
-            
-            holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
-            holder.workLogo.setColorFilter(Color.parseColor(subject.getColor()));
-        }
-        
         OptionModule agenda = ModulesUtils.getModuleOfId(agendaList, work.getAgendaId());
+        
+        holder.type.setText(workType.getText());
+        holder.workLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
+        holder.workLogo.setColorFilter(Color.parseColor(workType.getColor()));
+        
+        holder.subject.setText(subject.getText());
+        holder.subjectLogo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
+        holder.subjectLogo.setColorFilter(Color.parseColor(subject.getColor()));
+        
+        holder.agenda.setText(agenda.getText());
         holder.agendaLogo.setImageBitmap(Utils.getBitmapFromAsset(context, agenda.getLogo()));
         holder.agendaLogo.setColorFilter(Color.parseColor(agenda.getColor()));
-    
-        if (isSubjectsParent) {
-            holder.subjectLogo.setImageBitmap(Utils.getBitmapFromAsset(context, subject.getLogo()));
-            holder.subjectLogo.setColorFilter(Color.parseColor(subject.getColor()));
-        } else {
-            holder.subjectLogo.setImageBitmap(Utils.getBitmapFromAsset(context, workType.getLogo()));
-            holder.subjectLogo.setColorFilter(Color.parseColor(workType.getColor()));
-        }
+
+
 
         
         Calendar c = Calendar.getInstance();
@@ -263,7 +249,10 @@ public class WorksRecyclerAdapter extends RecyclerView.Adapter<WorksRecyclerAdap
     
 class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
-        TextView description;
+        TextView type;
+        TextView subject;
+        TextView agenda;
+    
         TextView date;
         TextView time;
         ImageView workLogo;
@@ -278,7 +267,10 @@ class ViewHolder extends RecyclerView.ViewHolder {
             layout = v;
             if (modules.size() != 0) {
                 title = v.findViewById(R.id.workTitle);
-                description = v.findViewById(R.id.workDescription);
+                type = v.findViewById(R.id.workTypeTextView);
+                subject = v.findViewById(R.id.SubjectTextView);
+                agenda = v.findViewById(R.id.AgendaTextView);
+                
                 date = v.findViewById(R.id.dateTextView);
                 time = v.findViewById(R.id.timeTextView);
                 workLogo = v.findViewById(R.id.workLogo);

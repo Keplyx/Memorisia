@@ -17,66 +17,66 @@
   ~  along with Memorisia.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="96dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="vertical">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="128dp"
+                                             android:clickable="true"
+                                             android:focusable="true"
+                                             android:foreground="?android:attr/selectableItemBackground"
+                                             android:orientation="vertical">
 
     <CheckBox
         android:id="@+id/stateCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/timeTextView"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/done"
-        android:layout_alignTop="@+id/agendaLogo"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp"/>
 
     <ImageView
         android:id="@+id/agendaLogo"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subjectLogo"
         app:srcCompat="@mipmap/ic_launcher"
-        android:layout_alignTop="@+id/workLogo"
-        android:layout_alignRight="@+id/stateCheckBox"
-        android:layout_alignEnd="@+id/stateCheckBox"/>
-
-    <ImageView
-        android:id="@+id/agenda"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignTop="@+id/agendaLogo"
-        android:layout_toLeftOf="@+id/agendaLogo"
-        android:layout_toStartOf="@+id/agendaLogo"
-        android:tint="@color/iconTint"
-        app:srcCompat="@drawable/ic_format_list_bulleted_black_24dp"/>
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"/>
 
     <ImageView
         android:id="@+id/workLogo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="32dp"/>
 
     <TextView
         android:id="@+id/workTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_alignBottom="@+id/agendaLogo"
-        android:layout_alignTop="@+id/workLogo"
-        android:layout_toLeftOf="@+id/agenda"
-        android:gravity="center_vertical"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:forceHasOverlappingRendering="false"
+        android:gravity="center_vertical|center"
         android:text="Title"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:layout_toRightOf="@+id/workLogo"
-        android:layout_toEndOf="@+id/workLogo"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_editor_absoluteX="8dp"/>
 
     <RatingBar
         android:id="@+id/priorityRatingBar"
@@ -85,65 +85,86 @@
         android:layout_height="wrap_content"
         android:numStars="5"
         android:stepSize="1"
-        android:layout_alignBottom="@+id/timeTextView"
-        android:layout_toRightOf="@+id/timeTextView"
-        android:layout_toEndOf="@+id/timeTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/timeTextView"
+        app:layout_constraintRight_toRightOf="@+id/timeTextView"/>
 
     <TextView
         android:id="@+id/dateTextView"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/workLogo"
-        android:layout_alignStart="@+id/workLogo"
-        android:layout_below="@+id/workLogo"
-        android:drawableLeft="@drawable/ic_date_range_black_24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:drawableEnd="@drawable/ic_date_range_black_24dp"
         android:gravity="center_vertical"
         android:text="99/99/9999"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stateCheckBox"/>
 
     <TextView
         android:id="@+id/timeTextView"
-        android:layout_width="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/dateTextView"
-        android:layout_alignBottom="@+id/dateTextView"
-        android:layout_toEndOf="@+id/dateTextView"
-        android:layout_toRightOf="@+id/dateTextView"
-        android:drawableLeft="@drawable/ic_access_time_black_24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:drawableEnd="@drawable/ic_access_time_black_24dp"
         android:gravity="center_vertical"
         android:text="99:99"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTextView"
+        tools:layout_constraintRight_creator="1"/>
 
     <TextView
-        android:id="@+id/workDescription"
+        android:id="@+id/workTypeTextView"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_alignBottom="@+id/workLogo"
-        android:layout_below="@+id/workTitle"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/workLogo"
-        android:layout_toLeftOf="@+id/stateCheckBox"
-        android:layout_toRightOf="@+id/workLogo"
-        android:text="Description"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+        android:layout_marginStart="8dp"
+        android:text="Type"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintLeft_toRightOf="@+id/workLogo"
+        app:layout_constraintTop_toTopOf="@+id/workLogo"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"/>
+
+    <TextView
+        android:id="@+id/SubjectTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Subject"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintLeft_toRightOf="@+id/subjectLogo"
+        app:layout_constraintTop_toTopOf="@+id/subjectLogo"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"/>
+
+    <TextView
+        android:id="@+id/AgendaTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Agenda"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintLeft_toRightOf="@+id/agendaLogo"
+        app:layout_constraintTop_toTopOf="@+id/agendaLogo"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"/>
 
     <ImageView
         android:id="@+id/subjectLogo"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workLogo"
         app:srcCompat="@mipmap/ic_launcher"
-        android:layout_alignBottom="@+id/stateCheckBox"
-        android:layout_alignRight="@+id/stateCheckBox"
-        android:layout_alignEnd="@+id/stateCheckBox"/>
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"/>
 
-    <ImageView
-        android:id="@+id/module"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:tint="@color/iconTint"
-        app:srcCompat="@drawable/ic_subject_black_24dp"
-        android:layout_alignBottom="@+id/stateCheckBox"
-        android:layout_toLeftOf="@+id/subjectLogo"
-        android:layout_toStartOf="@+id/subjectLogo"/>
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

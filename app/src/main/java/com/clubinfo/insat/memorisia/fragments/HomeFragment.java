@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByWeek(
                 db.workModuleDao().getWorkModulesOfAgenda(act.getSelectedAgendas()), new int[]{CalendarDay.today().getDay(), CalendarDay.today().getMonth() + 1, CalendarDay.today().getYear()});
         RecyclerView.Adapter mAdapter;
-        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false), true);
+        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false));
         weekRecyclerView.setAdapter(mAdapter);
     }
     
@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment {
         List<WorkModule> worksList = ModulesUtils.getWorkModuleListByPriority(
                 db.workModuleDao().getWorkModulesOfAgenda(act.getSelectedAgendas()), 5);
         RecyclerView.Adapter mAdapter;
-        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false), true);
+        mAdapter = new WorksRecyclerAdapter(getActivity(), ModulesUtils.sortWorkModuleListByDate(worksList, false));
         starsRecyclerView.setAdapter(mAdapter);
     }
     
